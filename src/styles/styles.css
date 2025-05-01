@@ -1,0 +1,9 @@
+body {
+  background: #000000 url(./public/images/body_bg.png);
+  /* ... */
+}
+.container {
+  /* ... */
+  background: #fff url(./public/images/tp_bg.png);
+  /* ... */
+}
