@@ -1,0 +1,6 @@
+pandas>=2.0.0
+selenium==4.11.2
+matplotlib
+statsmodels
+isoweek
+dropbox
