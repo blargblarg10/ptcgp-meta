@@ -232,11 +232,35 @@ const MatchEntry = ({
         </div>
       </div>
       
-      {entry.isLocked && (
-        <div className="mt-2 text-xs text-gray-500">
-          Recorded: {new Date(entry.timestamp).toLocaleDateString()}
-        </div>
-      )}
+      {/* Notes section and timestamp */}
+      <div className="mt-2">
+        {/* Show notes input for editing or new (unlocked) entries */}
+        {(!entry.isLocked || isEditing) && (
+          <div className="mt-2">
+            <input
+              type="text"
+              placeholder="Add notes about this match..."
+              value={entry.notes || ""}
+              onChange={(e) => onFieldChange(entry.id, 'notes', e.target.value)}
+              className="w-full p-1 text-xs border border-gray-300 rounded"
+            />
+          </div>
+        )}
+        
+        {/* Show recorded timestamp first */}
+        {entry.isLocked && (
+          <div className="text-xs text-gray-500">
+            Recorded: {new Date(entry.timestamp).toLocaleDateString()}
+          </div>
+        )}
+        
+        {/* Then show notes when locked and notes exist */}
+        {isLocked && entry.notes && (
+          <div className="mt-1 text-xs text-gray-600">
+            Notes: {entry.notes}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
