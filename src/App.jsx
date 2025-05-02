@@ -19,8 +19,8 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-red-600 flex flex-col" style={{ background: '#db0a0a url("./public/images/body_bg.png")' }}>
-      <div className="w-full max-w-7xl min-w-[320px] mx-auto bg-white flex-1" style={{ background: '#fff url("./public/images/tp_bg.png")' }}>
+    <div className="min-h-screen bg-red-600 flex flex-col" style={{ background: '#db0a0a url("./body_bg.png")' }}>
+      <div className="w-full max-w-7xl min-w-[320px] mx-auto bg-white flex-1" style={{ background: '#fff url("./tp_bg.png")' }}>
         <div className="bg-gray-50 p-5 border-b border-gray-200">
           <div className="relative">
             <div className="absolute right-0 top-0 flex flex-col items-end">

@@ -1,0 +1,49 @@
+name: Nightly Data Update
+
+on:
+  schedule:
+    # Run at 11:00 PM UTC every day
+    - cron: '0 23 * * *'
+  workflow_dispatch:  # Allows manual triggering from GitHub UI
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Needed to get commit count for auto-numbering
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f python_requirements.txt ]; then pip install -r python_requirements.txt; fi
+
+      - name: Run scraper
+        run: |
+          python scraper/scrapeDeckData.py
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --exit-code --quiet src/data/deckTournamentMeta.json || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Get commit count
+        if: steps.check_changes.outputs.changes == 'true'
+        id: commit_count
+        run: echo "count=$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add src/data/deckTournamentMeta.json
+          git commit -m "auto commit #${{ steps.commit_count.outputs.count }} for Tournament Deck Data"
+          git push

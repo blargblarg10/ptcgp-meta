@@ -10,6 +10,7 @@ const MatchEntry = ({
   formErrors 
 }) => {
   const isLocked = entry.isLocked && !isEditing;
+  const basePath = import.meta.env.BASE_URL || '/';
 
   // Render a card select dropdown
   const renderCardSelect = (field, value, disabled, excludeCard = null) => {
@@ -81,14 +82,14 @@ const MatchEntry = ({
             <div className="flex ml-2">
               {entry.yourDeck.primary && getCardInfo(entry.yourDeck.primary)?.iconPath && (
                 <img 
-                  src={getCardInfo(entry.yourDeck.primary).iconPath.replace('./public', '')} 
+                  src={`${basePath}icons/${getCardInfo(entry.yourDeck.primary).iconPath.split('/').pop()}`}
                   alt="Primary Pokemon" 
                   className="w-6 h-6"
                 />
               )}
               {entry.yourDeck.secondary && getCardInfo(entry.yourDeck.secondary)?.iconPath && (
                 <img 
-                  src={getCardInfo(entry.yourDeck.secondary).iconPath.replace('./public', '')} 
+                  src={`${basePath}icons/${getCardInfo(entry.yourDeck.secondary).iconPath.split('/').pop()}`}
                   alt="Secondary Pokemon" 
                   className="w-6 h-6 ml-1"
                 />
@@ -140,14 +141,14 @@ const MatchEntry = ({
             <div className="flex ml-2">
               {entry.opponentDeck.primary && getCardInfo(entry.opponentDeck.primary)?.iconPath && (
                 <img 
-                  src={getCardInfo(entry.opponentDeck.primary).iconPath.replace('./public', '')} 
+                  src={`${basePath}icons/${getCardInfo(entry.opponentDeck.primary).iconPath.split('/').pop()}`}
                   alt="Primary Pokemon" 
                   className="w-6 h-6"
                 />
               )}
               {entry.opponentDeck.secondary && getCardInfo(entry.opponentDeck.secondary)?.iconPath && (
                 <img 
-                  src={getCardInfo(entry.opponentDeck.secondary).iconPath.replace('./public', '')} 
+                  src={`${basePath}icons/${getCardInfo(entry.opponentDeck.secondary).iconPath.split('/').pop()}`}
                   alt="Secondary Pokemon" 
                   className="w-6 h-6 ml-1"
                 />
