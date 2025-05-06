@@ -27,7 +27,7 @@ SCRIPT_DIR = pathlib.Path(__file__).parent.resolve()
 # Configuration
 CONFIG = {
     'info': False,
-    'OUTPUT_FILE': "./src/data/card_data.json",
+    'OUTPUT_FILE': os.path.join(SCRIPT_DIR, "..", "src/data/card_data.json"),
     'ICON_FOLDER': "./public/icons/",
     'ICON_WEBPATH': "./icons/",
     'LOG_FILE': os.path.join(SCRIPT_DIR, 'scraper.log'),
@@ -340,7 +340,7 @@ class CardScraper:
             # Get card type (optional)
             try:
                 type_text = driver.find_element(By.CLASS_NAME, "card-text-title").text
-                card_element = re.split(r'\s*-\s*', type_text)[1].strip()
+                card_element = re.split(r'\s-\s', type_text)[1].strip()
             except Exception as e:
                 logger.warning(f"Could not get card type for {card_name} at {url}: {str(e)}")
                 card_element = ""
@@ -352,7 +352,7 @@ class CardScraper:
                 if "Evolves from" in stage_text:
                     evolves_from = stage_text.split("Evolves from")[1].split()[0].strip()
                 card_type = stage_text.split(' - ')[0].strip() if '-' in stage_text else ""
-                card_subtype = re.split(r'\s*-\s*', stage_text)[1].strip()
+                card_subtype = re.split(r'\s-\s', stage_text)[1].strip()
             except Exception as e:
                 logger.warning(f"Could not get evolution info for {card_name} at {url}: {str(e)}")
                 card_type = ""

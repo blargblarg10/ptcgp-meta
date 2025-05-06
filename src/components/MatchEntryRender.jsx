@@ -9,7 +9,8 @@ const SearchableDropdown = ({
   optgroups = null, 
   disabled, 
   className, 
-  placeholder = "Select Card" 
+  placeholder = "Select Card",
+  matchHistory = [] 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,6 +24,46 @@ const SearchableDropdown = ({
       : options.find(option => option.key === value)) 
     : null;
     
+  // Process match history to get frequent cards
+  const getRecentCards = () => {
+    if (!matchHistory || matchHistory.length === 0) return [];
+    
+    // Get the 20 most recent matches
+    const recentMatches = [...matchHistory].slice(0, 20);
+    
+    // Count card frequencies
+    const cardCounts = {};
+    recentMatches.forEach(match => {
+      // Count your deck cards
+      if (match.yourDeck.primary) {
+        cardCounts[match.yourDeck.primary] = (cardCounts[match.yourDeck.primary] || 0) + 1;
+      }
+      if (match.yourDeck.secondary) {
+        cardCounts[match.yourDeck.secondary] = (cardCounts[match.yourDeck.secondary] || 0) + 1;
+      }
+      
+      // Count opponent deck cards
+      if (match.opponentDeck.primary) {
+        cardCounts[match.opponentDeck.primary] = (cardCounts[match.opponentDeck.primary] || 0) + 1;
+      }
+      if (match.opponentDeck.secondary) {
+        cardCounts[match.opponentDeck.secondary] = (cardCounts[match.opponentDeck.secondary] || 0) + 1;
+      }
+    });
+    
+    // Sort by frequency and get top 10
+    return Object.entries(cardCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([cardKey]) => {
+        const cardInfo = getCardInfo(cardKey);
+        return cardInfo;
+      });
+  };
+  
+  // Get recent cards from match history
+  const recentCards = getRecentCards();
+  
   // Handle outside click to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -92,41 +133,72 @@ const SearchableDropdown = ({
       
       {isOpen && !disabled && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-auto">
-          {totalFilteredOptions === 0 ? (
+          {totalFilteredOptions === 0 && recentCards.length === 0 ? (
             <div className="p-2 text-gray-500">No matches found</div>
-          ) : optgroups ? (
-            Object.entries(filteredOptions).map(([group, groupOptions]) => (
-              <div key={group}>
-                <div className="sticky top-0 p-1 bg-gray-100 font-semibold text-sm">{group || "Other"}</div>
-                {groupOptions.map(option => (
-                  <div
-                    key={option.key}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      onChange(option.key);
-                      setIsOpen(false);
-                      setSearchTerm('');
-                    }}
-                  >
-                    {option.displayName}
-                  </div>
-                ))}
-              </div>
-            ))
           ) : (
-            filteredOptions.map(option => (
-              <div
-                key={option.key}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => {
-                  onChange(option.key);
-                  setIsOpen(false);
-                  setSearchTerm('');
-                }}
-              >
-                {option.displayName}
-              </div>
-            ))
+            <>
+              {/* Recent Cards Section */}
+              {recentCards.length > 0 && searchTerm === '' && (
+                <div>
+                  <div className="sticky top-0 p-1 bg-blue-100 font-semibold text-sm">Recent</div>
+                  {recentCards.map(option => (
+                    <div
+                      key={option.key}
+                      className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                      onClick={() => {
+                        onChange(option.key);
+                        setIsOpen(false);
+                        setSearchTerm('');
+                      }}
+                    >
+                      {option.iconPath && (
+                        <img 
+                          src={`${import.meta.env.BASE_URL || '/'}icons/${option.iconPath.split('/').pop()}`}
+                          alt={option.displayName} 
+                          className="w-5 h-5 mr-2"
+                        />
+                      )}
+                      {option.displayName}
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* Regular Categories */}
+              {optgroups && totalFilteredOptions > 0 && Object.entries(filteredOptions).map(([group, groupOptions]) => (
+                <div key={group}>
+                  <div className="sticky top-0 p-1 bg-gray-100 font-semibold text-sm">{group || "Other"}</div>
+                  {groupOptions.map(option => (
+                    <div
+                      key={option.key}
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        onChange(option.key);
+                        setIsOpen(false);
+                        setSearchTerm('');
+                      }}
+                    >
+                      {option.displayName}
+                    </div>
+                  ))}
+                </div>
+              ))}
+              
+              {/* Regular Options (no groups) */}
+              {!optgroups && filteredOptions.length > 0 && filteredOptions.map(option => (
+                <div
+                  key={option.key}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    onChange(option.key);
+                    setIsOpen(false);
+                    setSearchTerm('');
+                  }}
+                >
+                  {option.displayName}
+                </div>
+              ))}
+            </>
           )}
         </div>
       )}
@@ -140,7 +212,8 @@ const MatchEntry = ({
   onEdit, 
   onRemove, 
   onFieldChange, 
-  formErrors 
+  formErrors,
+  matchHistory = [] 
 }) => {
   const isLocked = entry.isLocked && !isEditing;
   const basePath = import.meta.env.BASE_URL || '/';
@@ -167,6 +240,7 @@ const MatchEntry = ({
         }}
         disabled={disabled}
         optgroups={cardsByElement}
+        matchHistory={matchHistory}
         className={`block w-full h-10 ${
           disabled ? 'bg-gray-200 text-gray-500' : 'bg-white'
         } ${

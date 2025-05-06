@@ -311,6 +311,7 @@ const MatchResultTracker = () => {
                 onRemove={removeEntry}
                 onFieldChange={handleBatchEntryChange}
                 formErrors={formErrors}
+                matchHistory={matches}
               />
             ))}
             
@@ -335,6 +336,7 @@ const MatchResultTracker = () => {
                   onRemove={removeEntry}
                   onFieldChange={handleBatchEntryChange}
                   formErrors={formErrors}
+                  matchHistory={matches}
                 />
               ))}
 
