@@ -151,18 +151,21 @@ export const saveUserMatchData = async (userData, matchData) => {
   }
   
   try {
+    // Sort matches by timestamp from newest to oldest
+    const sortedMatchData = [...matchData].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
     // Calculate stats
     const stats = {
-      totalMatches: matchData.length,
-      wins: matchData.filter(game => game.result === "victory").length,
-      losses: matchData.filter(game => game.result === "defeat").length,
-      draws: matchData.filter(game => game.result === "draw").length
+      totalMatches: sortedMatchData.length,
+      wins: sortedMatchData.filter(game => game.result === "victory").length,
+      losses: sortedMatchData.filter(game => game.result === "defeat").length,
+      draws: sortedMatchData.filter(game => game.result === "draw").length
     };
     
     // Update the Firestore document with matches
     const userDocRef = doc(db, 'users', userData.user_id);
     await updateDoc(userDocRef, {
-      matches: matchData,
+      matches: sortedMatchData,
       stats: stats,
       lastUpdated: new Date().toISOString()
     });
@@ -172,7 +175,7 @@ export const saveUserMatchData = async (userData, matchData) => {
       try {
         const fileRef = ref(storage, userData.path_to_json);
         const updatedData = {
-          matches: matchData,
+          matches: sortedMatchData,
           decks: [],
           stats: stats,
           lastUpdated: new Date().toISOString()

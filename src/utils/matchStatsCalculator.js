@@ -202,8 +202,11 @@ export const calculateRollingDeckFrequencies = (matchData, windowSize = 20, minG
  * Prepares data for the line chart
  */
 export const prepareLineChartData = (filteredData, showAllDates) => {
+  // First sort the data by timestamp from oldest to newest for chart display
+  const sortedData = [...filteredData].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  
   let points = 0;
-  return filteredData.map((match, index) => {
+  return sortedData.map((match, index) => {
     // Calculate points based on result
     const matchPoints = match.result === "victory" ? 10 : 
                        match.result === "defeat" ? -7 : 0;

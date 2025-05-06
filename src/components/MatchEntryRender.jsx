@@ -378,7 +378,7 @@ const MatchEntry = ({
         {/* Show recorded timestamp first */}
         {entry.isLocked && (
           <div className="text-xs text-gray-500">
-            Recorded: {new Date(entry.timestamp).toLocaleDateString()}
+            Recorded: {new Date(entry.timestamp).toLocaleDateString()} {new Date(entry.timestamp).toLocaleTimeString()}
           </div>
         )}
         
