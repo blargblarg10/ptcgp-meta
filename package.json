@@ -39,6 +39,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.0.4",
     "dayjs": "^1.11.13",
+    "firebase": "^11.6.1",
     "react": "^19.0.0",
     "react-datepicker": "^8.3.0",
     "react-dom": "^19.0.0",

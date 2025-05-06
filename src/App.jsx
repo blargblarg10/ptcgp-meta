@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route, useLocation, Link } from 'react-router-dom';
 import SubmitData from './components/SubmitDataTab';
 import YourStats from './components/YourStatsTab';
 import MetaDataTab from './components/MetaDataTab';
+import Login from './components/Login';
+import UserProfile from './components/UserProfile';
 import { useFileSystem } from './utils/fileSystemUtils';
+import { useAuth } from './context/AuthContext';
 
 // Main App component
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { fileHandle, loadError, errorMessage, handleFileSelect } = useFileSystem();
+  const { currentUser } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  // Close login modal when user successfully logs in
+  useEffect(() => {
+    if (currentUser && showLoginModal) {
+      setShowLoginModal(false);
+    }
+  }, [currentUser, showLoginModal]);
 
   // Helper function to determine if a path is active
   const isActive = (path) => {
@@ -24,17 +36,30 @@ const App = () => {
         <div className="bg-gray-50 p-5 border-b border-gray-200">
           <div className="relative">
             <div className="absolute right-0 top-0 flex flex-col items-end">
-              <button
-                onClick={handleFileSelect}
-                className={`px-4 py-2 rounded-md border transition-colors ${
-                  loadError 
-                    ? 'border-red-500 text-red-500 hover:bg-red-50'
-                    : 'border-blue-500 text-blue-500 hover:bg-blue-50'
-                }`}
-                title={errorMessage}
-              >
-                {fileHandle ? 'Change Data File' : 'Select Data File'}
-              </button>
+              <div className="flex items-center gap-3">
+                {currentUser ? (
+                  <UserProfile />
+                ) : (
+                  <button
+                    onClick={() => setShowLoginModal(true)}
+                    className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                  >
+                    Sign In
+                  </button>
+                )}
+                
+                <button
+                  onClick={handleFileSelect}
+                  className={`px-4 py-2 rounded-md border transition-colors ${
+                    loadError 
+                      ? 'border-red-500 text-red-500 hover:bg-red-50'
+                      : 'border-blue-500 text-blue-500 hover:bg-blue-50'
+                  }`}
+                  title={errorMessage}
+                >
+                  {fileHandle ? 'Change Data File' : 'Select Data File'}
+                </button>
+              </div>
               {errorMessage && (
                 <span className="text-xs text-red-500 mt-1">{errorMessage}</span>
               )}
@@ -85,6 +110,25 @@ const App = () => {
           </Routes>
         </div>
       </div>
+      
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
+          <div className="w-full max-w-md pointer-events-auto">
+            <div className="relative shadow-lg">
+              <button 
+                className="absolute right-3 top-3 text-gray-500 hover:text-gray-800 z-10"
+                onClick={() => setShowLoginModal(false)}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <Login />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
