@@ -5,14 +5,12 @@ import YourStats from './components/YourStatsTab';
 import MetaDataTab from './components/MetaDataTab';
 import Login from './components/Login';
 import UserProfile from './components/UserProfile';
-import { useFileSystem } from './utils/fileSystemUtils';
 import { useAuth } from './context/AuthContext';
 
 // Main App component
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { fileHandle, loadError, errorMessage, handleFileSelect } = useFileSystem();
   const { currentUser } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -47,22 +45,7 @@ const App = () => {
                     Sign In
                   </button>
                 )}
-                
-                <button
-                  onClick={handleFileSelect}
-                  className={`px-4 py-2 rounded-md border transition-colors ${
-                    loadError 
-                      ? 'border-red-500 text-red-500 hover:bg-red-50'
-                      : 'border-blue-500 text-blue-500 hover:bg-blue-50'
-                  }`}
-                  title={errorMessage}
-                >
-                  {fileHandle ? 'Change Data File' : 'Select Data File'}
-                </button>
               </div>
-              {errorMessage && (
-                <span className="text-xs text-red-500 mt-1">{errorMessage}</span>
-              )}
             </div>
             <header className="py-8 text-center">
               <h1 className="text-3xl text-gray-800 font-bold mb-2">Pokemon Meta</h1>
@@ -104,8 +87,8 @@ const App = () => {
         
         <div className="p-5">
           <Routes>
-            <Route path="/" element={<SubmitData fileHandle={fileHandle} />} />
-            <Route path="/stats" element={<YourStats fileHandle={fileHandle} />} />
+            <Route path="/" element={<SubmitData />} />
+            <Route path="/stats" element={<YourStats />} />
             <Route path="/metadata" element={<MetaDataTab />} />
           </Routes>
         </div>

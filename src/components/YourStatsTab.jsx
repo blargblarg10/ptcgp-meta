@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { calculateStats, preparePieData, prepareLineChartData, calculateRollingDeckFrequencies, loadMatchData } from '../utils/matchStatsCalculator';
+import { calculateStats, preparePieData, prepareLineChartData, calculateRollingDeckFrequencies } from '../utils/matchStatsCalculator';
+import { useAuth } from '../context/AuthContext';
+import { loadUserMatchData } from '../utils/firebase';
 import DeckBarCharts from './DeckBarCharts';
 import { COLORS, OTHER_COLOR } from './DeckBarCharts';
 import DatePicker from "react-datepicker";
@@ -16,16 +18,18 @@ const getLatestSeason = () => {
   }, null);
 };
 
-const YourStats = ({ fileHandle }) => {
+const YourStats = () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   // State
+  const { currentUser, userData } = useAuth();
   const [fullData, setFullData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [dateRange, setDateRange] = useState([today, today]);
   const [filterType, setFilterType] = useState('all'); // 'all', 'range', or 'season'
   const [selectedSeason, setSelectedSeason] = useState(getLatestSeason()?.id);
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalGames: 0,
     wins: 0,
@@ -37,22 +41,35 @@ const YourStats = ({ fileHandle }) => {
     myDeckStats: {}
   });
 
-  // Load match data on component mount or when fileHandle changes
+  // Load match data on component mount or when userData changes
   useEffect(() => {
     const fetchData = async () => {
-      const data = await loadMatchData(fileHandle);
-      if (data) {
-        setFullData(data);
-        setFilteredData(data);
-      } else {
+      setLoading(true);
+      try {
+        if (userData) {
+          const data = await loadUserMatchData(userData);
+          if (data && data.length > 0) {
+            setFullData(data);
+            setFilteredData(data);
+          } else {
+            setFullData([]);
+            setFilteredData([]);
+          }
+        } else {
+          setFullData([]);
+          setFilteredData([]);
+        }
+      } catch (error) {
+        console.error('Error loading match data:', error);
         setFullData([]);
         setFilteredData([]);
+      } finally {
+        setLoading(false);
       }
     };
-    if (fileHandle) {
-      fetchData();
-    }
-  }, [fileHandle]);
+    
+    fetchData();
+  }, [userData]);
 
   // Filter data based on selected date range or season
   useEffect(() => {
@@ -148,6 +165,43 @@ const YourStats = ({ fileHandle }) => {
       return { ...season, hasDateError: true };
     }
   };
+
+  // If not logged in, prompt user to sign in
+  if (!currentUser) {
+    return (
+      <div className="max-w-[1400px] mx-auto p-4">
+        <div className="p-6 bg-blue-50 border border-blue-200 rounded-lg text-center">
+          <h2 className="text-xl font-semibold text-blue-800 mb-3">Sign in to View Your Stats</h2>
+          <p className="text-blue-600 mb-4">
+            Please sign in to view your match statistics. Your data is securely stored in your account.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // If loading, show spinner
+  if (loading) {
+    return (
+      <div className="flex justify-center my-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // If no data, show message
+  if (fullData.length === 0) {
+    return (
+      <div className="max-w-[1400px] mx-auto p-4">
+        <div className="p-6 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+          <h2 className="text-xl font-semibold text-yellow-800 mb-3">No Match Data</h2>
+          <p className="text-yellow-700 mb-4">
+            You haven't recorded any matches yet. Go to the "Submit Your Data" tab to start tracking your matches.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-6">

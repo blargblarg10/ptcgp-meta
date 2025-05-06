@@ -1,18 +1,37 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, signInWithGoogle, logOut, subscribeToAuthChanges } from '../utils/firebase';
+import { auth, signInWithGoogle, logOut, subscribeToAuthChanges, createOrGetUserDocument } from '../utils/firebase';
 
 // Create auth context
 const AuthContext = createContext(null);
 
+// Custom hook to use auth context
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
 // Auth context provider component
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Subscribe to auth state changes
-    const unsubscribe = subscribeToAuthChanges((user) => {
+    const unsubscribe = subscribeToAuthChanges(async (user) => {
       setCurrentUser(user);
+      
+      // If user is logged in, create or get their document
+      if (user) {
+        try {
+          const userDoc = await createOrGetUserDocument(user);
+          setUserData(userDoc);
+        } catch (error) {
+          console.error("Error setting up user document:", error);
+        }
+      } else {
+        setUserData(null);
+      }
+      
       setLoading(false);
     });
 
@@ -23,6 +42,7 @@ export const AuthProvider = ({ children }) => {
   // Auth context values
   const value = {
     currentUser,
+    userData,
     loading,
     signInWithGoogle,
     logOut
@@ -35,7 +55,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use auth context
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+// Also export as default for flexibility
+export default { AuthProvider, useAuth };

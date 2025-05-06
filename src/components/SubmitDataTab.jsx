@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MatchEntry from './MatchEntryRender';
-import { loadMatchData, saveMatchData } from '../utils/matchStatsCalculator';
+import { useAuth } from '../context/AuthContext';
+import { loadUserMatchData, saveUserMatchData } from '../utils/firebase';
 
 // Initial batch row state
 const initialBatchRow = {
@@ -28,13 +29,15 @@ const createBatchRow = (existingRow = null) => ({
   timestamp: new Date().toISOString()
 });
 
-const MatchResultTracker = ({ fileHandle }) => {
+const MatchResultTracker = () => {
   // State
+  const { currentUser, userData } = useAuth();
   const [matches, setMatches] = useState([]);
   const [batchEntries, setBatchEntries] = useState([createBatchRow()]);
   const [formErrors, setFormErrors] = useState({});
   const [editingId, setEditingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const matchesPerPage = 20;
 
   // Calculate pagination values
@@ -48,12 +51,13 @@ const MatchResultTracker = ({ fileHandle }) => {
     setCurrentPage(pageNumber);
   };
 
-  // Load match data on component mount or when fileHandle changes
+  // Load match data on component mount or when userData changes
   useEffect(() => {
     const loadMatches = async () => {
+      setLoading(true);
       try {
-        const data = await loadMatchData(fileHandle);
-        if (data) {
+        if (userData) {
+          const data = await loadUserMatchData(userData);
           // Sort matches by timestamp, newest first
           setMatches(data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
         } else {
@@ -62,20 +66,20 @@ const MatchResultTracker = ({ fileHandle }) => {
       } catch (error) {
         console.error('Error loading match data:', error);
         setMatches([]);
+      } finally {
+        setLoading(false);
       }
     };
     
-    if (fileHandle) {
-      loadMatches();
-    }
-  }, [fileHandle]);
+    loadMatches();
+  }, [userData]);
 
-  // Save match data to file
-  const saveMatchDataToFile = async (updatedMatches) => {
-    if (!fileHandle) return;
+  // Save match data to Firebase
+  const saveMatchDataToFirebase = async (updatedMatches) => {
+    if (!userData) return;
     
     try {
-      await saveMatchData(fileHandle, updatedMatches);
+      await saveUserMatchData(userData, updatedMatches);
     } catch (error) {
       console.error('Error saving match data:', error);
     }
@@ -93,7 +97,7 @@ const MatchResultTracker = ({ fileHandle }) => {
     if (id.startsWith('match-')) {
       const updatedMatches = matches.filter(match => match.id !== id);
       setMatches(updatedMatches);
-      await saveMatchDataToFile(updatedMatches);
+      await saveMatchDataToFirebase(updatedMatches);
       if (editingId === id) {
         setEditingId(null);
       }
@@ -129,7 +133,7 @@ const MatchResultTracker = ({ fileHandle }) => {
       return match;
     });
     setMatches(updatedMatches);
-    await saveMatchDataToFile(updatedMatches);
+    await saveMatchDataToFirebase(updatedMatches);
     setEditingId(null);
   };
 
@@ -256,86 +260,106 @@ const MatchResultTracker = ({ fileHandle }) => {
     // Add new matches to the beginning of the array to maintain newest-first order
     const updatedMatches = [...newMatches, ...matches];
     setMatches(updatedMatches);
-    await saveMatchDataToFile(updatedMatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
+    await saveMatchDataToFirebase(updatedMatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
     
     setBatchEntries([createBatchRow()]);
     setFormErrors({});
   };
 
+  // If not logged in, prompt user to sign in
+  if (!currentUser) {
+    return (
+      <div className="max-w-[1400px] mx-auto p-4">
+        <div className="p-6 bg-blue-50 border border-blue-200 rounded-lg text-center">
+          <h2 className="text-xl font-semibold text-blue-800 mb-3">Sign in to Track Match Results</h2>
+          <p className="text-blue-600 mb-4">
+            Please sign in to save and track your match results. Your data will be securely stored in your account.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[1400px] mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Match Result Tracker</h1>
       
-      <div>      
-        <div className="mb-8">
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={addBatchRow}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-            >
-              + Add Row
-            </button>
-          </div>
-          <div className="mb-4"></div>
-          
-          {batchEntries.map(entry => (
-            <MatchEntry
-              key={entry.id}
-              entry={entry}
-              isEditing={editingId === entry.id}
-              onEdit={toggleEditMode}
-              onRemove={removeEntry}
-              onFieldChange={handleBatchEntryChange}
-              formErrors={formErrors}
-            />
-          ))}
-          
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="mt-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Submit All
-          </button>
+      {loading ? (
+        <div className="flex justify-center my-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
         </div>
-        
-        {matches.length > 0 && (
-          <div>
-            <h1 className="text-2xl font-bold mb-6">Match History</h1>
-            {currentMatches.map(match => (
+      ) : (
+        <div>      
+          <div className="mb-8">
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={addBatchRow}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                + Add Row
+              </button>
+            </div>
+            <div className="mb-4"></div>
+            
+            {batchEntries.map(entry => (
               <MatchEntry
-                key={match.id}
-                entry={match}
-                isEditing={editingId === match.id}
+                key={entry.id}
+                entry={entry}
+                isEditing={editingId === entry.id}
                 onEdit={toggleEditMode}
                 onRemove={removeEntry}
                 onFieldChange={handleBatchEntryChange}
                 formErrors={formErrors}
               />
             ))}
-
-            {totalPages > 1 && (
-              <div className="flex justify-center mt-4 items-center gap-2">
-                <span className="text-gray-600">Page:</span>
-                <select
-                  value={currentPage}
-                  onChange={(e) => handlePageChange(Number(e.target.value))}
-                  className="px-3 pr-8 py-1 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-left appearance-none"
-                  style={{ textAlignLast: 'left', minWidth: '4rem' }}
-                >
-                  {[...Array(totalPages)].map((_, index) => (
-                    <option key={index + 1} value={index + 1} className="text-left">
-                      {index + 1}
-                    </option>
-                  ))}
-                </select>
-                <span className="text-gray-600">of {totalPages}</span>
-              </div>
-            )}
+            
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="mt-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Submit All
+            </button>
           </div>
-        )}
-      </div>
+          
+          {matches.length > 0 && (
+            <div>
+              <h1 className="text-2xl font-bold mb-6">Match History</h1>
+              {currentMatches.map(match => (
+                <MatchEntry
+                  key={match.id}
+                  entry={match}
+                  isEditing={editingId === match.id}
+                  onEdit={toggleEditMode}
+                  onRemove={removeEntry}
+                  onFieldChange={handleBatchEntryChange}
+                  formErrors={formErrors}
+                />
+              ))}
+
+              {totalPages > 1 && (
+                <div className="flex justify-center mt-4 items-center gap-2">
+                  <span className="text-gray-600">Page:</span>
+                  <select
+                    value={currentPage}
+                    onChange={(e) => handlePageChange(Number(e.target.value))}
+                    className="px-3 pr-8 py-1 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-left appearance-none"
+                    style={{ textAlignLast: 'left', minWidth: '4rem' }}
+                  >
+                    {[...Array(totalPages)].map((_, index) => (
+                      <option key={index + 1} value={index + 1} className="text-left">
+                        {index + 1}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="text-gray-600">of {totalPages}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

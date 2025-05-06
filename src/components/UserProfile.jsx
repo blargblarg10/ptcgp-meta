@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
 const UserProfile = () => {
-  const { currentUser, logOut } = useAuth();
+  const { currentUser, userData, logOut } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -28,6 +28,16 @@ const UserProfile = () => {
         <span className="text-sm font-medium text-gray-700 truncate max-w-[120px]">
           {currentUser.displayName || currentUser.email}
         </span>
+        {userData && (
+          <div className="flex flex-col">
+            <span className="text-xs text-gray-500 truncate max-w-[120px]">
+              ID: {userData.user_id?.substring(0, 8)}...
+            </span>
+            <span className="text-xs text-gray-500 truncate max-w-[120px]" title={userData.path_to_json || 'No JSON file'}>
+              {userData.path_to_json ? '📄 JSON Attached' : 'No JSON file'}
+            </span>
+          </div>
+        )}
       </div>
       <button
         onClick={handleLogout}
