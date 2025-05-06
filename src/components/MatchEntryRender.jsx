@@ -1,5 +1,138 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { AVAILABLE_CARDS, CARDS_BY_ELEMENT, getCardInfo } from '../utils/cardDataProcessor';
+
+// Updated SearchableDropdown component
+const SearchableDropdown = ({ 
+  value, 
+  onChange, 
+  options, 
+  optgroups = null, 
+  disabled, 
+  className, 
+  placeholder = "Select Card" 
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const dropdownRef = useRef(null);
+  const inputRef = useRef(null);
+  
+  // Selected option
+  const selectedOption = value ? 
+    (optgroups 
+      ? Object.values(optgroups).flat().find(option => option.key === value)
+      : options.find(option => option.key === value)) 
+    : null;
+    
+  // Handle outside click to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+        // Reset search term if we have a selected value
+        if (value) {
+          setSearchTerm('');
+        }
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [value]);
+  
+  // Filter options based on search term
+  const filteredOptions = optgroups 
+    ? Object.entries(optgroups).reduce((acc, [group, groupOptions]) => {
+        const filtered = groupOptions.filter(option => 
+          option.displayName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        if (filtered.length > 0) {
+          acc[group] = filtered;
+        }
+        return acc;
+      }, {})
+    : options.filter(option => 
+        option.displayName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      
+  // Count total filtered options
+  const totalFilteredOptions = optgroups
+    ? Object.values(filteredOptions).reduce((sum, group) => sum + group.length, 0)
+    : filteredOptions.length;
+
+  // Update display value when selected option changes
+  useEffect(() => {
+    if (!isOpen && selectedOption) {
+      setSearchTerm('');
+    }
+  }, [isOpen, selectedOption]);
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+    if (!isOpen) {
+      setIsOpen(true);
+    }
+  };
+  
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <input
+        ref={inputRef}
+        type="text"
+        className={`w-full px-3 py-2 border rounded ${className}`}
+        placeholder={placeholder}
+        value={isOpen ? searchTerm : selectedOption ? selectedOption.displayName : searchTerm}
+        onChange={handleInputChange}
+        onFocus={() => !disabled && setIsOpen(true)}
+        onClick={() => !disabled && setIsOpen(true)}
+        disabled={disabled}
+      />
+      
+      {isOpen && !disabled && (
+        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-auto">
+          {totalFilteredOptions === 0 ? (
+            <div className="p-2 text-gray-500">No matches found</div>
+          ) : optgroups ? (
+            Object.entries(filteredOptions).map(([group, groupOptions]) => (
+              <div key={group}>
+                <div className="sticky top-0 p-1 bg-gray-100 font-semibold text-sm">{group || "Other"}</div>
+                {groupOptions.map(option => (
+                  <div
+                    key={option.key}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      onChange(option.key);
+                      setIsOpen(false);
+                      setSearchTerm('');
+                    }}
+                  >
+                    {option.displayName}
+                  </div>
+                ))}
+              </div>
+            ))
+          ) : (
+            filteredOptions.map(option => (
+              <div
+                key={option.key}
+                className="p-2 hover:bg-gray-100 cursor-pointer"
+                onClick={() => {
+                  onChange(option.key);
+                  setIsOpen(false);
+                  setSearchTerm('');
+                }}
+              >
+                {option.displayName}
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const MatchEntry = ({ 
   entry, 
@@ -18,33 +151,28 @@ const MatchEntry = ({
       ? AVAILABLE_CARDS.filter(card => card.key !== excludeCard)
       : AVAILABLE_CARDS;
       
+    // Filter out excluded card from card groups too
+    const cardsByElement = excludeCard 
+      ? Object.entries(CARDS_BY_ELEMENT).reduce((acc, [element, cards]) => {
+          acc[element] = cards.filter(card => card.key !== excludeCard);
+          return acc;
+        }, {})
+      : CARDS_BY_ELEMENT;
+      
     return (
-      <select
+      <SearchableDropdown
         value={value || ""}
-        onChange={(e) => {
-          onFieldChange(entry.id, field, e.target.value);
+        onChange={(value) => {
+          onFieldChange(entry.id, field, value);
         }}
         disabled={disabled}
-        className={`block w-full h-10 rounded border ${
+        optgroups={cardsByElement}
+        className={`block w-full h-10 ${
           disabled ? 'bg-gray-200 text-gray-500' : 'bg-white'
         } ${
           formErrors?.[entry.id]?.[field] ? 'border-red-500' : 'border-gray-300'
         }`}
-      >
-        <option value="">Select Card</option>
-        {Object.entries(CARDS_BY_ELEMENT).map(([element, cards]) => (
-          <optgroup key={element} label={element || "Other"}>
-            {cards.map(card => (
-              <option 
-                key={card.key} 
-                value={card.key}
-              >
-                {card.displayName}
-              </option>
-            ))}
-          </optgroup>
-        ))}
-      </select>
+      />
     );
   };
   
