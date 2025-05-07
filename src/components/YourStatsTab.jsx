@@ -504,22 +504,21 @@ const YourStats = () => {
                   </div>
                   
                   <h4 className="font-semibold text-gray-800 text-sm mb-1">Matchups:</h4>
-                  <div className="max-h-40 overflow-y-auto pr-1 thin-scrollbar">
+                  <div>
                     <div className="space-y-1">
-                      {Object.keys(deckStat.matchups).map((opponent) => {
-                        const matchup = deckStat.matchups[opponent];
-                        return (
+                      {Object.entries(deckStat.matchups)
+                        .sort(([_, a], [__, b]) => b.total - a.total) // Sort by total games played
+                        .map(([opponent, matchup]) => (
                           <div key={opponent} className="flex justify-between items-center p-1 bg-gray-50 rounded shadow-sm border border-gray-100 text-xs">
-                            <div className="truncate max-w-28">
-                              <span className="font-medium text-gray-700">{opponent}:</span>
-                              <span className="ml-1 text-gray-600">{`${matchup.wins}-${matchup.losses}-${matchup.draws}`}</span>
+                            <div className="font-medium text-gray-700 truncate mr-1 flex-1">
+                              {opponent}
                             </div>
-                            <div className="font-semibold text-gray-800">
-                              {matchup.winRate}%
+                            <div className="font-semibold text-gray-800 whitespace-nowrap">
+                              {`${matchup.wins}-${matchup.losses}${matchup.draws > 0 ? `-${matchup.draws}` : ''}`}
+                              <span className="text-gray-600 ml-1">({matchup.winRate}%)</span>
                             </div>
                           </div>
-                        );
-                      })}
+                        ))}
                     </div>
                   </div>
                 </div>
