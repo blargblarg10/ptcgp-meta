@@ -251,19 +251,40 @@ const MatchResultTracker = () => {
       await saveEdit(editingId);
     }
 
+    // Prepare new matches data
     const newMatches = batchEntries.map(entry => ({
       ...entry,
       id: entry.id.startsWith('new-') ? `match-${Date.now()}-${Math.random().toString(36).substring(2, 9)}` : entry.id,
       isLocked: true
     }));
 
-    // Add new matches to the beginning of the array to maintain newest-first order
-    const updatedMatches = [...newMatches, ...matches];
-    setMatches(updatedMatches);
-    await saveMatchDataToFirebase(updatedMatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
-    
-    setBatchEntries([createBatchRow()]);
-    setFormErrors({});
+    try {
+      // Add loading cursor without hiding the UI
+      document.body.style.cursor = 'wait';
+      
+      // Create updated matches array but don't update state yet
+      const updatedMatches = [...newMatches, ...matches];
+      
+      // Sort matches by timestamp, newest first
+      const sortedMatches = updatedMatches.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      
+      // Save to Firebase first
+      await saveMatchDataToFirebase(sortedMatches);
+      
+      // Only update the match history after the save is successful
+      setMatches(sortedMatches);
+      
+      // Then reset the submission form
+      setBatchEntries([createBatchRow()]);
+      setFormErrors({});
+    } catch (error) {
+      console.error('Error saving match data:', error);
+      // Display an error message to the user
+      alert('Failed to save match data. Please try again.');
+    } finally {
+      // Reset cursor back to normal
+      document.body.style.cursor = 'default';
+    }
   };
 
   // If not logged in, prompt user to sign in
