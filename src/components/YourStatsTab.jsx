@@ -27,7 +27,7 @@ const YourStats = () => {
   const [fullData, setFullData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [dateRange, setDateRange] = useState([today, today]);
-  const [filterType, setFilterType] = useState('all'); // 'all', 'range', or 'season'
+  const [filterType, setFilterType] = useState('season'); // 'all', 'range', or 'season'
   const [selectedSeason, setSelectedSeason] = useState(getLatestSeason()?.id);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -160,7 +160,17 @@ const YourStats = () => {
         return { ...season, hasDateError: true };
       }
       
-      return season;
+      // Calculate days remaining in the season
+      const now = dayjs();
+      const daysRemaining = endDate.diff(now, 'day');
+      
+      return { 
+        ...season, 
+        startDateFormatted: startDate.format('MMM D, YYYY'),
+        endDateFormatted: endDate.format('MMM D, YYYY'),
+        daysRemaining: daysRemaining > 0 ? daysRemaining : 0,
+        hasTimeLeft: daysRemaining > 0
+      };
     } catch (error) {
       return { ...season, hasDateError: true };
     }
@@ -237,6 +247,17 @@ const YourStats = () => {
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
                 type="radio"
+                value="season"
+                checked={filterType === 'season'}
+                onChange={(e) => handleFilterTypeChange(e.target.value)}
+                className="h-4 w-4 text-[#2980ef] focus:ring-[#2980ef] border-gray-300"
+              />
+              <span className="text-gray-700 font-medium">Season Range</span>
+            </label>
+
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
                 value="all"
                 checked={filterType === 'all'}
                 onChange={(e) => handleFilterTypeChange(e.target.value)}
@@ -254,17 +275,6 @@ const YourStats = () => {
                 className="h-4 w-4 text-[#2980ef] focus:ring-[#2980ef] border-gray-300"
               />
               <span className="text-gray-700 font-medium">Date Range</span>
-            </label>
-            
-            <label className="flex items-center space-x-2 cursor-pointer">
-              <input
-                type="radio"
-                value="season"
-                checked={filterType === 'season'}
-                onChange={(e) => handleFilterTypeChange(e.target.value)}
-                className="h-4 w-4 text-[#2980ef] focus:ring-[#2980ef] border-gray-300"
-              />
-              <span className="text-gray-700 font-medium">Season Range</span>
             </label>
           </div>
           
@@ -321,7 +331,11 @@ const YourStats = () => {
               (getCurrentSeasonInfo() 
                 ? (getCurrentSeasonInfo().hasDateError 
                     ? "Error with Season Date Range" 
-                    : `Showing matches from ${getCurrentSeasonInfo().name}`)
+                    : `Showing matches from season ${getCurrentSeasonInfo().name} | ${getCurrentSeasonInfo().startDateFormatted} - ${getCurrentSeasonInfo().endDateFormatted}${
+                        getCurrentSeasonInfo().hasTimeLeft 
+                        ? ` | Days remaining: ${getCurrentSeasonInfo().daysRemaining}` 
+                        : ''
+                      }`)
                 : "Select a season")
             }
           </p>
