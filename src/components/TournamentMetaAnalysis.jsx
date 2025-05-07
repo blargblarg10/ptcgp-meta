@@ -31,12 +31,13 @@ const TournamentMetaAnalysis = ({
             return data.Matches && parseInt(data.Matches) > 0;
           })
           .map(([opponent, data]) => ({
-            opponent,
+            opponent: opponent.toLowerCase() === "other" ? "OTHER" : opponent,
             winRate: parseFloat(data["Win Rate"]),
             record: data.Score || null,
-            matches: parseInt(data.Matches) || 0
+            matches: parseInt(data.Matches) || 0,
+            isMirrorMatch: opponent === deck.name // Add flag for mirror matches
           }))
-          .sort((a, b) => b.winRate - a.winRate);
+          .sort((a, b) => b.matches - a.matches); // Sort by number of games in descending order
         
         setMatchups(matchupData);
       }
@@ -250,7 +251,7 @@ const TournamentMetaAnalysis = ({
                   {matchups.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.winRate >= 50 ? '#34C759' : '#FF3B30'}
+                      fill={entry.isMirrorMatch ? '#808080' : entry.winRate >= 50 ? '#34C759' : '#FF3B30'}
                     />
                   ))}
                 </Bar>
