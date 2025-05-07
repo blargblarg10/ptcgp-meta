@@ -3,8 +3,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine, Responsive
 import { calculateStats, preparePieData, prepareLineChartData, calculateRollingDeckFrequencies } from '../utils/matchStatsCalculator';
 import { useAuth } from '../context/AuthContext';
 import { loadUserMatchData } from '../utils/firebase';
-import DeckBarCharts from './DeckBarCharts';
-import { COLORS, OTHER_COLOR } from './DeckBarCharts';
+import PieCharts from './PieCharts';
+import { COLORS, OTHER_COLOR } from './PieCharts';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from 'dayjs';
@@ -328,41 +328,41 @@ const YourStats = () => {
         </div>
 
         {/* Overall Statistics */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
-            <div className="bg-[#2980ef] p-3">
-              <h2 className="text-2xl font-semibold text-white">Overall Statistics</h2>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
+          <div className="bg-[#2980ef] p-3">
+            <h2 className="text-2xl font-semibold text-white">Overall Statistics</h2>
+          </div>
+          
+          {/* Stats Row - Responsive grid for mobile */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 p-4">
+            <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
+              <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Total Games</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.totalGames}</p>
             </div>
             
-            {/* Stats Row */}
-          <div className="bg-white grid grid-cols-4 gap-4 p-4 mb-6">
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 text-center">
-              <p className="text-gray-600 font-medium mb-1">Total Games</p>
-              <p className="text-2xl font-bold text-gray-800">{stats.totalGames}</p>
-            </div>
-            
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 text-center">
-              <p className="text-gray-600 font-medium mb-1">Record</p>
-              <p className="text-2xl font-bold text-gray-800">
+            <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
+              <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Record</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-800">
                 {stats.wins}-{stats.losses}-{stats.draws}
               </p>
             </div>
             
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 text-center">
-              <p className="text-gray-600 font-medium mb-1">Win Rate</p>
-              <p className="text-2xl font-bold text-gray-800">{stats.winRate}%</p>
+            <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
+              <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Win Rate</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.winRate}%</p>
             </div>
             
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 text-center">
-              <p className="text-gray-600 font-medium mb-1">Total Points</p>
-              <p className="text-2xl font-bold text-gray-800">
+            <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
+              <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Total Points</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-800">
                 {pointsChartData[pointsChartData.length - 1]?.cumulativePoints || 0}
               </p>
             </div>
           </div>
 
           {/* Bar Charts Section */}
-          <div className="min-h-[700px] mb-6">
-            <DeckBarCharts 
+          <div className="mb-6">
+            <PieCharts 
               myDeckPieData={myDeckPieData}
               opponentDeckPieData={opponentDeckPieData}
               totalGames={stats.totalGames}
