@@ -276,9 +276,10 @@ const MatchEntry = ({
 
   return (
     <div className={rowClasses}>
-      <div className="grid grid-cols-24 gap-4">
+      {/* Responsive grid layout - Stack on mobile, grid on larger screens */}
+      <div className="md:grid md:grid-cols-24 md:gap-4 space-y-3 md:space-y-0">
         {/* Your Deck */}
-        <div className="col-span-8">
+        <div className="md:col-span-8 md:mb-0">
           <div className="flex items-center mb-1 h-6">
             <label className="text-xs font-medium text-gray-700">Your Deck</label>
             <div className="flex ml-2">
@@ -311,33 +312,75 @@ const MatchEntry = ({
           </div>
         </div>
         
-        {/* Turn Order */}
-        <div className="col-span-3">
-          <div className="h-6 flex items-center mb-1">
-            <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Turn Order">Turn Order</label>
+        {/* Turn Order and Result: side by side on mobile, separate columns on desktop */}
+        <div className="flex space-x-2 md:space-x-0 md:block md:col-span-3">
+          <div className="flex-1 md:w-full">
+            <div className="h-6 flex items-center mb-1">
+              <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Turn Order">Turn Order</label>
+            </div>
+            <button
+              type="button"
+              onClick={() => !isLocked && onFieldChange(entry.id, 'turnOrder', entry.turnOrder === 'first' ? 'second' : 'first')}
+              disabled={isLocked}
+              className={`h-10 w-full rounded-md flex items-center justify-center text-sm font-medium shadow-sm transition-colors duration-200 ${
+                isLocked ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'
+              } ${
+                entry.turnOrder === 'first' 
+                  ? 'bg-blue-500 text-white' 
+                  : entry.turnOrder === 'second'
+                  ? 'bg-red-500 text-white'
+                  : 'bg-gray-100 text-gray-700'
+              }`}
+            >
+              <span className="font-medium">
+                {entry.turnOrder === 'first' ? 'FIRST' : entry.turnOrder === 'second' ? 'SECOND' : 'TURN'}
+              </span>
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => !isLocked && onFieldChange(entry.id, 'turnOrder', entry.turnOrder === 'first' ? 'second' : 'first')}
-            disabled={isLocked}
-            className={`h-10 w-full rounded-md flex items-center justify-center text-sm font-medium shadow-sm transition-colors duration-200 ${
-              isLocked ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'
-            } ${
-              entry.turnOrder === 'first' 
-                ? 'bg-blue-500 text-white' 
-                : entry.turnOrder === 'second'
-                ? 'bg-red-500 text-white'
-                : 'bg-gray-100 text-gray-700'
-            }`}
-          >
-            <span className="font-medium">
-              {entry.turnOrder === 'first' ? 'FIRST' : entry.turnOrder === 'second' ? 'SECOND' : 'TURN'}
-            </span>
-          </button>
+
+          {/* Result on mobile (visible in smaller screens, hidden in md) */}
+          <div className="flex-1 md:hidden">
+            <div className="h-6 flex items-center mb-1">
+              <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Result">Result</label>
+            </div>
+            <button
+              type="button"
+              className={`h-10 w-full rounded-md flex items-center justify-center text-sm font-medium shadow-sm transition-colors duration-200 ${
+                entry.result === 'victory'
+                  ? 'bg-blue-500 text-white'
+                  : entry.result === 'defeat'
+                  ? 'bg-red-500 text-white'
+                  : entry.result === 'draw'
+                  ? 'bg-gray-500 text-white'
+                  : 'bg-gray-100 text-gray-700'
+              } ${isLocked ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'}`}
+              onClick={() => {
+                if (!isLocked) {
+                  const nextResult = entry.result === 'none' 
+                    ? 'victory' 
+                    : entry.result === 'victory' 
+                    ? 'defeat' 
+                    : entry.result === 'defeat'
+                    ? 'draw'
+                    : 'victory';
+                  onFieldChange(entry.id, 'result', nextResult);
+                }
+              }}
+              disabled={isLocked}
+            >
+              {entry.result === 'none' 
+                ? 'None' 
+                : entry.result === 'victory' 
+                ? 'Victory' 
+                : entry.result === 'defeat'
+                ? 'Defeat'
+                : 'Draw'}
+            </button>
+          </div>
         </div>
         
         {/* Opponent's Deck */}
-        <div className="col-span-8">
+        <div className="md:col-span-8">
           <div className="flex items-center mb-1 h-6">
             <label className="text-xs font-medium text-gray-700">Opponent's Deck</label>
             <div className="flex ml-2">
@@ -370,8 +413,8 @@ const MatchEntry = ({
           </div>
         </div>
         
-        {/* Result */}
-        <div className="col-span-3">
+        {/* Result - Only visible on md+ screens */}
+        <div className="hidden md:block md:col-span-3">
           <div className="h-6 flex items-center mb-1">
             <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Result">Result</label>
           </div>
@@ -411,31 +454,33 @@ const MatchEntry = ({
         </div>
         
         {/* Actions */}
-        <div className="col-span-2 flex items-end justify-end space-x-2">
-          {entry.isLocked && (
+        <div className="flex justify-end md:col-span-2 md:items-end">
+          <div className="flex space-x-2">
+            {entry.isLocked && (
+              <button
+                type="button"
+                onClick={() => onEdit(entry.id)}
+                className={`h-10 w-10 flex items-center justify-center text-lg rounded-md text-white shadow-sm hover:bg-opacity-90 transition-colors duration-200 ${
+                  isEditing ? 'bg-green-500' : 'bg-amber-500'
+                }`}
+              >
+                {isEditing ? '✓' : '✎'}
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => onEdit(entry.id)}
-              className={`h-10 w-10 flex items-center justify-center text-lg rounded-md text-white shadow-sm hover:bg-opacity-90 transition-colors duration-200 ${
-                isEditing ? 'bg-green-500' : 'bg-amber-500'
-              }`}
+              onClick={() => onRemove(entry.id)}
+              className="h-10 w-10 flex items-center justify-center text-xl rounded-md bg-red-500 text-white shadow-sm hover:bg-opacity-90 transition-colors duration-200"
+              title="Remove"
             >
-              {isEditing ? '✓' : '✎'}
+              ×
             </button>
-          )}
-          <button
-            type="button"
-            onClick={() => onRemove(entry.id)}
-            className="h-10 w-10 flex items-center justify-center text-xl rounded-md bg-red-500 text-white shadow-sm hover:bg-opacity-90 transition-colors duration-200"
-            title="Remove"
-          >
-            ×
-          </button>
+          </div>
         </div>
       </div>
       
       {/* Notes section and timestamp */}
-      <div className="mt-2">
+      <div className="mt-3">
         {/* Show notes input for editing or new (unlocked) entries */}
         {(!entry.isLocked || isEditing) && (
           <div className="mt-2">
