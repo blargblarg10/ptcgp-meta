@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Sector } from 'recharts';
 
 // Modern Pokémon-themed colors
@@ -16,6 +16,34 @@ const COLORS = [
 ];
 
 const OTHER_COLOR = '#8E8E93'; // Modern gray for "Other" category
+
+// Add a style tag to remove outlines from SVG elements
+const NoOutlineStyle = () => (
+  <style>
+    {`
+      .recharts-sector {
+        outline: none !important;
+      }
+      .recharts-pie-sector:focus {
+        outline: none !important;
+      }
+      .recharts-surface:focus {
+        outline: none !important;
+      }
+      .recharts-wrapper * {
+        outline: none !important;
+      }
+      svg *:focus, svg *:focus-visible {
+        outline: none !important;
+      }
+      /* Target all possible svg elements that might get the focus outline */
+      svg path, svg circle, svg ellipse, svg line, svg polyline, 
+      svg polygon, svg rect, svg text, svg g {
+        outline: none !important;
+      }
+    `}
+  </style>
+);
 
 // Active shape for animation when hovering over pie slices
 const renderActiveShape = (props) => {
@@ -73,15 +101,77 @@ const CustomLegend = ({ payload }) => {
 
 // New reusable single chart component
 const SingleDeckPieChart = ({ data, title, totalGames }) => {
-  const [activeIndex, setActiveIndex] = useState(null);
+  // Track both hover index and clicked index separately
+  const [hoverIndex, setHoverIndex] = useState(null);
+  const [clickedIndex, setClickedIndex] = useState(null);
+  
+  // The active index is either the hover index (if hovering) or the clicked index (if clicked)
+  const activeIndex = hoverIndex !== null ? hoverIndex : clickedIndex;
+
+  // Add an effect to apply the no-outline style to the document
+  useEffect(() => {
+    // Add a global style to the document head
+    const style = document.createElement('style');
+    style.textContent = `
+      .recharts-sector, .recharts-sector:focus, .recharts-sector:focus-visible,
+      .recharts-surface, .recharts-surface:focus, .recharts-surface:focus-visible,
+      svg *, svg *:focus, svg *:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Cleanup function to remove the style when component unmounts
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   const onPieEnter = (_, index) => {
-    setActiveIndex(index);
+    setHoverIndex(index);
   };
 
   const onPieLeave = () => {
-    setActiveIndex(null);
+    // When mouse leaves, clear the hover index
+    setHoverIndex(null);
   };
+
+  const onPieClick = (_, index) => {
+    // If clicking on the already clicked slice, unselect it
+    if (clickedIndex === index) {
+      setClickedIndex(null);
+    } else {
+      // Otherwise, select the new slice
+      setClickedIndex(index);
+    }
+  };
+
+  // Add click handler to document to clear activeIndex when clicking outside the chart
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      // Check if the click is outside the pie chart
+      const pieElements = document.querySelectorAll('.recharts-sector');
+      let clickedOnPie = false;
+      
+      for (const el of pieElements) {
+        if (el.contains(e.target) || el === e.target) {
+          clickedOnPie = true;
+          break;
+        }
+      }
+      
+      if (!clickedOnPie) {
+        setClickedIndex(null);
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+    
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
@@ -91,6 +181,7 @@ const SingleDeckPieChart = ({ data, title, totalGames }) => {
       <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
+            <NoOutlineStyle />
             <Pie
               activeIndex={activeIndex}
               activeShape={renderActiveShape}
@@ -102,13 +193,17 @@ const SingleDeckPieChart = ({ data, title, totalGames }) => {
               dataKey="value"
               onMouseEnter={onPieEnter}
               onMouseLeave={onPieLeave}
+              onClick={onPieClick}
               paddingAngle={2}
+              style={{ outline: 'none' }}
+              tabIndex={-1} // Prevent keyboard focus
             >
               {data.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
                   fill={entry.name === 'Other' ? OTHER_COLOR : COLORS[index % COLORS.length]}
                   className="drop-shadow-sm"
+                  style={{ outline: 'none', cursor: 'pointer' }}
                 />
               ))}
             </Pie>
