@@ -3,6 +3,41 @@ import MatchEntry from './MatchEntryRender';
 import { useAuth } from '../context/AuthContext';
 import { loadUserMatchData, saveUserMatchData } from '../utils/firebase';
 
+// Cookie utilities for saving and loading unsubmitted entries
+const COOKIE_NAME = 'ptcgp_unsubmitted_entries';
+
+// Save entries to cookies
+const saveEntriesToCookies = (entries) => {
+  try {
+    const serialized = JSON.stringify(entries);
+    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(serialized)};path=/;max-age=604800;SameSite=Strict`; // 7 days expiry
+  } catch (error) {
+    console.error('Error saving entries to cookies:', error);
+  }
+};
+
+// Load entries from cookies
+const loadEntriesFromCookies = () => {
+  try {
+    const cookieValue = document.cookie
+      .split('; ')
+      .find(row => row.startsWith(`${COOKIE_NAME}=`))
+      ?.split('=')[1];
+      
+    if (cookieValue) {
+      return JSON.parse(decodeURIComponent(cookieValue)) || [];
+    }
+  } catch (error) {
+    console.error('Error loading entries from cookies:', error);
+  }
+  return [];
+};
+
+// Clear cookie
+const clearEntriesCookie = () => {
+  document.cookie = `${COOKIE_NAME}=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT;SameSite=Strict`;
+};
+
 // Initial batch row state
 const initialBatchRow = {
   yourDeck: {
@@ -33,7 +68,7 @@ const MatchResultTracker = () => {
   // State
   const { currentUser, userData } = useAuth();
   const [matches, setMatches] = useState([]);
-  const [batchEntries, setBatchEntries] = useState([createBatchRow()]);
+  const [batchEntries, setBatchEntries] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [editingId, setEditingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,6 +80,29 @@ const MatchResultTracker = () => {
   const indexOfFirstMatch = indexOfLastMatch - matchesPerPage;
   const currentMatches = matches.slice(indexOfFirstMatch, indexOfLastMatch);
   const totalPages = Math.ceil(matches.length / matchesPerPage);
+
+  // Initialize batch entries from cookies or create a new one
+  useEffect(() => {
+    const savedEntries = loadEntriesFromCookies();
+    if (savedEntries && savedEntries.length > 0) {
+      // Ensure timestamps are up to date
+      const entriesWithUpdatedTimestamps = savedEntries.map(entry => ({
+        ...entry,
+        timestamp: entry.timestamp || new Date().toISOString()
+      }));
+      setBatchEntries(entriesWithUpdatedTimestamps);
+      console.log('Loaded unsubmitted entries from cookies:', entriesWithUpdatedTimestamps.length);
+    } else {
+      setBatchEntries([createBatchRow()]);
+    }
+  }, []);
+
+  // Save batch entries to cookies whenever they change
+  useEffect(() => {
+    if (batchEntries.length > 0) {
+      saveEntriesToCookies(batchEntries);
+    }
+  }, [batchEntries]);
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
@@ -108,7 +166,13 @@ const MatchResultTracker = () => {
       return;
     }
     
-    setBatchEntries(batchEntries.filter(entry => entry.id !== id));
+    const updatedEntries = batchEntries.filter(entry => entry.id !== id);
+    setBatchEntries(updatedEntries);
+    
+    // If removing the last entry, clear cookies
+    if (updatedEntries.length === 0) {
+      clearEntriesCookie();
+    }
   };
 
   // Toggle edit mode for a match entry
@@ -281,6 +345,10 @@ const MatchResultTracker = () => {
       
       // Then reset the submission form
       setBatchEntries([createBatchRow()]);
+      
+      // Clear the cookie after successful submission
+      clearEntriesCookie();
+      
       setFormErrors({});
     } catch (error) {
       console.error('Error saving match data:', error);
