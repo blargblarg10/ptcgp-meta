@@ -217,6 +217,8 @@ const MatchEntry = ({
 }) => {
   const isLocked = entry.isLocked && !isEditing;
   const basePath = import.meta.env.BASE_URL || '/';
+  // Add state for delete confirmation
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Render a card select dropdown
   const renderCardSelect = (field, value, disabled, excludeCard = null) => {
@@ -469,6 +471,26 @@ const MatchEntry = ({
         {/* Actions */}
         <div className="flex justify-end md:col-span-2 md:items-end">
           <div className="flex space-x-2">
+            {/* Delete button first (only appears in edit mode or for new entries) */}
+            {(isEditing || !entry.isLocked) && (
+              <button
+                type="button"
+                onClick={() => {
+                  // Only show confirmation for editing existing entries, not for new/unsubmitted ones
+                  if (isEditing && entry.isLocked) {
+                    setShowDeleteConfirm(true);
+                  } else {
+                    // Direct delete for unsubmitted entries
+                    onRemove(entry.id);
+                  }
+                }}
+                className="h-10 w-10 flex items-center justify-center text-xl rounded-md bg-red-500 text-white shadow-sm hover:bg-opacity-90 transition-colors duration-200"
+                title="Remove"
+              >
+                ×
+              </button>
+            )}
+            {/* Edit/Confirm button second */}
             {entry.isLocked && (
               <button
                 type="button"
@@ -480,14 +502,6 @@ const MatchEntry = ({
                 {isEditing ? '✓' : '✎'}
               </button>
             )}
-            <button
-              type="button"
-              onClick={() => onRemove(entry.id)}
-              className="h-10 w-10 flex items-center justify-center text-xl rounded-md bg-red-500 text-white shadow-sm hover:bg-opacity-90 transition-colors duration-200"
-              title="Remove"
-            >
-              ×
-            </button>
           </div>
         </div>
       </div>
@@ -514,6 +528,33 @@ const MatchEntry = ({
           </div>
         )}
       </div>
+      
+      {/* Delete confirmation popup - only appears for locked entries in edit mode */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
+          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+            <h3 className="text-lg font-medium mb-2">Confirm Deletion</h3>
+            <p className="mb-4">Are you sure you want to delete this match entry? This action cannot be undone.</p>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  onRemove(entry.id);
+                  setShowDeleteConfirm(false);
+                }}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
