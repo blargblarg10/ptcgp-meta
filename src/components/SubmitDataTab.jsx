@@ -13,7 +13,7 @@ const initialBatchRow = {
     primary: null,    // Will store just the key
     secondary: null   // Will store just the key
   },
-  turnOrder: "first",
+  turnOrder: null,
   result: "none",
   isLocked: false
 };
@@ -228,7 +228,12 @@ const MatchResultTracker = () => {
       }
       
       if (entry.result === 'none') {
-        entryErrors['result'] = 'Select a result';
+        entryErrors['result'] = 'Required';
+        isValid = false;
+      }
+      
+      if (entry.turnOrder === null) {
+        entryErrors['turnOrder'] = 'Required';
         isValid = false;
       }
       

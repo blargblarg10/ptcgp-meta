@@ -132,7 +132,7 @@ const SearchableDropdown = ({
       />
       
       {isOpen && !disabled && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-115 overflow-auto">
           {totalFilteredOptions === 0 && recentCards.length === 0 ? (
             <div className="p-2 text-gray-500">No matches found</div>
           ) : (
@@ -330,10 +330,12 @@ const MatchEntry = ({
                   : entry.turnOrder === 'second'
                   ? 'bg-red-500 text-white'
                   : 'bg-gray-100 text-gray-700'
+              } ${
+                formErrors?.[entry.id]?.turnOrder ? 'border-2 border-red-500' : ''
               }`}
             >
               <span className="font-medium">
-                {entry.turnOrder === 'first' ? 'FIRST' : entry.turnOrder === 'second' ? 'SECOND' : 'TURN'}
+                {entry.turnOrder === 'first' ? 'FIRST' : entry.turnOrder === 'second' ? 'SECOND' : 'None'}
               </span>
             </button>
           </div>
@@ -353,7 +355,9 @@ const MatchEntry = ({
                   : entry.result === 'draw'
                   ? 'bg-gray-500 text-white'
                   : 'bg-gray-100 text-gray-700'
-              } ${isLocked ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'}`}
+              } ${isLocked ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'} ${
+                formErrors?.[entry.id]?.result ? 'border-2 border-red-500' : ''
+              }`}
               onClick={() => {
                 if (!isLocked) {
                   const nextResult = entry.result === 'none' 
@@ -428,7 +432,9 @@ const MatchEntry = ({
                 : entry.result === 'draw'
                 ? 'bg-gray-500 text-white'
                 : 'bg-gray-100 text-gray-700'
-            } ${isLocked ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'}`}
+            } ${isLocked ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'} ${
+              formErrors?.[entry.id]?.result ? 'border-2 border-red-500' : ''
+            }`}
             onClick={() => {
               if (!isLocked) {
                 const nextResult = entry.result === 'none' 
