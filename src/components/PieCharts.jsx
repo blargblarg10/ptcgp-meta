@@ -99,8 +99,86 @@ const CustomLegend = ({ payload }) => {
   );
 };
 
+// View mode toggle component
+const ViewModeToggle = ({ viewMode, setViewMode }) => {
+  return (
+    <div className="flex items-center">
+      <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+        <button
+          className={`px-2 py-1 flex items-center ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'}`}
+          onClick={() => setViewMode('list')}
+          title="List View"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+          </svg>
+        </button>
+        <button
+          className={`px-2 py-1 flex items-center ${viewMode === 'pie' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'}`}
+          onClick={() => setViewMode('pie')}
+          title="Pie Chart View"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
+            <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// List view component
+const DeckListView = ({ data, title, viewMode, setViewMode }) => {
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+      <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-2">
+        <h3 className="text-xl font-semibold text-gray-800">
+          {title}
+        </h3>
+        <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
+      </div>
+      <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50 sticky top-0">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Deck
+              </th>
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Count
+              </th>
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {data.map((item, index) => (
+              <tr key={`${item.name}-${index}`} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <td className="px-6 py-2 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="h-3 w-3 rounded-full mr-2" style={{ backgroundColor: item.name === 'Other' ? OTHER_COLOR : COLORS[index % COLORS.length] }}></div>
+                    <div className="text-sm font-medium text-gray-900">{item.name}</div>
+                  </div>
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap text-right text-sm text-gray-500">
+                  {item.value}
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap text-right text-sm text-gray-500">
+                  {((item.value / item.total) * 100).toFixed(1)}%
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 // New reusable single chart component
-const SingleDeckPieChart = ({ data, title, totalGames }) => {
+const SingleDeckPieChart = ({ data, title, totalGames, viewMode, setViewMode }) => {
   // Track both hover index and clicked index separately
   const [hoverIndex, setHoverIndex] = useState(null);
   const [clickedIndex, setClickedIndex] = useState(null);
@@ -175,9 +253,12 @@ const SingleDeckPieChart = ({ data, title, totalGames }) => {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-      <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b border-gray-200 pb-2">
-        {title}
-      </h3>
+      <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-2">
+        <h3 className="text-xl font-semibold text-gray-800">
+          {title}
+        </h3>
+        <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
+      </div>
       <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -216,6 +297,10 @@ const SingleDeckPieChart = ({ data, title, totalGames }) => {
 };
 
 const PieCharts = ({ myDeckPieData, opponentDeckPieData, totalGames }) => {
+  // Independent view modes for each chart
+  const [myDeckViewMode, setMyDeckViewMode] = useState('list');
+  const [opponentDeckViewMode, setOpponentDeckViewMode] = useState('list');
+  
   const processData = (data) => {
     return data.map(item => ({
       ...item,
@@ -227,18 +312,58 @@ const PieCharts = ({ myDeckPieData, opponentDeckPieData, totalGames }) => {
   const myDeckData = processData(myDeckPieData);
   const opponentDeckData = processData(opponentDeckPieData);
 
+  // Render function for My Deck tile
+  const renderMyDeckTile = () => {
+    if (myDeckViewMode === 'pie') {
+      return (
+        <SingleDeckPieChart 
+          data={myDeckData} 
+          title="My Deck Distribution" 
+          totalGames={totalGames} 
+          viewMode={myDeckViewMode}
+          setViewMode={setMyDeckViewMode}
+        />
+      );
+    } else {
+      return (
+        <DeckListView 
+          data={myDeckData} 
+          title="My Deck Distribution" 
+          viewMode={myDeckViewMode}
+          setViewMode={setMyDeckViewMode}
+        />
+      );
+    }
+  };
+
+  // Render function for Opponent Deck tile
+  const renderOpponentDeckTile = () => {
+    if (opponentDeckViewMode === 'pie') {
+      return (
+        <SingleDeckPieChart 
+          data={opponentDeckData} 
+          title="Opponent Deck Distribution" 
+          totalGames={totalGames} 
+          viewMode={opponentDeckViewMode}
+          setViewMode={setOpponentDeckViewMode}
+        />
+      );
+    } else {
+      return (
+        <DeckListView 
+          data={opponentDeckData} 
+          title="Opponent Deck Distribution" 
+          viewMode={opponentDeckViewMode}
+          setViewMode={setOpponentDeckViewMode}
+        />
+      );
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-      <SingleDeckPieChart 
-        data={myDeckData} 
-        title="My Deck Distribution" 
-        totalGames={totalGames} 
-      />
-      <SingleDeckPieChart 
-        data={opponentDeckData} 
-        title="Opponent Deck Distribution" 
-        totalGames={totalGames} 
-      />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {renderMyDeckTile()}
+      {renderOpponentDeckTile()}
     </div>
   );
 };
