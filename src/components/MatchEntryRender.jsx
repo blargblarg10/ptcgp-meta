@@ -276,6 +276,13 @@ const MatchEntry = ({
 
   return (
     <div className={rowClasses}>
+      {/* Timestamp in top right corner when locked */}
+      {entry.isLocked && (
+        <div className="absolute top-2 right-3 text-xs text-gray-500">
+          Recorded: {new Date(entry.timestamp).toLocaleDateString()} {new Date(entry.timestamp).toLocaleTimeString()}
+        </div>
+      )}
+      
       {/* Responsive grid layout - Stack on mobile, grid on larger screens */}
       <div className="md:grid md:grid-cols-24 md:gap-4 space-y-3 md:space-y-0">
         {/* Your Deck */}
@@ -485,7 +492,7 @@ const MatchEntry = ({
         </div>
       </div>
       
-      {/* Notes section and timestamp */}
+      {/* Notes section */}
       <div className="mt-3">
         {/* Show notes input for editing or new (unlocked) entries */}
         {(!entry.isLocked || isEditing) && (
@@ -500,16 +507,9 @@ const MatchEntry = ({
           </div>
         )}
         
-        {/* Show recorded timestamp first */}
-        {entry.isLocked && (
-          <div className="text-xs text-gray-500">
-            Recorded: {new Date(entry.timestamp).toLocaleDateString()} {new Date(entry.timestamp).toLocaleTimeString()}
-          </div>
-        )}
-        
-        {/* Then show notes when locked and notes exist */}
+        {/* Show notes when locked and notes exist - slightly bigger and darker */}
         {isLocked && entry.notes && (
-          <div className="mt-1 text-xs text-gray-600">
+          <div className="mt-1 text-sm text-gray-700">
             Notes: {entry.notes}
           </div>
         )}
