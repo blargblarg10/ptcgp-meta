@@ -24,6 +24,14 @@ export const calculateStats = (matchData) => {
   const draws = matchData.filter(game => game.result === "draw").length;
   const winRate = totalGames > 0 ? (wins / totalGames * 100).toFixed(2) : 0;
 
+  // Calculate first vs second turn statistics
+  const firstTurnGames = matchData.filter(game => game.turnOrder === "first").length;
+  const secondTurnGames = matchData.filter(game => game.turnOrder === "second").length;
+  const firstTurnWins = matchData.filter(game => game.turnOrder === "first" && game.result === "victory").length;
+  const firstTurnLosses = matchData.filter(game => game.turnOrder === "first" && game.result === "defeat").length;
+  const secondTurnWins = matchData.filter(game => game.turnOrder === "second" && game.result === "victory").length;
+  const secondTurnLosses = matchData.filter(game => game.turnOrder === "second" && game.result === "defeat").length;
+
   // Calculate my deck color combinations
   const myDeckCounts = {};
   matchData.forEach(game => {
@@ -86,6 +94,12 @@ export const calculateStats = (matchData) => {
     losses,
     draws,
     winRate,
+    firstTurnGames,
+    secondTurnGames,
+    firstTurnWins,
+    firstTurnLosses,
+    secondTurnWins,
+    secondTurnLosses,
     myDeckCounts,
     opponentDeckCounts,
     myDeckStats

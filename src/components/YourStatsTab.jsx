@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { calculateStats, preparePieData, prepareLineChartData, calculateRollingDeckFrequencies } from '../utils/matchStatsCalculator';
 import { useAuth } from '../context/AuthContext';
@@ -40,6 +40,25 @@ const YourStats = () => {
     opponentDeckCounts: {},
     myDeckStats: {}
   });
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    
+    // Set initial value
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Clean up
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Load match data on component mount or when userData changes
   useEffect(() => {
@@ -348,7 +367,7 @@ const YourStats = () => {
           </div>
           
           {/* Stats Row - Responsive grid for mobile */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 p-4">
             <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
               <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Total Games</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.totalGames}</p>
@@ -357,7 +376,7 @@ const YourStats = () => {
             <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
               <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Record</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-800">
-                {stats.wins}-{stats.losses}-{stats.draws}
+                {stats.wins}-{stats.losses}-{stats.draws} <span className="text-base font-medium text-gray-600">({pointsChartData[pointsChartData.length - 1]?.cumulativePoints || 0} pts)</span>
               </p>
             </div>
             
@@ -365,12 +384,49 @@ const YourStats = () => {
               <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Win Rate</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.winRate}%</p>
             </div>
-            
-            <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
-              <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Total Points</p>
-              <p className="text-xl sm:text-2xl font-bold text-gray-800">
-                {pointsChartData[pointsChartData.length - 1]?.cumulativePoints || 0}
-              </p>
+          </div>
+
+          {/* Turn Order Performance */}
+          <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 mb-4 mx-4">
+            <p className="text-gray-600 font-medium mb-2 text-sm sm:text-base text-center">Turn Order Performance</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-none md:flex md:flex-row md:justify-between gap-3">
+              <div 
+                className="bg-blue-50 p-3 rounded-lg shadow-sm border border-blue-100 text-center w-full sm:w-full md:w-auto"
+                style={{
+                  width: isDesktop 
+                    ? `calc(100% * ${stats.firstTurnGames ? Math.max((stats.firstTurnGames / stats.totalGames), 0.1) : 0.5})` 
+                    : '100%',
+                  minWidth: '150px',
+                  transition: 'width 0.5s ease-in-out'
+                }}
+              >
+                <p className="text-blue-700 font-medium mb-1 text-sm">Going First</p>
+                <p className="text-lg font-bold text-blue-800">
+                  {stats.firstTurnGames ? 
+                    `${stats.firstTurnWins}-${stats.firstTurnLosses} (${((stats.firstTurnWins / stats.firstTurnGames) * 100).toFixed(1)}%)` : 
+                    'No data'}
+                </p>
+                <p className="text-xs text-blue-600 mt-1">{stats.firstTurnGames || 0} games ({stats.firstTurnGames ? ((stats.firstTurnGames / stats.totalGames) * 100).toFixed(1) : 0}%)</p>
+              </div>
+              
+              <div 
+                className="bg-red-50 p-3 rounded-lg shadow-sm border border-red-100 text-center w-full sm:w-full md:w-auto"
+                style={{
+                  width: isDesktop 
+                    ? `calc(100% * ${stats.secondTurnGames ? Math.max((stats.secondTurnGames / stats.totalGames), 0.1) : 0.5})` 
+                    : '100%',
+                  minWidth: '150px',
+                  transition: 'width 0.5s ease-in-out'
+                }}
+              >
+                <p className="text-red-700 font-medium mb-1 text-sm">Going Second</p>
+                <p className="text-lg font-bold text-red-800">
+                  {stats.secondTurnGames ? 
+                    `${stats.secondTurnWins}-${stats.secondTurnLosses} (${((stats.secondTurnWins / stats.secondTurnGames) * 100).toFixed(1)}%)` : 
+                    'No data'}
+                </p>
+                <p className="text-xs text-red-600 mt-1">{stats.secondTurnGames || 0} games ({stats.secondTurnGames ? ((stats.secondTurnGames / stats.totalGames) * 100).toFixed(1) : 0}%)</p>
+              </div>
             </div>
           </div>
 
