@@ -524,7 +524,7 @@ const MatchEntry = ({
         {/* Show notes when locked and notes exist - slightly bigger and darker */}
         {isLocked && entry.notes && (
           <div className="mt-1 text-sm text-gray-700">
-            Notes: {entry.notes}
+            {entry.notes}
           </div>
         )}
       </div>
