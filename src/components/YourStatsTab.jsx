@@ -376,13 +376,15 @@ const YourStats = () => {
             <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
               <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Record</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-800">
-                {stats.wins}-{stats.losses}-{stats.draws} <span className="text-base font-medium text-gray-600">({pointsChartData[pointsChartData.length - 1]?.cumulativePoints || 0} pts)</span>
+              {stats.wins}-{stats.losses}-{stats.draws} <span className="text-base font-medium text-gray-600">({stats.winRate}%)</span>
               </p>
             </div>
             
             <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
-              <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Win Rate</p>
-              <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.winRate}%</p>
+              <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Points</p>
+              <p className={`text-xl sm:text-2xl font-bold ${(pointsChartData[pointsChartData.length - 1]?.cumulativePoints || 0) < 0 ? 'text-red-600' : 'text-gray-800'}`}>
+              {pointsChartData[pointsChartData.length - 1]?.cumulativePoints || 0}
+              </p>
             </div>
           </div>
 
@@ -509,7 +511,7 @@ const YourStats = () => {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={pointsChartData}
-                margin={{ top: 15, right: 30, left: 30, bottom: 15 }}
+                margin={{ top: 15, right: 20, left: 0, bottom: 15 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis 
@@ -551,44 +553,46 @@ const YourStats = () => {
         
         {/* Individual Deck Statistics */}
         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Individual Deck Statistics</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex flex-wrap">
           {Object.keys(stats.myDeckStats).map((deckType) => {
             const deckStat = stats.myDeckStats[deckType];
             return (
-              <div key={deckType} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-                <div className="bg-gray-200 p-2">
-                  <h3 className="text-lg font-bold text-gray-800">{deckType}</h3>
-                </div>
-                <div className="p-3">
-                  <div className="grid grid-cols-2 gap-2 mb-3">
-                    <div className="text-center p-1 bg-gray-50 rounded shadow-sm border border-gray-100">
-                      <p className="text-gray-600 text-xs">Games / Record</p>
-                      <p className="text-base font-bold text-gray-800">
-                        {deckStat.total} <span className="text-xs font-normal">({deckStat.wins}-{deckStat.losses}-{deckStat.draws})</span>
-                      </p>
-                    </div>
-                    <div className="text-center p-1 bg-gray-50 rounded shadow-sm border border-gray-100">
-                      <p className="text-gray-600 text-xs">Win Rate</p>
-                      <p className="text-base font-bold text-gray-800">{deckStat.winRate}%</p>
-                    </div>
+              <div key={deckType} className="w-full md:w-1/2 lg:w-1/3 p-2" style={{ alignSelf: 'flex-start' }}>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="bg-gray-200 p-2">
+                    <h3 className="text-lg font-bold text-gray-800">{deckType}</h3>
                   </div>
-                  
-                  <h4 className="font-semibold text-gray-800 text-sm mb-1">Matchups:</h4>
-                  <div>
-                    <div className="space-y-1">
-                      {Object.entries(deckStat.matchups)
-                        .sort(([_, a], [__, b]) => b.total - a.total) // Sort by total games played
-                        .map(([opponent, matchup]) => (
-                          <div key={opponent} className="flex justify-between items-center p-1 bg-gray-50 rounded shadow-sm border border-gray-100 text-xs">
-                            <div className="font-medium text-gray-700 truncate mr-1 flex-1">
-                              {opponent}
+                  <div className="p-3">
+                    <div className="grid grid-cols-2 gap-2 mb-3">
+                      <div className="text-center p-1 bg-gray-50 rounded shadow-sm border border-gray-100">
+                        <p className="text-gray-600 text-xs">Games / Record</p>
+                        <p className="text-base font-bold text-gray-800">
+                          {deckStat.total} <span className="text-xs font-normal">({deckStat.wins}-{deckStat.losses}-{deckStat.draws})</span>
+                        </p>
+                      </div>
+                      <div className="text-center p-1 bg-gray-50 rounded shadow-sm border border-gray-100">
+                        <p className="text-gray-600 text-xs">Win Rate</p>
+                        <p className="text-base font-bold text-gray-800">{deckStat.winRate}%</p>
+                      </div>
+                    </div>
+                    
+                    <h4 className="font-semibold text-gray-800 text-sm mb-1">Matchups:</h4>
+                    <div>
+                      <div className="space-y-1">
+                        {Object.entries(deckStat.matchups)
+                          .sort(([_, a], [__, b]) => b.total - a.total) // Sort by total games played
+                          .map(([opponent, matchup]) => (
+                            <div key={opponent} className="flex justify-between items-center p-1 bg-gray-50 rounded shadow-sm border border-gray-100 text-xs">
+                              <div className="font-medium text-gray-700 truncate mr-1 flex-1">
+                                {opponent}
+                              </div>
+                              <div className="font-semibold text-gray-800 whitespace-nowrap">
+                                {`${matchup.wins}-${matchup.losses}${matchup.draws > 0 ? `-${matchup.draws}` : ''}`}
+                                <span className="text-gray-600 ml-1">({matchup.winRate}%)</span>
+                              </div>
                             </div>
-                            <div className="font-semibold text-gray-800 whitespace-nowrap">
-                              {`${matchup.wins}-${matchup.losses}${matchup.draws > 0 ? `-${matchup.draws}` : ''}`}
-                              <span className="text-gray-600 ml-1">({matchup.winRate}%)</span>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                      </div>
                     </div>
                   </div>
                 </div>
