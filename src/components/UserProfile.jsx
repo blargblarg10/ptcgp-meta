@@ -1,13 +1,23 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { loadUserMatchData, saveUserMatchData } from '../utils/firebase';
-import { jsonToCsv, csvToJson, validateJsonStructure, downloadFile } from '../utils/dataFormatConverter';
+import { 
+  jsonToCsv, 
+  csvToJson, 
+  validateJsonStructure, 
+  downloadFile,
+  analyzeCSV,
+  processCSV
+} from '../utils/dataFormatConverter';
 
 const UserProfile = () => {
   const { currentUser, userData, logOut } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
+  const [uploadWarnings, setUploadWarnings] = useState([]);
+  const [uploadStats, setUploadStats] = useState(null);
+  const [showUploadInfo, setShowUploadInfo] = useState(false);
   const fileInputRef = useRef(null);
   
   const toggleDropdown = () => {
@@ -28,9 +38,22 @@ const UserProfile = () => {
       setShowDropdown(false);
       const matchData = await loadUserMatchData(userData);
       if (matchData && matchData.length > 0) {
+        // Add notes header information at the top of the file
+        const notesHeader = 
+          "# PTCGP Meta Match Data\n" +
+          `# Downloaded on: ${new Date().toLocaleString()}\n` +
+          `# User: ${currentUser.displayName || currentUser.email}\n` +
+          `# Total Records: ${matchData.length}\n` +
+          "# Format: CSV with headers\n" +
+          "# Notes: This file contains your match history data. You can edit and re-upload it.\n" +
+          "#        - The 'notes' column can be used for your personal match notes\n" +
+          "#        - All dates should be in ISO format (YYYY-MM-DDTHH:MM:SS.mmmZ)\n" +
+          "#        - Do not modify the ID column values\n\n";
+          
         const csvContent = jsonToCsv(matchData);
+        const fileContent = notesHeader + csvContent;
         const fileName = `ptcgp_match_data_${new Date().toISOString().split('T')[0]}.csv`;
-        downloadFile(csvContent, fileName, 'text/csv');
+        downloadFile(fileContent, fileName, 'text/csv');
       } else {
         alert('No match data available to download');
       }
@@ -51,26 +74,59 @@ const UserProfile = () => {
 
     setUploading(true);
     setUploadError(null);
+    setUploadWarnings([]);
+    setUploadStats(null);
+    setShowUploadInfo(false);
     
     try {
       const fileContent = await readFileAsText(file);
-      const { data, errors } = csvToJson(fileContent);
       
-      if (errors && errors.length > 0) {
-        setUploadError(`CSV format error: ${errors[0]}`);
-        return;
+      // Use the consolidated processCSV function to handle all validation in one call
+      const processedResult = processCSV(fileContent);
+      
+      // Set stats for display
+      setUploadStats(processedResult.stats);
+      
+      // Set warnings array
+      if (processedResult.warnings && processedResult.warnings.length > 0) {
+        setUploadWarnings(processedResult.warnings);
       }
       
-      const validation = validateJsonStructure(data);
-      if (!validation.valid) {
-        setUploadError(`Data validation error: ${validation.errors[0]}`);
-        return;
+      // Check for critical errors
+      if (!processedResult.valid || (processedResult.errors && processedResult.errors.length > 0)) {
+        // Only show critical errors (missing required fields like timestamp, result, etc.)
+        const criticalErrors = processedResult.errors.filter(error => 
+          !error.includes('automatically') && 
+          !error.includes('Missing ID field') && 
+          !error.includes('Missing isLocked field') &&
+          !error.includes('Missing notes field')
+        );
+        
+        if (criticalErrors.length > 0) {
+          setUploadError(`Data validation error: ${criticalErrors[0]}`);
+          if (criticalErrors.length > 1) {
+            setUploadWarnings(prevWarnings => [
+              ...prevWarnings,
+              ...criticalErrors.slice(1, 5),
+              criticalErrors.length > 5 ? `And ${criticalErrors.length - 5} more errors...` : null
+            ].filter(Boolean));
+          }
+          setShowUploadInfo(true);
+          return;
+        }
       }
+      
+      // Always show the info dialog for user awareness
+      setShowUploadInfo(true);
+      
+      // Use the processed data with added fields
+      const finalData = processedResult.data;
       
       // Confirm before replacing all data
-      if (window.confirm('This will replace all your existing match data. Are you sure you want to continue?')) {
-        await saveUserMatchData(userData, data);
+      if (window.confirm(`This will replace all your existing match data with ${finalData.length} records. Are you sure you want to continue?`)) {
+        await saveUserMatchData(userData, finalData);
         alert('Match data successfully uploaded and saved');
+        setShowUploadInfo(false);
       }
     } catch (error) {
       console.error('Error uploading CSV:', error);
@@ -179,10 +235,26 @@ const UserProfile = () => {
       />
       
       {uploadError && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(107, 114, 128, 0.25)' }}>
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
             <h3 className="text-lg font-medium text-red-600 mb-2">Upload Error</h3>
-            <p className="text-gray-600 mb-4">{uploadError}</p>
+            <div className="text-gray-600 mb-4">
+              <p className="mb-2">{uploadError.split(' - ')[0]}</p>
+              {uploadError.includes(' - Field:') && (
+                <div className="mt-2 bg-red-50 p-3 rounded border border-red-200">
+                  <p className="font-medium text-red-700 text-sm">Error Details:</p>
+                  <div className="mt-1 grid grid-cols-3 gap-1 text-sm">
+                    <div className="font-medium">Field:</div>
+                    <div className="col-span-2">{uploadError.split('Field: ')[1]?.split(',')[0]}</div>
+                    
+                    <div className="font-medium">Value:</div>
+                    <div className="col-span-2 font-mono text-red-800 break-all">
+                      {uploadError.split('Value: ')[1]}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
             <button
               onClick={() => setUploadError(null)}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -194,8 +266,69 @@ const UserProfile = () => {
       )}
       
       {uploading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(107, 114, 128, 0.25)' }}>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      )}
+
+      {showUploadInfo && (
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(107, 114, 128, 0.25)' }}>
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+            <h3 className="text-lg font-medium text-blue-600 mb-2">CSV Upload Information</h3>
+            
+            {uploadStats && (
+              <div className="mb-4 bg-gray-50 p-3 rounded border border-gray-200">
+                <h4 className="font-medium text-gray-700 mb-1">File Statistics:</h4>
+                <ul className="text-sm text-gray-600">
+                  <li>Total records: {uploadStats.rowCount}</li>
+                  {uploadStats.headerCount && <li>Columns: {uploadStats.headerCount}</li>}
+                  {uploadStats.missingHeadersCount > 0 && (
+                    <li className="text-yellow-600">Missing headers: {uploadStats.missingHeadersCount}</li>
+                  )}
+                  {uploadStats.unexpectedHeadersCount > 0 && (
+                    <li className="text-yellow-600">Extra headers: {uploadStats.unexpectedHeadersCount}</li>
+                  )}
+                </ul>
+              </div>
+            )}
+            
+            {uploadWarnings.length > 0 && (
+              <div className="mb-4">
+                <h4 className="font-medium text-yellow-600 mb-1">Warnings:</h4>
+                <ul className="text-sm text-gray-600 max-h-60 overflow-y-auto bg-yellow-50 p-3 rounded border border-yellow-200">
+                  {uploadWarnings.map((warning, index) => (
+                    <li key={index} className="mb-2 pb-2 border-b border-yellow-100 last:border-b-0">
+                      {warning.includes(' - Field:') ? (
+                        <div>
+                          <p className="font-medium">{warning.split(' - ')[0]}</p>
+                          <div className="mt-1 ml-2 grid grid-cols-3 gap-1 text-sm">
+                            <div className="font-medium">Field:</div>
+                            <div className="col-span-2">{warning.split('Field: ')[1]?.split(',')[0]}</div>
+                            
+                            <div className="font-medium">Value:</div>
+                            <div className="col-span-2 font-mono text-yellow-800 break-all">
+                              {warning.split('Value: ')[1]}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        warning
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            <div className="flex justify-end mt-2">
+              <button
+                onClick={() => setShowUploadInfo(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
