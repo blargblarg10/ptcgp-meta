@@ -54,25 +54,46 @@ const initialBatchRow = {
 };
 
 // Helper function to create a new batch row
-const createBatchRow = (existingRow = null) => ({
-  ...initialBatchRow,
-  id: `new-${Date.now()}`,
-  yourDeck: existingRow ? { ...existingRow.yourDeck } : { ...initialBatchRow.yourDeck },
-  opponentDeck: existingRow ? { ...existingRow.opponentDeck } : { ...initialBatchRow.opponentDeck },
-  result: 'none',
-  isLocked: false,
-  timestamp: new Date().toISOString()
-});
+const createBatchRow = (existingRow = null, matchHistory = []) => {
+  // Priority order:
+  // 1. Use existingRow's yourDeck if available
+  // 2. Otherwise use most recent match from history
+  // 3. Default to initialBatchRow if nothing else is available
+  let yourDeck = { ...initialBatchRow.yourDeck };
+  
+  if (existingRow) {
+    // Priority 1: Use existing row if provided
+    yourDeck = { ...existingRow.yourDeck };
+  } else if (matchHistory && matchHistory.length > 0) {
+    // Priority 2: Find the most recent match with yourDeck data
+    const recentMatch = matchHistory.find(match => match.yourDeck && match.yourDeck.primary);
+    if (recentMatch) {
+      yourDeck = { ...recentMatch.yourDeck };
+    }
+  }
+  // Priority 3: Default to null (already set in yourDeck initialization)
+  
+  return {
+    ...initialBatchRow,
+    id: `new-${Date.now()}`,
+    yourDeck,
+    opponentDeck: { ...initialBatchRow.opponentDeck },
+    result: 'none',
+    isLocked: false,
+    timestamp: new Date().toISOString()
+  };
+};
 
 const MatchResultTracker = () => {
   // State
   const { currentUser, userData } = useAuth();
   const [matches, setMatches] = useState([]);
-  const [batchEntries, setBatchEntries] = useState([]);
+  const [batchEntries, setBatchEntries] = useState([]); 
   const [formErrors, setFormErrors] = useState({});
   const [editingId, setEditingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [matchesLoaded, setMatchesLoaded] = useState(false);
   const matchesPerPage = 20;
 
   // Calculate pagination values
@@ -81,21 +102,35 @@ const MatchResultTracker = () => {
   const currentMatches = matches.slice(indexOfFirstMatch, indexOfLastMatch);
   const totalPages = Math.ceil(matches.length / matchesPerPage);
 
-  // Initialize batch entries from cookies or create a new one
+  // Initialize batch entries after matches have loaded
   useEffect(() => {
-    const savedEntries = loadEntriesFromCookies();
-    if (savedEntries && savedEntries.length > 0) {
-      // Ensure timestamps are up to date
-      const entriesWithUpdatedTimestamps = savedEntries.map(entry => ({
-        ...entry,
-        timestamp: entry.timestamp || new Date().toISOString()
-      }));
-      setBatchEntries(entriesWithUpdatedTimestamps);
-      console.log('Loaded unsubmitted entries from cookies:', entriesWithUpdatedTimestamps.length);
-    } else {
-      setBatchEntries([createBatchRow()]);
-    }
-  }, []);
+    // Only initialize when matches have finished loading
+    if (!matchesLoaded) return;
+    
+    const initializeEntries = async () => {
+      try {
+        // First check for saved entries in cookies
+        const savedEntries = loadEntriesFromCookies();
+        if (savedEntries && savedEntries.length > 0) {
+          // Ensure timestamps are up to date
+          const entriesWithUpdatedTimestamps = savedEntries.map(entry => ({
+            ...entry,
+            timestamp: entry.timestamp || new Date().toISOString()
+          }));
+          setBatchEntries(entriesWithUpdatedTimestamps);
+          console.log('Loaded unsubmitted entries from cookies:', entriesWithUpdatedTimestamps.length);
+        } else {
+          // If no saved entries, create a new one using match history if available
+          setBatchEntries([createBatchRow(null, matches)]);
+        }
+      } catch (error) {
+        console.error('Error initializing batch entries:', error);
+        setBatchEntries([createBatchRow()]);
+      }
+    };
+    
+    initializeEntries();
+  }, [matchesLoaded, matches]);
 
   // Save batch entries to cookies whenever they change
   useEffect(() => {
@@ -117,13 +152,19 @@ const MatchResultTracker = () => {
         if (userData) {
           const data = await loadUserMatchData(userData);
           // Sort matches by timestamp, newest first
-          setMatches(data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
+          const sortedData = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          setMatches(sortedData);
+          
+          // After matches are loaded, check if we need to initialize batch entries
+          setMatchesLoaded(true);
         } else {
           setMatches([]);
+          setMatchesLoaded(true);
         }
       } catch (error) {
         console.error('Error loading match data:', error);
         setMatches([]);
+        setMatchesLoaded(true);
       } finally {
         setLoading(false);
       }
@@ -146,7 +187,7 @@ const MatchResultTracker = () => {
   // Add a new batch row
   const addBatchRow = () => {
     const firstRow = batchEntries[0];
-    const newRow = createBatchRow(firstRow);
+    const newRow = createBatchRow(firstRow, matches);
     setBatchEntries([newRow, ...batchEntries]);
   };
 
