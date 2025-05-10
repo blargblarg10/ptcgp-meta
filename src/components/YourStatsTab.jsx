@@ -367,7 +367,7 @@ const YourStats = () => {
           </div>
           
           {/* Stats Row - Responsive grid for mobile */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 p-4">
+          <div className={`grid grid-cols-1 sm:grid-cols-2 ${stats.avgTurn ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-2 sm:gap-3 md:gap-4 p-4`}>
             <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
               <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Total Games</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.totalGames}</p>
