@@ -489,6 +489,19 @@ const MatchResultTracker = () => {
 
               {totalPages > 1 && (
                 <div className="flex justify-center mt-4 items-center gap-2">
+                  {/* Left Arrow - Only show if not on first page */}
+                  {currentPage > 1 && (
+                    <button 
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
+                      aria-label="Previous page"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                  )}
+                  
                   <span className="text-gray-600">Page:</span>
                   <select
                     value={currentPage}
@@ -503,6 +516,19 @@ const MatchResultTracker = () => {
                     ))}
                   </select>
                   <span className="text-gray-600">of {totalPages}</span>
+                  
+                  {/* Right Arrow - Only show if not on last page */}
+                  {currentPage < totalPages && (
+                    <button 
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
+                      aria-label="Next page"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  )}
                 </div>
               )}
             </div>
