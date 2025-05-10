@@ -233,8 +233,7 @@ const YourStats = () => {
   }
 
   return (
-    <div className="min-h-screen p-6">
-      <style>
+    <div className="min-h-screen p-6">      <style>
         {`
           @media (min-width: 640px) {
             .thin-scrollbar::-webkit-scrollbar {
@@ -253,6 +252,21 @@ const YourStats = () => {
             
             .thin-scrollbar::-webkit-scrollbar-thumb:hover {
               background: #313131;
+            }
+              /* Hide scrollbar when not hovering */
+            .thin-scrollbar {
+              scrollbar-width: thin;
+            }
+            
+            .thin-scrollbar::-webkit-scrollbar {
+              width: 4px;
+            }
+            
+            /* Make sure scrollbar is actually visible */
+            .thin-scrollbar:hover::-webkit-scrollbar,
+            .thin-scrollbar:focus::-webkit-scrollbar,
+            .thin-scrollbar:active::-webkit-scrollbar {
+              display: block;
             }
           }
         `}
@@ -566,12 +580,11 @@ const YourStats = () => {
           {Object.keys(stats.myDeckStats).map((deckType) => {
             const deckStat = stats.myDeckStats[deckType];
             return (
-              <div key={deckType} className="w-full md:w-1/2 lg:w-1/3 p-2" style={{ alignSelf: 'flex-start' }}>
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+              <div key={deckType} className="w-full md:w-1/2 lg:w-1/3 p-2" style={{ alignSelf: 'flex-start' }}>                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden h-[350px] flex flex-col">
                   <div className="bg-gray-200 p-2">
                     <h3 className="text-lg font-bold text-gray-800">{deckType}</h3>
                   </div>
-                  <div className="p-3">
+                  <div className="p-3 flex-1 flex flex-col">
                     <div className="grid grid-cols-2 gap-2 mb-3">
                       <div className="text-center p-1 bg-gray-50 rounded shadow-sm border border-gray-100">
                         <p className="text-gray-600 text-xs">Games / Record</p>
@@ -584,9 +597,8 @@ const YourStats = () => {
                         <p className="text-base font-bold text-gray-800">{deckStat.winRate}%</p>
                       </div>
                     </div>
-                    
-                    <h4 className="font-semibold text-gray-800 text-sm mb-1">Matchups:</h4>
-                    <div>
+                      <h4 className="font-semibold text-gray-800 text-sm mb-1">Matchups:</h4>
+                    <div className="overflow-y-auto max-h-[180px] thin-scrollbar pr-2 mt-1">
                       <div className="space-y-1">
                         {Object.entries(deckStat.matchups)
                           .sort(([_, a], [__, b]) => b.total - a.total) // Sort by total games played
