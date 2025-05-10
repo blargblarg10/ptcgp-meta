@@ -24,6 +24,12 @@ export const calculateStats = (matchData) => {
   const draws = matchData.filter(game => game.result === "draw").length;
   const winRate = totalGames > 0 ? (wins / totalGames * 100).toFixed(2) : 0;
 
+  // Calculate average turn
+  const gamesWithTurnData = matchData.filter(game => game.turn !== null && game.turn !== undefined);
+  const avgTurn = gamesWithTurnData.length > 0 
+    ? (gamesWithTurnData.reduce((sum, game) => sum + game.turn, 0) / gamesWithTurnData.length).toFixed(1) 
+    : null;
+
   // Calculate first vs second turn statistics
   const firstTurnGames = matchData.filter(game => game.turnOrder === "first").length;
   const secondTurnGames = matchData.filter(game => game.turnOrder === "second").length;
@@ -94,6 +100,7 @@ export const calculateStats = (matchData) => {
     losses,
     draws,
     winRate,
+    avgTurn,
     firstTurnGames,
     secondTurnGames,
     firstTurnWins,

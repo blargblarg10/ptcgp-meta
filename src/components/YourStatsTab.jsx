@@ -367,7 +367,7 @@ const YourStats = () => {
           </div>
           
           {/* Stats Row - Responsive grid for mobile */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 p-4">
             <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
               <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Total Games</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.totalGames}</p>
@@ -379,6 +379,15 @@ const YourStats = () => {
               {stats.wins}-{stats.losses}-{stats.draws} <span className="text-base font-medium text-gray-600">({stats.winRate}%)</span>
               </p>
             </div>
+            
+            {stats.avgTurn && (
+              <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
+                <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Avg. Turn</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-800">
+                  {stats.avgTurn}
+                </p>
+              </div>
+            )}
             
             <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
               <p className="text-gray-600 font-medium mb-1 text-sm sm:text-base">Points</p>

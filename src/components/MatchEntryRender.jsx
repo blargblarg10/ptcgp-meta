@@ -133,6 +133,20 @@ const SearchableDropdown = ({
       
       {isOpen && !disabled && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-115 overflow-auto">
+          {/* None option - Always at the top */}
+          <div className="sticky top-0 p-1 bg-gray-100 font-semibold text-sm text-gray-700">
+            <div 
+              className="p-2 hover:bg-gray-200 cursor-pointer"
+              onClick={() => {
+                onChange(null);
+                setIsOpen(false);
+                setSearchTerm('');
+              }}
+            >
+              {placeholder}
+            </div>
+          </div>
+
           {totalFilteredOptions === 0 && recentCards.length === 0 ? (
             <div className="p-2 text-gray-500">No matches found</div>
           ) : (
@@ -220,19 +234,41 @@ const MatchEntry = ({
   // Add state for delete confirmation
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  // Render a turn select dropdown
+  const renderTurnSelect = (field, value, disabled) => {
+    return (
+      <select
+        value={value || ""}
+        onChange={(e) => {
+          const turnValue = e.target.value === "" ? null : parseInt(e.target.value, 10);
+          onFieldChange(entry.id, field, turnValue);
+        }}
+        disabled={disabled}
+        className={`block w-full h-10 px-1 text-center ${
+          disabled ? 'bg-gray-200 text-gray-500' : 'bg-white'
+        } border-gray-300 rounded-md appearance-none`}
+        style={{ 
+          WebkitAppearance: 'none',
+          MozAppearance: 'none',
+          appearance: 'none',
+          backgroundImage: 'none'
+        }}
+      >
+        <option value="">-</option>
+        {Array.from({ length: 30 }, (_, i) => i + 1).map((num) => (
+          <option key={num} value={num}>{num}</option>
+        ))}
+      </select>
+    );
+  };
+
   // Render a card select dropdown
   const renderCardSelect = (field, value, disabled, excludeCard = null) => {
-    const availableCards = excludeCard 
-      ? AVAILABLE_CARDS.filter(card => card.key !== excludeCard)
-      : AVAILABLE_CARDS;
+    // Remove the filtering by excludeCard to allow selection of the same card
+    const availableCards = AVAILABLE_CARDS;
       
-    // Filter out excluded card from card groups too
-    const cardsByElement = excludeCard 
-      ? Object.entries(CARDS_BY_ELEMENT).reduce((acc, [element, cards]) => {
-          acc[element] = cards.filter(card => card.key !== excludeCard);
-          return acc;
-        }, {})
-      : CARDS_BY_ELEMENT;
+    // Don't filter out cards from card groups
+    const cardsByElement = CARDS_BY_ELEMENT;
       
     return (
       <SearchableDropdown
@@ -287,9 +323,9 @@ const MatchEntry = ({
       )}
       
       {/* Responsive grid layout - Stack on mobile, grid on larger screens */}
-      <div className="md:grid md:grid-cols-24 md:gap-4 space-y-3 md:space-y-0">
+      <div className="md:grid md:grid-cols-24 md:gap-2 space-y-3 md:space-y-0">
         {/* Your Deck */}
-        <div className="md:col-span-8 md:mb-0">
+        <div className="md:col-span-9 md:mb-0">
           <div className="flex items-center mb-1 h-6">
             <label className="text-xs font-medium text-gray-700">Your Deck</label>
             <div className="flex ml-2">
@@ -318,13 +354,16 @@ const MatchEntry = ({
             </div>
             <div className="flex-1">
               {renderCardSelect('yourDeck.secondary', entry.yourDeck.secondary, isLocked, entry.yourDeck.primary)}
+              {formErrors?.[entry.id]?.['yourDeck.secondary'] && (
+                <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.secondary']}</div>
+              )}
             </div>
           </div>
         </div>
         
-        {/* Turn Order and Result: side by side on mobile, separate columns on desktop */}
-        <div className="flex space-x-2 md:space-x-0 md:block md:col-span-3">
-          <div className="flex-1 md:w-full">
+        {/* Turn Order, Turn, and Result: side by side on mobile */}
+        <div className="flex space-x-2 md:space-x-0 md:block md:col-span-2">
+          <div className="flex-[0.425] md:w-full">
             <div className="h-6 flex items-center mb-1">
               <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Turn Order">Turn Order</label>
             </div>
@@ -332,7 +371,7 @@ const MatchEntry = ({
               type="button"
               onClick={() => !isLocked && onFieldChange(entry.id, 'turnOrder', entry.turnOrder === 'first' ? 'second' : 'first')}
               disabled={isLocked}
-              className={`h-10 w-full rounded-md flex items-center justify-center text-sm font-medium shadow-sm transition-colors duration-200 ${
+              className={`h-10 w-full rounded-md flex items-center justify-center text-xs font-medium shadow-sm transition-colors duration-200 ${
                 isLocked ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'
               } ${
                 entry.turnOrder === 'first' 
@@ -350,14 +389,14 @@ const MatchEntry = ({
             </button>
           </div>
 
-          {/* Result on mobile (visible in smaller screens, hidden in md) */}
-          <div className="flex-1 md:hidden">
+          {/* Result on mobile (hidden in md+) */}
+          <div className="flex-[0.425] md:hidden">
             <div className="h-6 flex items-center mb-1">
               <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Result">Result</label>
             </div>
             <button
               type="button"
-              className={`h-10 w-full rounded-md flex items-center justify-center text-sm font-medium shadow-sm transition-colors duration-200 ${
+              className={`h-10 w-full rounded-md flex items-center justify-center text-xs font-medium shadow-sm transition-colors duration-200 ${
                 entry.result === 'victory'
                   ? 'bg-blue-500 text-white'
                   : entry.result === 'defeat'
@@ -391,10 +430,18 @@ const MatchEntry = ({
                 : 'Draw'}
             </button>
           </div>
+          
+          {/* Turn field on mobile (hidden in md+) */}
+          <div className="flex-[0.15] md:hidden">
+            <div className="h-6 flex items-center mb-1">
+              <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Turn">Turn</label>
+            </div>
+            {renderTurnSelect('turn', entry.turn, isLocked)}
+          </div>
         </div>
         
         {/* Opponent's Deck */}
-        <div className="md:col-span-8">
+        <div className="md:col-span-9">
           <div className="flex items-center mb-1 h-6">
             <label className="text-xs font-medium text-gray-700">Opponent's Deck</label>
             <div className="flex ml-2">
@@ -423,18 +470,29 @@ const MatchEntry = ({
             </div>
             <div className="flex-1">
               {renderCardSelect('opponentDeck.secondary', entry.opponentDeck.secondary, isLocked, entry.opponentDeck.primary)}
+              {formErrors?.[entry.id]?.['opponentDeck.secondary'] && (
+                <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.secondary']}</div>
+              )}
             </div>
           </div>
         </div>
         
+        {/* Turn field - Only visible on md+ screens */}
+        <div className="hidden md:block md:col-span-1">
+          <div className="h-6 flex items-center mb-1">
+            <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Turn">Turn</label>
+          </div>
+          {renderTurnSelect('turn', entry.turn, isLocked)}
+        </div>
+        
         {/* Result - Only visible on md+ screens */}
-        <div className="hidden md:block md:col-span-3">
+        <div className="hidden md:block md:col-span-2">
           <div className="h-6 flex items-center mb-1">
             <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Result">Result</label>
           </div>
           <button
             type="button"
-            className={`h-10 w-full rounded-md flex items-center justify-center text-sm font-medium shadow-sm transition-colors duration-200 ${
+            className={`h-10 w-full rounded-md flex items-center justify-center text-xs font-medium shadow-sm transition-colors duration-200 ${
               entry.result === 'victory'
                 ? 'bg-blue-500 text-white'
                 : entry.result === 'defeat'
@@ -470,8 +528,8 @@ const MatchEntry = ({
         </div>
         
         {/* Actions */}
-        <div className="flex justify-end md:col-span-2 md:items-end">
-          <div className="flex space-x-2">
+        <div className="flex justify-end md:col-span-1 md:items-end">
+          <div className="flex space-x-1">
             {/* Delete button first (only appears in edit mode or for new entries) */}
             {(isEditing || !entry.isLocked) && (
               <button

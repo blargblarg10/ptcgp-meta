@@ -332,6 +332,20 @@ const MatchResultTracker = () => {
         isValid = false;
       }
       
+      // Check if primary and secondary are the same for your deck
+      if (entry.yourDeck.primary && entry.yourDeck.secondary && 
+          entry.yourDeck.primary === entry.yourDeck.secondary) {
+        entryErrors['yourDeck.secondary'] = 'Cannot be the same as primary';
+        isValid = false;
+      }
+      
+      // Check if primary and secondary are the same for opponent's deck
+      if (entry.opponentDeck.primary && entry.opponentDeck.secondary && 
+          entry.opponentDeck.primary === entry.opponentDeck.secondary) {
+        entryErrors['opponentDeck.secondary'] = 'Cannot be the same as primary';
+        isValid = false;
+      }
+      
       if (entry.result === 'none') {
         entryErrors['result'] = 'Required';
         isValid = false;
