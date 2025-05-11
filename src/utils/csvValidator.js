@@ -355,8 +355,17 @@ export const analyzeCsvFile = (csvContent) => {
     };
   }
 
+  // Filter out blank lines and comment lines that start with #
+  const filteredContent = csvContent
+    .split(/\r?\n/)
+    .filter(line => {
+      const trimmedLine = line.trim();
+      return trimmedLine !== '' && !trimmedLine.startsWith('#');
+    })
+    .join('\n');
+
   // Basic structure validation
-  const rows = csvContent.split(/\r?\n/);
+  const rows = filteredContent.split(/\r?\n/);
   if (rows.length < 2) {
     return {
       valid: false,
