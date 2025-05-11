@@ -269,9 +269,8 @@ const validateMatchRecord = (record, rowNum) => {
         errors.push(createDetailedError('yourDeck.primary', record.yourDeck.primary, 'Card does not exist in card database'));
       }
     }
-    
-    // Check yourDeck.secondary if it exists
-    if (record.yourDeck.secondary) {
+      // Check yourDeck.secondary if it exists and is not null
+    if (record.opponentDeck.secondary !== "null" && record.opponentDeck.secondary) {
       // Validate yourDeck.secondary is a valid card key in card_data
       const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
       if (!availableCardKeys.includes(record.yourDeck.secondary)) {
@@ -293,9 +292,8 @@ const validateMatchRecord = (record, rowNum) => {
         errors.push(createDetailedError('opponentDeck.primary', record.opponentDeck.primary, 'Card does not exist in card database'));
       }
     }
-    
-    // Check opponentDeck.secondary if it exists
-    if (record.opponentDeck.secondary) {
+      // Check opponentDeck.secondary if it exists and is not null
+    if (record.opponentDeck.secondary !== "null" && record.opponentDeck.secondary) {
       // Validate opponentDeck.secondary is a valid card key in card_data
       const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
       if (!availableCardKeys.includes(record.opponentDeck.secondary)) {
