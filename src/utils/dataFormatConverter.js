@@ -27,7 +27,6 @@ export const jsonToCsv = (jsonData) => {
   if (!Array.isArray(jsonData) || jsonData.length === 0) {
     return '';
   }
-
   // Create CSV header row
   const csvRows = [EXPECTED_HEADERS.join(',')];
 
@@ -37,15 +36,22 @@ export const jsonToCsv = (jsonData) => {
       if (header.includes('.')) {
         // Handle nested properties
         const [parent, child] = header.split('.');
-        return item[parent] && item[parent][child] !== undefined 
-          ? `"${item[parent][child]}"` 
-          : '""';
+        const value = item[parent] && item[parent][child];
+        
+        // Handle different data types for nested properties
+        if (value === null || value === undefined || value === "null") {
+          return '""';
+        } else if (typeof value === 'boolean') {
+          return value.toString();
+        } else {
+          return `"${value.toString().replace(/"/g, '""')}"`;
+        }
       } else {
         // Handle normal properties
         const value = item[header];
         
         // Handle different data types
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || value === "null") {
           return '""';
         } else if (typeof value === 'boolean') {
           return value.toString();
@@ -123,22 +129,26 @@ export const csvToJson = (csvData) => {
     
     headers.forEach((header, index) => {
       const value = values[index].trim();
-      
-      if (header.includes('.')) {
+        if (header.includes('.')) {
         // Handle nested properties
         const [parent, child] = header.split('.');
         if (!item[parent]) {
           item[parent] = {};
         }
-        item[parent][child] = value === "" ? null : value;
+        // Fix for handling "null" string values
+        if (value === "null" || value === "") {
+          item[parent][child] = null;
+        } else {
+          item[parent][child] = value === "" ? null : value;
+        }
       } else {
         // Parse values according to expected types
         if (header === 'isLocked') {
           item[header] = value.toLowerCase() === 'true';
         } else if (header === 'turnOrder') {
-          item[header] = value === "" ? null : value;
+          item[header] = value === "" || value === "null" ? null : value;
         } else {
-          item[header] = value === "" ? null : value;
+          item[header] = value === "" || value === "null" ? null : value;
         }
       }
     });
