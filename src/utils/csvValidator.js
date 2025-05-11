@@ -118,11 +118,22 @@ export const preprocessAndValidateCsvData = (jsonData) => {
       processedRecord.isLocked = true;
       warnings.push(`Row ${index + 1}: Missing isLocked field - automatically set to true`);
     }
-    
-    // Add notes if missing
+      // Add notes if missing
     if (processedRecord.notes === undefined) {
       processedRecord.notes = "";
       warnings.push(`Row ${index + 1}: Missing notes field - automatically added as empty`);
+    }
+    
+    // Add points if missing
+    if (processedRecord.points === undefined) {
+      processedRecord.points = 0;
+      warnings.push(`Row ${index + 1}: Missing points field - automatically set to 0`);
+    }
+    
+    // Add auto if missing
+    if (processedRecord.auto === undefined) {
+      processedRecord.auto = true;
+      warnings.push(`Row ${index + 1}: Missing auto field - automatically set to true`);
     }
     
     // Make sure yourDeck and opponentDeck objects exist

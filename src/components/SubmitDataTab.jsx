@@ -50,25 +50,31 @@ const initialBatchRow = {
   },
   turnOrder: null,
   result: "none",
-  isLocked: false
+  isLocked: false,
+  points: 0,          // Default points to 0
+  auto: true          // Default auto to true
 };
 
 // Helper function to create a new batch row
-const createBatchRow = (existingRow = null, matchHistory = []) => {
-  // Priority order:
+const createBatchRow = (existingRow = null, matchHistory = []) => {  // Priority order:
   // 1. Use existingRow's yourDeck if available
   // 2. Otherwise use most recent match from history
   // 3. Default to initialBatchRow if nothing else is available
   let yourDeck = { ...initialBatchRow.yourDeck };
+  let points = initialBatchRow.points;
+  let auto = initialBatchRow.auto;
   
   if (existingRow) {
     // Priority 1: Use existing row if provided
     yourDeck = { ...existingRow.yourDeck };
+    points = existingRow.points !== undefined ? existingRow.points : initialBatchRow.points;
+    auto = existingRow.auto !== undefined ? existingRow.auto : initialBatchRow.auto;
   } else if (matchHistory && matchHistory.length > 0) {
     // Priority 2: Find the most recent match with yourDeck data
     const recentMatch = matchHistory.find(match => match.yourDeck && match.yourDeck.primary);
     if (recentMatch) {
       yourDeck = { ...recentMatch.yourDeck };
+      // Don't copy points and auto from match history
     }
   }
   // Priority 3: Default to null (already set in yourDeck initialization)
@@ -80,7 +86,9 @@ const createBatchRow = (existingRow = null, matchHistory = []) => {
     opponentDeck: { ...initialBatchRow.opponentDeck },
     result: 'none',
     isLocked: false,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    points,
+    auto
   };
 };
 

@@ -15,7 +15,9 @@ export const EXPECTED_HEADERS = [
   'turnOrder',
   'result',
   'isLocked',
-  'notes'
+  'notes',
+  'points',
+  'auto'
 ];
 
 /**
@@ -229,10 +231,9 @@ export const validateJsonStructure = (jsonData) => {
     if (!item.opponentDeck || typeof item.opponentDeck !== 'object') {
       errors.push(`Row ${index + 1}: Missing or invalid 'opponentDeck' object`);
     }
-    
-    // Check for extra fields that aren't in the expected schema
+      // Check for extra fields that aren't in the expected schema
     Object.keys(item).forEach(key => {
-      if (!['id', 'timestamp', 'yourDeck', 'opponentDeck', 'turnOrder', 'result', 'isLocked', 'notes'].includes(key)) {
+      if (!['id', 'timestamp', 'yourDeck', 'opponentDeck', 'turnOrder', 'result', 'isLocked', 'notes', 'points', 'auto'].includes(key)) {
         errors.push(`Row ${index + 1}: Unexpected field '${key}'`);
       }
     });
