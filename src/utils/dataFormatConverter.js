@@ -195,7 +195,7 @@ function parseCSVRow(row) {
     if (char === '"') {
       if (i + 1 < row.length && row[i + 1] === '"') {
         // Handle escaped quotes - "" becomes " inside a quoted string
-        currentValue += '"';
+        currentValue += '';
         i++;
       } else {
         // Toggle quote mode
