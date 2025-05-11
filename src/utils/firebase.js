@@ -138,10 +138,38 @@ export const loadUserMatchData = async (userData) => {
     
     return [];
   } catch (error) {
-    console.error("Error loading user match data:", error);
-    return [];
+    console.error("Error loading user match data:", error);    return [];
   }
 };
+
+
+// START OF STUPID NULL FIXING FUNCTION
+/**
+ * Recursively converts string "null" values to JavaScript null
+ * @param {Object|Array} data - Data to process
+ * @returns {Object|Array} Processed data with string "null" replaced with null
+ */
+const convertStringNullToNull = (data) => {
+  if (data === null || data === undefined) return data;
+  
+  if (data === "null") return null;
+  
+  if (typeof data !== 'object') return data;
+  
+  if (Array.isArray(data)) {
+    return data.map(item => convertStringNullToNull(item));
+  }
+  
+  const result = {};
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      result[key] = convertStringNullToNull(data[key]);
+    }
+  }
+  return result;
+};
+
+// END OF STUPID NULL FIXING FUNCTION
 
 // Also store user match data in Firestore instead of Storage
 export const saveUserMatchData = async (userData, matchData) => {
@@ -151,8 +179,11 @@ export const saveUserMatchData = async (userData, matchData) => {
   }
   
   try {
+    // Convert string "null" values to actual null
+    const processedMatchData = convertStringNullToNull(matchData);
+    
     // Sort matches by timestamp from newest to oldest
-    const sortedMatchData = [...matchData].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    const sortedMatchData = [...processedMatchData].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     
     // Calculate stats
     const stats = {

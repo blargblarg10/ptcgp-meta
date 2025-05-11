@@ -29,7 +29,6 @@ export const jsonToCsv = (jsonData) => {
   if (!Array.isArray(jsonData) || jsonData.length === 0) {
     return '';
   }
-
   // Create CSV header row
   const csvRows = [EXPECTED_HEADERS.join(',')];
 
@@ -39,15 +38,22 @@ export const jsonToCsv = (jsonData) => {
       if (header.includes('.')) {
         // Handle nested properties
         const [parent, child] = header.split('.');
-        return item[parent] && item[parent][child] !== undefined 
-          ? `"${item[parent][child]}"` 
-          : '""';
+        const value = item[parent] && item[parent][child];
+        
+        // Handle different data types for nested properties
+        if (value === null || value === undefined || value === "null") {
+          return '""';
+        } else if (typeof value === 'boolean') {
+          return value.toString();
+        } else {
+          return `"${value.toString().replace(/"/g, '""')}"`;
+        }
       } else {
         // Handle normal properties
         const value = item[header];
         
         // Handle different data types
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || value === "null") {
           return '""';
         } else if (typeof value === 'boolean') {
           return value.toString();
@@ -73,13 +79,20 @@ export const csvToJson = (csvData) => {
     return { data: [], errors: ['Invalid CSV data'] };
   }
 
-  const rows = csvData.split(/\r?\n/);
-  if (rows.length < 2) { // Need at least header row and one data row
+  // Filter out blank lines and comment lines that start with #
+  const filteredRows = csvData
+    .split(/\r?\n/)
+    .filter(line => {
+      const trimmedLine = line.trim();
+      return trimmedLine !== '' && !trimmedLine.startsWith('#');
+    });
+
+  if (filteredRows.length < 2) { // Need at least header row and one data row
     return { data: [], errors: ['CSV file must contain at least a header row and one data row'] };
   }
 
   // Extract headers
-  const headers = rows[0].split(',').map(h => h.trim());
+  const headers = filteredRows[0].split(',').map(h => h.trim());
   
   // These headers are required
   const REQUIRED_HEADERS = EXPECTED_HEADERS.filter(h => 
@@ -95,16 +108,15 @@ export const csvToJson = (csvData) => {
       errors: [`Missing required headers: ${missingRequiredHeaders.join(', ')}`] 
     };
   }
-
   const jsonData = [];
   const errors = [];
   const warnings = [];
 
   // Convert each CSV row to a JSON object
-  for (let i = 1; i < rows.length; i++) {
-    if (!rows[i].trim()) continue; // Skip empty rows
+  for (let i = 1; i < filteredRows.length; i++) {
+    if (!filteredRows[i].trim()) continue; // Skip empty rows (additional check)
     
-    const values = parseCSVRow(rows[i]);
+    const values = parseCSVRow(filteredRows[i]);
     if (values.length !== headers.length) {
       errors.push(`Row ${i + 1}: Column count mismatch. Expected ${headers.length}, got ${values.length}`);
       continue;
@@ -125,22 +137,26 @@ export const csvToJson = (csvData) => {
     
     headers.forEach((header, index) => {
       const value = values[index].trim();
-      
-      if (header.includes('.')) {
+        if (header.includes('.')) {
         // Handle nested properties
         const [parent, child] = header.split('.');
         if (!item[parent]) {
           item[parent] = {};
         }
-        item[parent][child] = value === "" ? null : value;
+        // Fix for handling "null" string values
+        if (value === "null" || value === "") {
+          item[parent][child] = null;
+        } else {
+          item[parent][child] = value === "" ? null : value;
+        }
       } else {
         // Parse values according to expected types
         if (header === 'isLocked') {
           item[header] = value.toLowerCase() === 'true';
         } else if (header === 'turnOrder') {
-          item[header] = value === "" ? null : value;
+          item[header] = value === "" || value === "null" ? null : value;
         } else {
-          item[header] = value === "" ? null : value;
+          item[header] = value === "" || value === "null" ? null : value;
         }
       }
     });
@@ -181,7 +197,7 @@ function parseCSVRow(row) {
     if (char === '"') {
       if (i + 1 < row.length && row[i + 1] === '"') {
         // Handle escaped quotes - "" becomes " inside a quoted string
-        currentValue += '"';
+        currentValue += '';
         i++;
       } else {
         // Toggle quote mode
