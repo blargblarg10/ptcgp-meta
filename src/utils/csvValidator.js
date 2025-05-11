@@ -384,17 +384,16 @@ export const analyzeCsvFile = (csvContent) => {
       stats: { rowCount: rows.length }
     };
   }
-
   // Header validation
   const headers = rows[0].split(',').map(h => h.trim());
   
   // These headers are required
   const REQUIRED_HEADERS = EXPECTED_HEADERS.filter(h => 
-    !['id', 'isLocked', 'notes'].includes(h)
+    !['id', 'isLocked', 'notes', 'points', 'auto'].includes(h)
   );
   
   // These headers are optional (will be auto-created)
-  const OPTIONAL_HEADERS = ['id', 'isLocked', 'notes'];
+  const OPTIONAL_HEADERS = ['id', 'isLocked', 'notes', 'points', 'auto'];
   
   const missingRequiredHeaders = REQUIRED_HEADERS.filter(h => !headers.includes(h));
   const missingOptionalHeaders = OPTIONAL_HEADERS.filter(h => !headers.includes(h));

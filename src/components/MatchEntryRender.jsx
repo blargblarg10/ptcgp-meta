@@ -227,7 +227,8 @@ const MatchEntry = ({
   onRemove, 
   onFieldChange, 
   formErrors,
-  matchHistory = [] 
+  matchHistory = [],
+  previousEntryPoints
 }) => {
   const isLocked = entry.isLocked && !isEditing;
   const basePath = import.meta.env.BASE_URL || '/';
@@ -589,28 +590,24 @@ const MatchEntry = ({
           </div>
           
           {/* Points and Auto on the right */}
-          <div className="flex items-center space-x-3">
-            {/* Points input */}
-            <div className="flex items-center">
-              <label className="text-xs font-medium text-gray-700 mr-1">Points:</label>              {(!entry.isLocked || isEditing) ? (
-                <input
-                  type="number"
-                  min="0"
-                  max="9999"
-                  value={entry.points !== undefined ? entry.points : 0}
-                  onChange={(e) => onFieldChange(entry.id, 'points', parseInt(e.target.value) || 0)}
-                  disabled={isLocked}
-                  className={`w-10 p-1 text-sm border rounded ${
-                    isLocked ? 'bg-gray-200 text-gray-500' : 'bg-white'
-                  } ${formErrors?.[entry.id]?.points ? 'border-red-500' : 'border-gray-300'}`}
-                  style={{ 
-                    WebkitAppearance: 'textfield',
-                    MozAppearance: 'textfield',
-                    appearance: 'textfield'
-                  }}
-                />
+          <div className="flex items-center space-x-3">            {/* Points input */}
+            <div className="flex items-center">              <label className="text-xs font-medium text-gray-700 mr-1">Points:</label>              {(!entry.isLocked || isEditing) ? (
+                <div className="relative">
+                  <input                    type="number"
+                    min="0"
+                    max="9999"
+                    value={entry.points !== undefined ? entry.points : 0}
+                    onChange={(e) => onFieldChange(entry.id, 'points', parseInt(e.target.value) || 0)}
+                    disabled={isLocked || (entry.auto !== undefined ? entry.auto : true)}
+                    className={`w-10 p-1 text-sm border rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                      isLocked || (entry.auto !== undefined ? entry.auto : true) ? 'bg-gray-200 text-gray-500' : 'bg-white'
+                    } ${formErrors?.[entry.id]?.points ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                </div>
               ) : (
-                <span className="text-sm text-gray-700 font-medium">{entry.points !== undefined ? entry.points : 0}</span>
+                <div className="relative">
+                  <span className="text-sm text-gray-700 font-medium">{entry.points !== undefined ? entry.points : 0}</span>
+                </div>
               )}
             </div>
             

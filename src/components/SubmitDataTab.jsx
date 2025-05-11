@@ -63,20 +63,41 @@ const createBatchRow = (existingRow = null, matchHistory = []) => {  // Priority
   let yourDeck = { ...initialBatchRow.yourDeck };
   let points = initialBatchRow.points;
   let auto = initialBatchRow.auto;
+  let result = 'none';
+  
+  // Determine previous points from matches or existing row
+  const prevPoints = matchHistory.length > 0 ? matchHistory[0].points : 
+                     existingRow ? existingRow.points : initialBatchRow.points;
   
   if (existingRow) {
     // Priority 1: Use existing row if provided
     yourDeck = { ...existingRow.yourDeck };
-    points = existingRow.points !== undefined ? existingRow.points : initialBatchRow.points;
     auto = existingRow.auto !== undefined ? existingRow.auto : initialBatchRow.auto;
+    result = existingRow.result !== undefined ? existingRow.result : initialBatchRow.result;
   } else if (matchHistory && matchHistory.length > 0) {
     // Priority 2: Find the most recent match with yourDeck data
     const recentMatch = matchHistory.find(match => match.yourDeck && match.yourDeck.primary);
     if (recentMatch) {
       yourDeck = { ...recentMatch.yourDeck };
-      // Don't copy points and auto from match history
+      auto = recentMatch.auto !== undefined ? recentMatch.auto : initialBatchRow.auto;
     }
   }
+  
+  // Calculate points based on auto setting, previous points, and result
+  if (auto) {
+    if (result === 'victory') {
+      points = prevPoints + 10;
+    } else if (result === 'defeat') {
+      points = prevPoints - 7;
+    } else {
+      points = prevPoints;
+    }
+  } else if (existingRow && existingRow.points !== undefined) {
+    points = existingRow.points;
+  } else {
+    points = initialBatchRow.points;
+  }
+  
   // Priority 3: Default to null (already set in yourDeck initialization)
   
   return {
@@ -84,7 +105,7 @@ const createBatchRow = (existingRow = null, matchHistory = []) => {  // Priority
     id: `new-${Date.now()}`,
     yourDeck,
     opponentDeck: { ...initialBatchRow.opponentDeck },
-    result: 'none',
+    result,
     isLocked: false,
     timestamp: new Date().toISOString(),
     points,
@@ -151,7 +172,6 @@ const MatchResultTracker = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
   // Load match data on component mount or when userData changes
   useEffect(() => {
     const loadMatches = async () => {
@@ -159,8 +179,18 @@ const MatchResultTracker = () => {
       try {
         if (userData) {
           const data = await loadUserMatchData(userData);
+          
+          // Add points and auto fields if they don't exist in old match data
+          const processedData = data.map(match => ({
+            ...match,
+            // Ensure points exists, default to 0 if missing
+            points: match.points !== undefined ? match.points : 0,
+            // Ensure auto exists, default to true if missing
+            auto: match.auto !== undefined ? match.auto : true
+          }));
+          
           // Sort matches by timestamp, newest first
-          const sortedData = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          const sortedData = processedData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
           setMatches(sortedData);
           
           // After matches are loaded, check if we need to initialize batch entries
@@ -191,11 +221,25 @@ const MatchResultTracker = () => {
       console.error('Error saving match data:', error);
     }
   };
-
   // Add a new batch row
   const addBatchRow = () => {
     const firstRow = batchEntries[0];
     const newRow = createBatchRow(firstRow, matches);
+    
+    // Set the points based on the previous entry if auto is enabled
+    if (newRow.auto) {
+      const prevPoints = batchEntries.length > 0 ? batchEntries[0].points : 
+                       matches.length > 0 ? matches[0].points : 0;
+      
+      if (newRow.result === 'victory') {
+        newRow.points = prevPoints + 10;
+      } else if (newRow.result === 'defeat') {
+        newRow.points = prevPoints - 7;
+      } else {
+        newRow.points = prevPoints;
+      }
+    }
+    
     setBatchEntries([newRow, ...batchEntries]);
   };
 
@@ -222,12 +266,19 @@ const MatchResultTracker = () => {
     if (updatedEntries.length === 0) {
       clearEntriesCookie();
     }
-  };
-
-  // Toggle edit mode for a match entry
+  };  // Toggle edit mode for a match entry
   const toggleEditMode = (id) => {
     if (editingId && editingId !== id) {
       saveEdit(editingId);
+    }
+    
+    // Find the entry and print its values to console
+    const entryToEdit = [...batchEntries, ...matches].find(entry => entry.id === id);
+    if (entryToEdit) {
+      console.log('Edit button clicked for entry:', entryToEdit);
+      // Print points and auto values specifically
+      console.log('Points:', entryToEdit.points);
+      console.log('Auto Calculation Enabled:', entryToEdit.auto);
     }
     
     if (editingId === id) {
@@ -248,35 +299,70 @@ const MatchResultTracker = () => {
     setMatches(updatedMatches);
     await saveMatchDataToFirebase(updatedMatches);
     setEditingId(null);
-  };
-
-  // Handle change to a batch entry field
+  };  // Handle change to a batch entry field
   const handleBatchEntryChange = (id, field, value) => {
+    // Helper to calculate auto points based on previous entry and result
+    const calculateAutoPoints = (entry, prevPoints) => {
+      // Only calculate if auto is enabled
+      if (!entry.auto) return entry.points;
+      
+      const basePoints = prevPoints !== undefined ? prevPoints : 0;
+      if (entry.result === 'victory') return basePoints + 10;
+      if (entry.result === 'defeat') return basePoints - 7;
+      return basePoints; // Draw or none
+    };
+    
+    // Function to update all dependent entries when a point value changes
+    const updateDependentEntries = (entries, startIndex) => {
+      // We need to update all entries BEFORE the changed entry (since we display newest first)
+      // that have auto=true because they depend on this entry's points
+      for (let i = startIndex - 1; i >= 0; i--) {
+        if (entries[i].auto) {
+          const dependentEntry = entries[i];
+          const prevPoints = i < entries.length - 1 ? entries[i + 1].points : 0;
+          entries[i] = {
+            ...dependentEntry,
+            points: calculateAutoPoints(dependentEntry, prevPoints)
+          };
+        }
+      }
+      return entries;
+    };
+    
     const entryIndex = batchEntries.findIndex(entry => entry.id === id);
     
     if (entryIndex === -1) {
-      const updatedMatches = matches.map(match => {
-        if (match.id === id) {
-          if (field.includes('.')) {
-            const [parent, child] = field.split('.');
-            return {
-              ...match,
-              [parent]: {
-                ...match[parent],
-                [child]: value
-              }
-            };
-          }
-          
-          return {
-            ...match,
-            [field]: value
-          };
+      // Handling match history entries
+      const matchIndex = matches.findIndex(match => match.id === id);
+      if (matchIndex !== -1) {
+        const updatedMatches = [...matches];
+        const currentMatch = { ...updatedMatches[matchIndex] };
+        const prevPoints = matchIndex < matches.length - 1 ? matches[matchIndex + 1].points : 0;
+          // Update the specific field first
+        if (field.includes('.')) {
+          const [parent, child] = field.split('.');
+          currentMatch[parent] = {
+            ...currentMatch[parent],
+            [child]: value
+          };        } else {
+          currentMatch[field] = value;
         }
-        return match;
-      });
-      
-      setMatches(updatedMatches);
+        
+        // Always calculate auto points if auto is enabled
+        if (field === 'auto' ? value : currentMatch.auto) {
+          currentMatch.points = calculateAutoPoints(
+            field === 'auto' ? {...currentMatch, auto: value} : currentMatch, 
+            prevPoints
+          );
+        }
+        
+        updatedMatches[matchIndex] = currentMatch;
+        
+        // Now update any dependent entries (entries that come before this one)
+        const finalMatches = updateDependentEntries(updatedMatches, matchIndex);
+        
+        setMatches(finalMatches);
+      }
       
       if (formErrors[id]?.[field]) {
         setFormErrors({
@@ -291,25 +377,37 @@ const MatchResultTracker = () => {
       return;
     }
     
+    // Handling batch entries
     const updatedEntries = [...batchEntries];
+    const currentEntry = { ...updatedEntries[entryIndex] };
+    const prevPoints = entryIndex < batchEntries.length - 1 
+      ? batchEntries[entryIndex + 1].points 
+      : matches.length > 0 ? matches[0].points : 0;
     
+    // Update the specific field first
     if (field.includes('.')) {
       const [parent, child] = field.split('.');
-      updatedEntries[entryIndex] = {
-        ...updatedEntries[entryIndex],
-        [parent]: {
-          ...updatedEntries[entryIndex][parent],
-          [child]: value
-        }
-      };
-    } else {
-      updatedEntries[entryIndex] = {
-        ...updatedEntries[entryIndex],
-        [field]: value
-      };
+      currentEntry[parent] = {
+        ...currentEntry[parent],
+        [child]: value
+      };    } else {
+      currentEntry[field] = value;
+    }    
+    
+    // Always calculate auto points if auto is enabled
+    if (field === 'auto' ? value : currentEntry.auto) {
+      currentEntry.points = calculateAutoPoints(
+        field === 'auto' ? {...currentEntry, auto: value} : currentEntry, 
+        prevPoints
+      );
     }
     
-    setBatchEntries(updatedEntries);
+    updatedEntries[entryIndex] = currentEntry;
+    
+    // Now update any dependent entries
+    const finalEntries = updateDependentEntries(updatedEntries, entryIndex);
+    
+    setBatchEntries(finalEntries);
     
     if (formErrors[id]?.[field]) {
       setFormErrors({
@@ -457,7 +555,7 @@ const MatchResultTracker = () => {
             </div>
             <div className="mb-4"></div>
             
-            {batchEntries.map(entry => (
+            {batchEntries.map(entry => (              
               <MatchEntry
                 key={entry.id}
                 entry={entry}
@@ -467,6 +565,9 @@ const MatchResultTracker = () => {
                 onFieldChange={handleBatchEntryChange}
                 formErrors={formErrors}
                 matchHistory={matches}
+                previousEntryPoints={batchEntries.indexOf(entry) < batchEntries.length - 1 ? 
+                  batchEntries[batchEntries.indexOf(entry) + 1].points : 
+                  matches.length > 0 ? matches[0].points : undefined}
               />
             ))}
             
@@ -482,7 +583,7 @@ const MatchResultTracker = () => {
           {matches.length > 0 && (
             <div>
               <h1 className="text-2xl font-bold mb-6">Match History</h1>
-              {currentMatches.map(match => (
+              {currentMatches.map(match => (                
                 <MatchEntry
                   key={match.id}
                   entry={match}
@@ -492,6 +593,8 @@ const MatchResultTracker = () => {
                   onFieldChange={handleBatchEntryChange}
                   formErrors={formErrors}
                   matchHistory={matches}
+                  previousEntryPoints={matches.findIndex(m => m.id === match.id) < matches.length - 1 ? 
+                    matches[matches.findIndex(m => m.id === match.id) + 1].points : undefined}
                 />
               ))}
 

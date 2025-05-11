@@ -90,13 +90,12 @@ export const csvToJson = (csvData) => {
   if (filteredRows.length < 2) { // Need at least header row and one data row
     return { data: [], errors: ['CSV file must contain at least a header row and one data row'] };
   }
-
   // Extract headers
   const headers = filteredRows[0].split(',').map(h => h.trim());
   
   // These headers are required
   const REQUIRED_HEADERS = EXPECTED_HEADERS.filter(h => 
-    !['id', 'isLocked', 'notes'].includes(h)
+    !['id', 'isLocked', 'notes', 'points', 'auto'].includes(h)
   );
   
   // Validate only required headers
@@ -123,8 +122,7 @@ export const csvToJson = (csvData) => {
     }
 
     const item = {};
-    
-    // Initialize optional fields with default values
+      // Initialize optional fields with default values
     if (!headers.includes('id')) {
       item.id = null; // This will be auto-generated later
     }
@@ -133,6 +131,13 @@ export const csvToJson = (csvData) => {
     }
     if (!headers.includes('notes')) {
       item.notes = "";
+    }
+    // Initialize points and auto with default values if not in headers
+    if (!headers.includes('points')) {
+      item.points = 0;
+    }
+    if (!headers.includes('auto')) {
+      item.auto = true;
     }
     
     headers.forEach((header, index) => {
@@ -149,19 +154,23 @@ export const csvToJson = (csvData) => {
         } else {
           item[parent][child] = value === "" ? null : value;
         }
-      } else {
-        // Parse values according to expected types
+      } else {        // Parse values according to expected types
         if (header === 'isLocked') {
           item[header] = value.toLowerCase() === 'true';
         } else if (header === 'turnOrder') {
           item[header] = value === "" || value === "null" ? null : value;
+        } else if (header === 'points') {
+          // Parse points as a number, default to 0 if invalid
+          const parsedPoints = parseInt(value, 10);
+          item[header] = isNaN(parsedPoints) ? 0 : parsedPoints;
+        } else if (header === 'auto') {
+          // Parse auto as a boolean, default to true if invalid
+          item[header] = value.toLowerCase() !== 'false';
         } else {
           item[header] = value === "" || value === "null" ? null : value;
         }
       }
-    });
-
-    // Make sure yourDeck and opponentDeck objects exist
+    });    // Make sure yourDeck and opponentDeck objects exist
     if (!item.yourDeck) {
       item.yourDeck = { primary: null, secondary: null };
     } else if (!item.yourDeck.secondary) {
@@ -172,6 +181,14 @@ export const csvToJson = (csvData) => {
       item.opponentDeck = { primary: null, secondary: null };
     } else if (!item.opponentDeck.secondary) {
       item.opponentDeck.secondary = null;
+    }
+    
+    // Ensure points and auto fields exist with default values if missing
+    if (item.points === undefined || item.points === null) {
+      item.points = 0;
+    }
+    if (item.auto === undefined || item.auto === null) {
+      item.auto = true;
     }
 
     jsonData.push(item);
