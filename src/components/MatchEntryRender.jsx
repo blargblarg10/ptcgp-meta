@@ -227,7 +227,8 @@ const MatchEntry = ({
   onRemove, 
   onFieldChange, 
   formErrors,
-  matchHistory = [] 
+  matchHistory = [],
+  previousEntryPoints
 }) => {
   const isLocked = entry.isLocked && !isEditing;
   const basePath = import.meta.env.BASE_URL || '/';
@@ -562,30 +563,80 @@ const MatchEntry = ({
               </button>
             )}
           </div>
-        </div>
-      </div>
+        </div>      </div>
       
-      {/* Notes section */}
+      {/* Notes section with Points and Auto on the right */}
       <div className="mt-3">
-        {/* Show notes input for editing or new (unlocked) entries */}
-        {(!entry.isLocked || isEditing) && (
-          <div className="mt-2">
-            <input
-              type="text"
-              placeholder="Add notes about this match..."
-              value={entry.notes || ""}
-              onChange={(e) => onFieldChange(entry.id, 'notes', e.target.value)}
-              className="w-full p-1 text-xs border border-gray-300 rounded"
-            />
+        <div className="flex justify-between items-center">
+          {/* Notes section - takes up most of the space */}
+          <div className="flex-grow mr-4">
+            {/* Show notes input for editing or new (unlocked) entries */}
+            {(!entry.isLocked || isEditing) && (
+              <input
+                type="text"
+                placeholder="Add notes about this match..."
+                value={entry.notes || ""}
+                onChange={(e) => onFieldChange(entry.id, 'notes', e.target.value)}
+                className="w-full p-1 text-xs border border-gray-300 rounded"
+              />
+            )}
+            
+            {/* Show notes when locked and notes exist - slightly bigger and darker */}
+            {isLocked && entry.notes && (
+              <div className="text-sm text-gray-700">
+                {entry.notes}
+              </div>
+            )}
           </div>
-        )}
-        
-        {/* Show notes when locked and notes exist - slightly bigger and darker */}
-        {isLocked && entry.notes && (
-          <div className="mt-1 text-sm text-gray-700">
-            {entry.notes}
+          
+          {/* Points and Auto on the right */}
+          <div className="flex items-center space-x-3">            {/* Points input */}
+            <div className="flex items-center">              <label className="text-xs font-medium text-gray-700 mr-1">Points:</label>              {(!entry.isLocked || isEditing) ? (
+                <div className="relative">
+                  <input                    type="number"
+                    min="0"
+                    max="9999"
+                    value={entry.points !== undefined ? entry.points : 0}
+                    onChange={(e) => onFieldChange(entry.id, 'points', parseInt(e.target.value) || 0)}
+                    disabled={isLocked || (entry.auto !== undefined ? entry.auto : true)}
+                    className={`w-10 p-1 text-sm border rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                      isLocked || (entry.auto !== undefined ? entry.auto : true) ? 'bg-gray-200 text-gray-500' : 'bg-white'
+                    } ${formErrors?.[entry.id]?.points ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                </div>
+              ) : (
+                <div className="relative">
+                  <span className="text-sm text-gray-700 font-medium">{entry.points !== undefined ? entry.points : 0}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Auto toggle with simple dot */}
+            <div className="flex items-center">
+              <label className="text-xs font-medium text-gray-700 mr-1">Auto:</label>
+              {(!entry.isLocked || isEditing) ? (
+                <button
+                  type="button"
+                  onClick={() => onFieldChange(entry.id, 'auto', !(entry.auto !== undefined ? entry.auto : true))}
+                  disabled={isLocked}
+                  className={`w-4 h-6 flex items-center justify-center rounded-full transition-colors ${
+                    (entry.auto !== undefined ? entry.auto : true) 
+                      ? 'bg-blue-500' 
+                      : 'bg-gray-200'
+                  } ${isLocked ? 'opacity-60 cursor-not-allowed' : 'hover:bg-opacity-90'}`}
+                  aria-label="Toggle auto"
+                >
+                </button>
+              ) : (
+                <div className={`w-4 h-6 rounded-full ${
+                  (entry.auto !== undefined ? entry.auto : true) 
+                    ? 'bg-blue-500' 
+                    : 'bg-gray-200'
+                }`}>
+                </div>              )}
+            </div>
           </div>
-        )}
+        </div>
       </div>
       
       {/* Delete confirmation popup - only appears for locked entries in edit mode */}

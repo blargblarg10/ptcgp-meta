@@ -182,8 +182,17 @@ export const saveUserMatchData = async (userData, matchData) => {
     // Convert string "null" values to actual null
     const processedMatchData = convertStringNullToNull(matchData);
     
+    // Ensure all match entries have points and auto fields
+    const updatedMatchData = processedMatchData.map(match => ({
+      ...match,
+      // Ensure points exists, default to 0 if missing
+      points: match.points !== undefined ? match.points : 0,
+      // Ensure auto exists, default to true if missing
+      auto: match.auto !== undefined ? match.auto : true
+    }));
+    
     // Sort matches by timestamp from newest to oldest
-    const sortedMatchData = [...processedMatchData].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    const sortedMatchData = [...updatedMatchData].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     
     // Calculate stats
     const stats = {
