@@ -25070,5 +25070,2302 @@
                 }
             }
         }
+    ],
+    "2025-05-12": [
+        {
+            "Rank": "1",
+            "Deck Name": "Giratina ex Darkrai ex",
+            "URL": "https://play.limitlesstcg.com/decks/giratina-ex-a2b-darkrai-ex-a2?game=POCKET&format=standard&set=A3",
+            "Count": "654",
+            "Share": "10.42%",
+            "Win %": "56.57%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "556",
+                    "Score": "270 - 270 - 16",
+                    "Win Rate": "48.56%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "307",
+                    "Score": "207 - 95 - 5",
+                    "Win Rate": "67.43%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "268",
+                    "Score": "158 - 107 - 3",
+                    "Win Rate": "58.96%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "2",
+                    "Score": "0 - 2 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "248",
+                    "Score": "170 - 75 - 3",
+                    "Win Rate": "68.55%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "203",
+                    "Score": "62 - 130 - 11",
+                    "Win Rate": "30.54%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "188",
+                    "Score": "138 - 46 - 4",
+                    "Win Rate": "73.40%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "105",
+                    "Score": "43 - 58 - 4",
+                    "Win Rate": "40.95%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "97",
+                    "Score": "62 - 35 - 0",
+                    "Win Rate": "63.92%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "68",
+                    "Score": "40 - 26 - 2",
+                    "Win Rate": "58.82%"
+                },
+                "Charizard ex": {
+                    "Matches": "66",
+                    "Score": "26 - 39 - 1",
+                    "Win Rate": "39.39%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "65",
+                    "Score": "22 - 41 - 2",
+                    "Win Rate": "33.85%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "63",
+                    "Score": "16 - 46 - 1",
+                    "Win Rate": "25.40%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "51",
+                    "Score": "22 - 28 - 1",
+                    "Win Rate": "43.14%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Incineroar ex": {
+                    "Matches": "37",
+                    "Score": "23 - 14 - 0",
+                    "Win Rate": "62.16%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "32",
+                    "Score": "24 - 7 - 1",
+                    "Win Rate": "75.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "32",
+                    "Score": "19 - 13 - 0",
+                    "Win Rate": "59.38%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "26",
+                    "Score": "12 - 14 - 0",
+                    "Win Rate": "46.15%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "23",
+                    "Score": "21 - 2 - 0",
+                    "Win Rate": "91.30%"
+                },
+                "Other": {
+                    "Matches": "894",
+                    "Score": "575-306",
+                    "Win Rate": "64.3%"
+                }
+            }
+        },
+        {
+            "Rank": "2",
+            "Deck Name": "Giratina ex Snorlax",
+            "URL": "https://play.limitlesstcg.com/decks/giratina-ex-a2b-snorlax-a2a?game=POCKET&format=standard&set=A3",
+            "Count": "570",
+            "Share": "9.08%",
+            "Win %": "51.13%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "307",
+                    "Score": "95 - 207 - 5",
+                    "Win Rate": "30.94%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "3",
+                    "Score": "3 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "178",
+                    "Score": "93 - 84 - 1",
+                    "Win Rate": "52.25%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "162",
+                    "Score": "83 - 76 - 3",
+                    "Win Rate": "51.23%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "162",
+                    "Score": "63 - 99 - 0",
+                    "Win Rate": "38.89%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "107",
+                    "Score": "46 - 60 - 1",
+                    "Win Rate": "42.99%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "98",
+                    "Score": "48 - 50 - 0",
+                    "Win Rate": "48.98%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "94",
+                    "Score": "69 - 25 - 0",
+                    "Win Rate": "73.40%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "73",
+                    "Score": "37 - 36 - 0",
+                    "Win Rate": "50.68%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "60",
+                    "Score": "44 - 16 - 0",
+                    "Win Rate": "73.33%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "58",
+                    "Score": "39 - 18 - 1",
+                    "Win Rate": "67.24%"
+                },
+                "Charizard ex": {
+                    "Matches": "48",
+                    "Score": "17 - 31 - 0",
+                    "Win Rate": "35.42%"
+                },
+                "Incineroar ex": {
+                    "Matches": "38",
+                    "Score": "23 - 15 - 0",
+                    "Win Rate": "60.53%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "31",
+                    "Score": "17 - 14 - 0",
+                    "Win Rate": "54.84%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "31",
+                    "Score": "17 - 13 - 1",
+                    "Win Rate": "54.84%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "30",
+                    "Score": "18 - 12 - 0",
+                    "Win Rate": "60.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "5",
+                    "Score": "2 - 3 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "19",
+                    "Score": "12 - 7 - 0",
+                    "Win Rate": "63.16%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "18",
+                    "Score": "10 - 8 - 0",
+                    "Win Rate": "55.56%"
+                },
+                "Other": {
+                    "Matches": "675",
+                    "Score": "416-245",
+                    "Win Rate": "61.6%"
+                }
+            }
+        },
+        {
+            "Rank": "3",
+            "Deck Name": "Solgaleo ex Skarmory",
+            "URL": "https://play.limitlesstcg.com/decks/solgaleo-ex-a3-skarmory-a2?game=POCKET&format=standard&set=A3",
+            "Count": "435",
+            "Share": "6.93%",
+            "Win %": "49.39%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "188",
+                    "Score": "46 - 138 - 4",
+                    "Win Rate": "24.47%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "178",
+                    "Score": "84 - 93 - 1",
+                    "Win Rate": "47.19%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "176",
+                    "Score": "87 - 87 - 2",
+                    "Win Rate": "49.43%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "2",
+                    "Score": "0 - 2 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "95",
+                    "Score": "44 - 49 - 2",
+                    "Win Rate": "46.32%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "77",
+                    "Score": "44 - 33 - 0",
+                    "Win Rate": "57.14%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "75",
+                    "Score": "45 - 29 - 1",
+                    "Win Rate": "60.00%"
+                },
+                "Charizard ex": {
+                    "Matches": "67",
+                    "Score": "30 - 37 - 0",
+                    "Win Rate": "44.78%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "56",
+                    "Score": "24 - 31 - 1",
+                    "Win Rate": "42.86%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "52",
+                    "Score": "27 - 25 - 0",
+                    "Win Rate": "51.92%"
+                },
+                "Incineroar ex": {
+                    "Matches": "45",
+                    "Score": "28 - 17 - 0",
+                    "Win Rate": "62.22%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "42",
+                    "Score": "11 - 30 - 1",
+                    "Win Rate": "26.19%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "40",
+                    "Score": "23 - 17 - 0",
+                    "Win Rate": "57.50%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "27",
+                    "Score": "8 - 19 - 0",
+                    "Win Rate": "29.63%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "26",
+                    "Score": "9 - 15 - 2",
+                    "Win Rate": "34.62%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "4",
+                    "Score": "2 - 2 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "25",
+                    "Score": "11 - 14 - 0",
+                    "Win Rate": "44.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "17",
+                    "Score": "8 - 9 - 0",
+                    "Win Rate": "47.06%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "17",
+                    "Score": "5 - 12 - 0",
+                    "Win Rate": "29.41%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "8",
+                    "Score": "5 - 3 - 0",
+                    "Win Rate": "62.50%"
+                },
+                "Other": {
+                    "Matches": "666",
+                    "Score": "391-265",
+                    "Win Rate": "58.7%"
+                }
+            }
+        },
+        {
+            "Rank": "4",
+            "Deck Name": "Charizard ex Incineroar ex",
+            "URL": "https://play.limitlesstcg.com/decks/charizard-ex-a2b-incineroar-ex-a3?game=POCKET&format=standard&set=A3",
+            "Count": "429",
+            "Share": "6.84%",
+            "Win %": "50.82%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "251",
+                    "Score": "134 - 115 - 2",
+                    "Win Rate": "53.39%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "226",
+                    "Score": "140 - 85 - 1",
+                    "Win Rate": "61.95%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "142",
+                    "Score": "76 - 66 - 0",
+                    "Win Rate": "53.52%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "120",
+                    "Score": "58 - 61 - 1",
+                    "Win Rate": "48.33%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "118",
+                    "Score": "63 - 54 - 1",
+                    "Win Rate": "53.39%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "77",
+                    "Score": "13 - 62 - 2",
+                    "Win Rate": "16.88%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "67",
+                    "Score": "26 - 41 - 0",
+                    "Win Rate": "38.81%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "56",
+                    "Score": "10 - 45 - 1",
+                    "Win Rate": "17.86%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "53",
+                    "Score": "30 - 23 - 0",
+                    "Win Rate": "56.60%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "47",
+                    "Score": "8 - 39 - 0",
+                    "Win Rate": "17.02%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "46",
+                    "Score": "34 - 12 - 0",
+                    "Win Rate": "73.91%"
+                },
+                "Charizard ex": {
+                    "Matches": "43",
+                    "Score": "23 - 20 - 0",
+                    "Win Rate": "53.49%"
+                },
+                "Incineroar ex": {
+                    "Matches": "29",
+                    "Score": "13 - 16 - 0",
+                    "Win Rate": "44.83%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "23",
+                    "Score": "12 - 10 - 1",
+                    "Win Rate": "52.17%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "18",
+                    "Score": "12 - 5 - 1",
+                    "Win Rate": "66.67%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "14",
+                    "Score": "7 - 7 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "10",
+                    "Score": "9 - 1 - 0",
+                    "Win Rate": "90.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "10",
+                    "Score": "6 - 4 - 0",
+                    "Win Rate": "60.00%"
+                },
+                "Other": {
+                    "Matches": "588",
+                    "Score": "313-273",
+                    "Win Rate": "53.2%"
+                }
+            }
+        },
+        {
+            "Rank": "5",
+            "Deck Name": "Arceus ex Crobat",
+            "URL": "https://play.limitlesstcg.com/decks/arceus-ex-crobat-a2a?game=POCKET&format=standard&set=A3",
+            "Count": "333",
+            "Share": "5.31%",
+            "Win %": "51.88%",
+            "Matchups": {
+                "Magnezone Oricorio": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Charizard ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Giratina ex Darkrai ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Incineroar ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                }
+            }
+        },
+        {
+            "Rank": "6",
+            "Deck Name": "Garchomp ex Rampardos",
+            "URL": "https://play.limitlesstcg.com/decks/garchomp-ex-a2a-rampardos-a2?game=POCKET&format=standard&set=A3",
+            "Count": "313",
+            "Share": "4.99%",
+            "Win %": "51.60%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "248",
+                    "Score": "75 - 170 - 3",
+                    "Win Rate": "30.24%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "162",
+                    "Score": "99 - 63 - 0",
+                    "Win Rate": "61.11%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "150",
+                    "Score": "75 - 75 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "111",
+                    "Score": "68 - 41 - 2",
+                    "Win Rate": "61.26%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "98",
+                    "Score": "54 - 41 - 3",
+                    "Win Rate": "55.10%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "77",
+                    "Score": "33 - 44 - 0",
+                    "Win Rate": "42.86%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "50",
+                    "Score": "27 - 20 - 3",
+                    "Win Rate": "54.00%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "46",
+                    "Score": "35 - 11 - 0",
+                    "Win Rate": "76.09%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "43",
+                    "Score": "34 - 9 - 0",
+                    "Win Rate": "79.07%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "43",
+                    "Score": "23 - 20 - 0",
+                    "Win Rate": "53.49%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "25",
+                    "Score": "5 - 20 - 0",
+                    "Win Rate": "20.00%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "21",
+                    "Score": "0 - 20 - 1",
+                    "Win Rate": "0.00%"
+                },
+                "Charizard ex": {
+                    "Matches": "17",
+                    "Score": "9 - 8 - 0",
+                    "Win Rate": "52.94%"
+                },
+                "Incineroar ex": {
+                    "Matches": "16",
+                    "Score": "6 - 10 - 0",
+                    "Win Rate": "37.50%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "14",
+                    "Score": "8 - 6 - 0",
+                    "Win Rate": "57.14%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "12",
+                    "Score": "7 - 5 - 0",
+                    "Win Rate": "58.33%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "10",
+                    "Score": "5 - 5 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "9",
+                    "Score": "6 - 3 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "6",
+                    "Score": "2 - 4 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Other": {
+                    "Matches": "342",
+                    "Score": "209-132",
+                    "Win Rate": "61.1%"
+                }
+            }
+        },
+        {
+            "Rank": "7",
+            "Deck Name": "Giratina ex Greninja",
+            "URL": "https://play.limitlesstcg.com/decks/giratina-ex-a2b-greninja-a1?game=POCKET&format=standard&set=A3",
+            "Count": "213",
+            "Share": "3.39%",
+            "Win %": "57.07%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "203",
+                    "Score": "130 - 62 - 11",
+                    "Win Rate": "64.04%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "128",
+                    "Score": "63 - 63 - 2",
+                    "Win Rate": "49.22%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "107",
+                    "Score": "60 - 46 - 1",
+                    "Win Rate": "56.07%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "98",
+                    "Score": "49 - 47 - 2",
+                    "Win Rate": "50.00%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "98",
+                    "Score": "41 - 54 - 3",
+                    "Win Rate": "41.84%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "77",
+                    "Score": "62 - 13 - 2",
+                    "Win Rate": "80.52%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "56",
+                    "Score": "31 - 24 - 1",
+                    "Win Rate": "55.36%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "41",
+                    "Score": "24 - 17 - 0",
+                    "Win Rate": "58.54%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "33",
+                    "Score": "14 - 19 - 0",
+                    "Win Rate": "42.42%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "31",
+                    "Score": "13 - 18 - 0",
+                    "Win Rate": "41.94%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "29",
+                    "Score": "11 - 18 - 0",
+                    "Win Rate": "37.93%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "22",
+                    "Score": "9 - 13 - 0",
+                    "Win Rate": "40.91%"
+                },
+                "Charizard ex": {
+                    "Matches": "20",
+                    "Score": "17 - 3 - 0",
+                    "Win Rate": "85.00%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "19",
+                    "Score": "2 - 17 - 0",
+                    "Win Rate": "10.53%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "12",
+                    "Score": "8 - 4 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "12",
+                    "Score": "6 - 6 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "10",
+                    "Score": "5 - 5 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Incineroar ex": {
+                    "Matches": "5",
+                    "Score": "4 - 1 - 0",
+                    "Win Rate": "80.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Other": {
+                    "Matches": "244",
+                    "Score": "157-84",
+                    "Win Rate": "64.3%"
+                }
+            }
+        },
+        {
+            "Rank": "8",
+            "Deck Name": "Lucario Rampardos",
+            "URL": "https://play.limitlesstcg.com/decks/lucario-rampardos-a2?game=POCKET&format=standard&set=A3",
+            "Count": "186",
+            "Share": "2.96%",
+            "Win %": "51.67%",
+            "Matchups": {
+                "Giratina ex Snorlax": {
+                    "Matches": "98",
+                    "Score": "50 - 48 - 0",
+                    "Win Rate": "51.02%"
+                },
+                "Giratina ex Darkrai ex": {
+                    "Matches": "97",
+                    "Score": "35 - 62 - 0",
+                    "Win Rate": "36.08%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "75",
+                    "Score": "29 - 45 - 1",
+                    "Win Rate": "38.67%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "52",
+                    "Score": "25 - 26 - 1",
+                    "Win Rate": "48.08%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "50",
+                    "Score": "20 - 27 - 3",
+                    "Win Rate": "40.00%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "34",
+                    "Score": "17 - 17 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "33",
+                    "Score": "19 - 14 - 0",
+                    "Win Rate": "57.58%"
+                },
+                "Charizard ex": {
+                    "Matches": "27",
+                    "Score": "14 - 13 - 0",
+                    "Win Rate": "51.85%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "22",
+                    "Score": "12 - 9 - 1",
+                    "Win Rate": "54.55%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "22",
+                    "Score": "9 - 13 - 0",
+                    "Win Rate": "40.91%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "17",
+                    "Score": "14 - 3 - 0",
+                    "Win Rate": "82.35%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "17",
+                    "Score": "13 - 4 - 0",
+                    "Win Rate": "76.47%"
+                },
+                "Incineroar ex": {
+                    "Matches": "16",
+                    "Score": "7 - 9 - 0",
+                    "Win Rate": "43.75%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "12",
+                    "Score": "8 - 4 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "12",
+                    "Score": "6 - 6 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "10",
+                    "Score": "6 - 4 - 0",
+                    "Win Rate": "60.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "10",
+                    "Score": "4 - 6 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "8",
+                    "Score": "4 - 3 - 1",
+                    "Win Rate": "50.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Other": {
+                    "Matches": "266",
+                    "Score": "153-112",
+                    "Win Rate": "57.5%"
+                }
+            }
+        },
+        {
+            "Rank": "9",
+            "Deck Name": "Magnezone Oricorio",
+            "URL": "https://play.limitlesstcg.com/decks/magnezone-a2-oricorio-a3?game=POCKET&format=standard&set=A3",
+            "Count": "145",
+            "Share": "2.31%",
+            "Win %": "51.00%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "105",
+                    "Score": "58 - 43 - 4",
+                    "Win Rate": "55.24%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "94",
+                    "Score": "25 - 69 - 0",
+                    "Win Rate": "26.60%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "50",
+                    "Score": "13 - 37 - 0",
+                    "Win Rate": "26.00%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "43",
+                    "Score": "9 - 34 - 0",
+                    "Win Rate": "20.93%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "42",
+                    "Score": "30 - 11 - 1",
+                    "Win Rate": "71.43%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "29",
+                    "Score": "18 - 11 - 0",
+                    "Win Rate": "62.07%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "22",
+                    "Score": "15 - 7 - 0",
+                    "Win Rate": "68.18%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "17",
+                    "Score": "3 - 14 - 0",
+                    "Win Rate": "17.65%"
+                },
+                "Charizard ex": {
+                    "Matches": "16",
+                    "Score": "13 - 3 - 0",
+                    "Win Rate": "81.25%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "16",
+                    "Score": "7 - 7 - 2",
+                    "Win Rate": "43.75%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "13",
+                    "Score": "4 - 9 - 0",
+                    "Win Rate": "30.77%"
+                },
+                "Incineroar ex": {
+                    "Matches": "10",
+                    "Score": "6 - 4 - 0",
+                    "Win Rate": "60.00%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "9",
+                    "Score": "5 - 4 - 0",
+                    "Win Rate": "55.56%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "8",
+                    "Score": "4 - 4 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "7",
+                    "Score": "5 - 2 - 0",
+                    "Win Rate": "71.43%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "7",
+                    "Score": "0 - 7 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "6",
+                    "Score": "5 - 1 - 0",
+                    "Win Rate": "83.33%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "2",
+                    "Score": "2 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "6",
+                    "Score": "3 - 3 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Other": {
+                    "Matches": "184",
+                    "Score": "105-79",
+                    "Win Rate": "57.1%"
+                }
+            }
+        },
+        {
+            "Rank": "10",
+            "Deck Name": "Charizard ex",
+            "URL": "https://play.limitlesstcg.com/decks/charizard-ex-a2b?game=POCKET&format=standard&set=A3",
+            "Count": "136",
+            "Share": "2.17%",
+            "Win %": "46.94%",
+            "Matchups": {
+                "Solgaleo ex Skarmory": {
+                    "Matches": "67",
+                    "Score": "37 - 30 - 0",
+                    "Win Rate": "55.22%"
+                },
+                "Giratina ex Darkrai ex": {
+                    "Matches": "66",
+                    "Score": "39 - 26 - 1",
+                    "Win Rate": "59.09%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "48",
+                    "Score": "31 - 17 - 0",
+                    "Win Rate": "64.58%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "43",
+                    "Score": "20 - 23 - 0",
+                    "Win Rate": "46.51%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "27",
+                    "Score": "13 - 14 - 0",
+                    "Win Rate": "48.15%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "22",
+                    "Score": "7 - 15 - 0",
+                    "Win Rate": "31.82%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "20",
+                    "Score": "3 - 17 - 0",
+                    "Win Rate": "15.00%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "17",
+                    "Score": "8 - 9 - 0",
+                    "Win Rate": "47.06%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "16",
+                    "Score": "9 - 7 - 0",
+                    "Win Rate": "56.25%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "16",
+                    "Score": "3 - 13 - 0",
+                    "Win Rate": "18.75%"
+                },
+                "Charizard ex": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "14",
+                    "Score": "2 - 12 - 0",
+                    "Win Rate": "14.29%"
+                },
+                "Incineroar ex": {
+                    "Matches": "10",
+                    "Score": "5 - 5 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "4",
+                    "Score": "2 - 2 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "9",
+                    "Score": "1 - 8 - 0",
+                    "Win Rate": "11.11%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "8",
+                    "Score": "7 - 1 - 0",
+                    "Win Rate": "87.50%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "6",
+                    "Score": "5 - 1 - 0",
+                    "Win Rate": "83.33%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "6",
+                    "Score": "2 - 4 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "6",
+                    "Score": "2 - 4 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "4",
+                    "Score": "2 - 2 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Other": {
+                    "Matches": "237",
+                    "Score": "107-130",
+                    "Win Rate": "45.1%"
+                }
+            }
+        },
+        {
+            "Rank": "11",
+            "Deck Name": "Decidueye ex Meowscarada",
+            "URL": "https://play.limitlesstcg.com/decks/decidueye-ex-a3-meowscarada-a2b?game=POCKET&format=standard&set=A3",
+            "Count": "135",
+            "Share": "2.15%",
+            "Win %": "49.71%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "65",
+                    "Score": "41 - 22 - 2",
+                    "Win Rate": "63.08%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "58",
+                    "Score": "18 - 39 - 1",
+                    "Win Rate": "31.03%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "52",
+                    "Score": "25 - 27 - 0",
+                    "Win Rate": "48.08%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "31",
+                    "Score": "18 - 13 - 0",
+                    "Win Rate": "58.06%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "30",
+                    "Score": "13 - 17 - 0",
+                    "Win Rate": "43.33%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "25",
+                    "Score": "20 - 5 - 0",
+                    "Win Rate": "80.00%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "24",
+                    "Score": "12 - 12 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "22",
+                    "Score": "13 - 9 - 0",
+                    "Win Rate": "59.09%"
+                },
+                "Charizard ex": {
+                    "Matches": "1",
+                    "Score": "0 - 0 - 1",
+                    "Win Rate": "0.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "13",
+                    "Score": "6 - 7 - 0",
+                    "Win Rate": "46.15%"
+                },
+                "Incineroar ex": {
+                    "Matches": "13",
+                    "Score": "3 - 10 - 0",
+                    "Win Rate": "23.08%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "12",
+                    "Score": "8 - 4 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "3",
+                    "Score": "2 - 1 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "9",
+                    "Score": "5 - 4 - 0",
+                    "Win Rate": "55.56%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "8",
+                    "Score": "6 - 2 - 0",
+                    "Win Rate": "75.00%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "8",
+                    "Score": "1 - 7 - 0",
+                    "Win Rate": "12.50%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "7",
+                    "Score": "2 - 5 - 0",
+                    "Win Rate": "28.57%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "6",
+                    "Score": "2 - 4 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "3",
+                    "Score": "2 - 1 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Other": {
+                    "Matches": "215",
+                    "Score": "116-99",
+                    "Win Rate": "54.0%"
+                }
+            }
+        },
+        {
+            "Rank": "12",
+            "Deck Name": "Lycanroc Rampardos",
+            "URL": "https://play.limitlesstcg.com/decks/lycanroc-a3-rampardos-a2?game=POCKET&format=standard&set=A3",
+            "Count": "125",
+            "Share": "1.99%",
+            "Win %": "51.00%",
+            "Matchups": {
+                "Giratina ex Snorlax": {
+                    "Matches": "73",
+                    "Score": "36 - 37 - 0",
+                    "Win Rate": "49.32%"
+                },
+                "Giratina ex Darkrai ex": {
+                    "Matches": "68",
+                    "Score": "26 - 40 - 2",
+                    "Win Rate": "38.24%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "43",
+                    "Score": "20 - 23 - 0",
+                    "Win Rate": "46.51%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "40",
+                    "Score": "17 - 23 - 0",
+                    "Win Rate": "42.50%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "35",
+                    "Score": "23 - 12 - 0",
+                    "Win Rate": "65.71%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "22",
+                    "Score": "9 - 12 - 1",
+                    "Win Rate": "40.91%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "19",
+                    "Score": "17 - 2 - 0",
+                    "Win Rate": "89.47%"
+                },
+                "Incineroar ex": {
+                    "Matches": "15",
+                    "Score": "6 - 9 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Charizard ex": {
+                    "Matches": "14",
+                    "Score": "12 - 2 - 0",
+                    "Win Rate": "85.71%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "13",
+                    "Score": "9 - 4 - 0",
+                    "Win Rate": "69.23%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "12",
+                    "Score": "4 - 8 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "10",
+                    "Score": "2 - 8 - 0",
+                    "Win Rate": "20.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "8",
+                    "Score": "5 - 3 - 0",
+                    "Win Rate": "62.50%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "7",
+                    "Score": "6 - 1 - 0",
+                    "Win Rate": "85.71%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "5",
+                    "Score": "4 - 1 - 0",
+                    "Win Rate": "80.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "3",
+                    "Score": "3 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "3",
+                    "Score": "2 - 1 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "3",
+                    "Score": "1 - 2 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "2",
+                    "Score": "1 - 1 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Other": {
+                    "Matches": "149",
+                    "Score": "78-71",
+                    "Win Rate": "52.3%"
+                }
+            }
+        },
+        {
+            "Rank": "13",
+            "Deck Name": "Greninja Giratina ex",
+            "URL": "https://play.limitlesstcg.com/decks/greninja-a1-giratina-ex-a2b?game=POCKET&format=standard&set=A3",
+            "Count": "95",
+            "Share": "1.51%",
+            "Win %": "52.74%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "63",
+                    "Score": "46 - 16 - 1",
+                    "Win Rate": "73.02%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "46",
+                    "Score": "11 - 35 - 0",
+                    "Win Rate": "23.91%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "41",
+                    "Score": "17 - 24 - 0",
+                    "Win Rate": "41.46%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "35",
+                    "Score": "14 - 21 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "27",
+                    "Score": "19 - 8 - 0",
+                    "Win Rate": "70.37%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "22",
+                    "Score": "7 - 15 - 0",
+                    "Win Rate": "31.82%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "17",
+                    "Score": "4 - 13 - 0",
+                    "Win Rate": "23.53%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "14",
+                    "Score": "5 - 5 - 4",
+                    "Win Rate": "35.71%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "8",
+                    "Score": "7 - 1 - 0",
+                    "Win Rate": "87.50%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "7",
+                    "Score": "1 - 6 - 0",
+                    "Win Rate": "14.29%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "6",
+                    "Score": "5 - 1 - 0",
+                    "Win Rate": "83.33%"
+                },
+                "Charizard ex": {
+                    "Matches": "6",
+                    "Score": "4 - 2 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Incineroar ex": {
+                    "Matches": "5",
+                    "Score": "4 - 1 - 0",
+                    "Win Rate": "80.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "4",
+                    "Score": "3 - 1 - 0",
+                    "Win Rate": "75.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "4",
+                    "Score": "2 - 2 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "3",
+                    "Score": "1 - 2 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Other": {
+                    "Matches": "125",
+                    "Score": "79-45",
+                    "Win Rate": "63.2%"
+                }
+            }
+        },
+        {
+            "Rank": "14",
+            "Deck Name": "Incineroar ex",
+            "URL": "https://play.limitlesstcg.com/decks/incineroar-ex-a3?game=POCKET&format=standard&set=A3",
+            "Count": "95",
+            "Share": "1.51%",
+            "Win %": "48.80%",
+            "Matchups": {
+                "Solgaleo ex Skarmory": {
+                    "Matches": "45",
+                    "Score": "17 - 28 - 0",
+                    "Win Rate": "37.78%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "38",
+                    "Score": "15 - 23 - 0",
+                    "Win Rate": "39.47%"
+                },
+                "Giratina ex Darkrai ex": {
+                    "Matches": "37",
+                    "Score": "14 - 23 - 0",
+                    "Win Rate": "37.84%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "29",
+                    "Score": "16 - 13 - 0",
+                    "Win Rate": "55.17%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "20",
+                    "Score": "13 - 7 - 0",
+                    "Win Rate": "65.00%"
+                },
+                "Incineroar ex": {
+                    "Matches": "18",
+                    "Score": "9 - 9 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "16",
+                    "Score": "10 - 6 - 0",
+                    "Win Rate": "62.50%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "16",
+                    "Score": "9 - 7 - 0",
+                    "Win Rate": "56.25%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "15",
+                    "Score": "9 - 6 - 0",
+                    "Win Rate": "60.00%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "13",
+                    "Score": "10 - 3 - 0",
+                    "Win Rate": "76.92%"
+                },
+                "Charizard ex": {
+                    "Matches": "10",
+                    "Score": "5 - 5 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "10",
+                    "Score": "4 - 6 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "8",
+                    "Score": "2 - 6 - 0",
+                    "Win Rate": "25.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "5",
+                    "Score": "1 - 4 - 0",
+                    "Win Rate": "20.00%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "5",
+                    "Score": "1 - 4 - 0",
+                    "Win Rate": "20.00%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "5",
+                    "Score": "1 - 4 - 0",
+                    "Win Rate": "20.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "4",
+                    "Score": "3 - 1 - 0",
+                    "Win Rate": "75.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "3",
+                    "Score": "2 - 1 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "2",
+                    "Score": "2 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Other": {
+                    "Matches": "200",
+                    "Score": "100-92",
+                    "Win Rate": "50.0%"
+                }
+            }
+        },
+        {
+            "Rank": "15",
+            "Deck Name": "Charizard ex Moltres ex",
+            "URL": "https://play.limitlesstcg.com/decks/charizard-ex-moltres-ex-a1?game=POCKET&format=standard&set=A3",
+            "Count": "66",
+            "Share": "1.05%",
+            "Win %": "46.18%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "47",
+                    "Score": "21 - 24 - 2",
+                    "Win Rate": "44.68%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "25",
+                    "Score": "10 - 15 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "22",
+                    "Score": "7 - 15 - 0",
+                    "Win Rate": "31.82%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "17",
+                    "Score": "9 - 8 - 0",
+                    "Win Rate": "52.94%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "11",
+                    "Score": "6 - 5 - 0",
+                    "Win Rate": "54.55%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "11",
+                    "Score": "1 - 10 - 0",
+                    "Win Rate": "9.09%"
+                },
+                "Charizard ex": {
+                    "Matches": "10",
+                    "Score": "7 - 3 - 0",
+                    "Win Rate": "70.00%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "10",
+                    "Score": "5 - 5 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "10",
+                    "Score": "4 - 6 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "7",
+                    "Score": "0 - 7 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "6",
+                    "Score": "1 - 5 - 0",
+                    "Win Rate": "16.67%"
+                },
+                "Incineroar ex": {
+                    "Matches": "5",
+                    "Score": "4 - 1 - 0",
+                    "Win Rate": "80.00%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "4",
+                    "Score": "3 - 1 - 0",
+                    "Win Rate": "75.00%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "4",
+                    "Score": "3 - 1 - 0",
+                    "Win Rate": "75.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "3",
+                    "Score": "1 - 2 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "4",
+                    "Score": "2 - 2 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "3",
+                    "Score": "1 - 2 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "3",
+                    "Score": "0 - 3 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "2",
+                    "Score": "2 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "2",
+                    "Score": "1 - 1 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Other": {
+                    "Matches": "117",
+                    "Score": "61-54",
+                    "Win Rate": "52.1%"
+                }
+            }
+        },
+        {
+            "Rank": "16",
+            "Deck Name": "Aerodactyl ex Rampardos",
+            "URL": "https://play.limitlesstcg.com/decks/aerodactyl-ex-a1a-rampardos-a2?game=POCKET&format=standard&set=A3",
+            "Count": "65",
+            "Share": "1.04%",
+            "Win %": "50.94%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "32",
+                    "Score": "7 - 24 - 1",
+                    "Win Rate": "21.88%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "30",
+                    "Score": "12 - 18 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "25",
+                    "Score": "14 - 11 - 0",
+                    "Win Rate": "56.00%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "23",
+                    "Score": "10 - 12 - 1",
+                    "Win Rate": "43.48%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "19",
+                    "Score": "7 - 12 - 0",
+                    "Win Rate": "36.84%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "12",
+                    "Score": "5 - 7 - 0",
+                    "Win Rate": "41.67%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "12",
+                    "Score": "4 - 8 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "10",
+                    "Score": "5 - 5 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Charizard ex": {
+                    "Matches": "9",
+                    "Score": "8 - 1 - 0",
+                    "Win Rate": "88.89%"
+                },
+                "Incineroar ex": {
+                    "Matches": "8",
+                    "Score": "6 - 2 - 0",
+                    "Win Rate": "75.00%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "8",
+                    "Score": "4 - 4 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "7",
+                    "Score": "7 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "6",
+                    "Score": "4 - 2 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "5",
+                    "Score": "1 - 4 - 0",
+                    "Win Rate": "20.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "4",
+                    "Score": "1 - 3 - 0",
+                    "Win Rate": "25.00%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "3",
+                    "Score": "3 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "3",
+                    "Score": "2 - 1 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "2",
+                    "Score": "2 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Other": {
+                    "Matches": "100",
+                    "Score": "59-41",
+                    "Win Rate": "59.0%"
+                }
+            }
+        },
+        {
+            "Rank": "17",
+            "Deck Name": "Meowscarada Decidueye ex",
+            "URL": "https://play.limitlesstcg.com/decks/meowscarada-a2b-decidueye-ex-a3?game=POCKET&format=standard&set=A3",
+            "Count": "61",
+            "Share": "0.97%",
+            "Win %": "50.49%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "51",
+                    "Score": "28 - 22 - 1",
+                    "Win Rate": "54.90%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "31",
+                    "Score": "14 - 17 - 0",
+                    "Win Rate": "45.16%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "25",
+                    "Score": "9 - 16 - 0",
+                    "Win Rate": "36.00%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "22",
+                    "Score": "13 - 9 - 0",
+                    "Win Rate": "59.09%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "21",
+                    "Score": "20 - 0 - 1",
+                    "Win Rate": "95.24%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "14",
+                    "Score": "7 - 7 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "10",
+                    "Score": "8 - 2 - 0",
+                    "Win Rate": "80.00%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "10",
+                    "Score": "4 - 6 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "9",
+                    "Score": "4 - 5 - 0",
+                    "Win Rate": "44.44%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "8",
+                    "Score": "3 - 5 - 0",
+                    "Win Rate": "37.50%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "8",
+                    "Score": "2 - 6 - 0",
+                    "Win Rate": "25.00%"
+                },
+                "Charizard ex": {
+                    "Matches": "6",
+                    "Score": "1 - 5 - 0",
+                    "Win Rate": "16.67%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "6",
+                    "Score": "1 - 5 - 0",
+                    "Win Rate": "16.67%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "4",
+                    "Score": "1 - 3 - 0",
+                    "Win Rate": "25.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "4",
+                    "Score": "1 - 3 - 0",
+                    "Win Rate": "25.00%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "3",
+                    "Score": "0 - 3 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "2",
+                    "Score": "0 - 2 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Incineroar ex": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Other": {
+                    "Matches": "71",
+                    "Score": "38-32",
+                    "Win Rate": "53.5%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "0",
+                    "Score": "0-0",
+                    "Win Rate": "0%"
+                }
+            }
+        },
+        {
+            "Rank": "18",
+            "Deck Name": "Arceus ex Darkrai ex",
+            "URL": "https://play.limitlesstcg.com/decks/arceus-ex-a2a-darkrai-ex-a2?game=POCKET&format=standard&set=A3",
+            "Count": "61",
+            "Share": "0.97%",
+            "Win %": "47.28%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "32",
+                    "Score": "13 - 19 - 0",
+                    "Win Rate": "40.63%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "31",
+                    "Score": "13 - 17 - 1",
+                    "Win Rate": "41.94%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "26",
+                    "Score": "15 - 9 - 2",
+                    "Win Rate": "57.69%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "18",
+                    "Score": "5 - 12 - 1",
+                    "Win Rate": "27.78%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "18",
+                    "Score": "5 - 13 - 0",
+                    "Win Rate": "27.78%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "12",
+                    "Score": "6 - 6 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "12",
+                    "Score": "6 - 6 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "9",
+                    "Score": "4 - 5 - 0",
+                    "Win Rate": "44.44%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "9",
+                    "Score": "3 - 6 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "8",
+                    "Score": "3 - 5 - 0",
+                    "Win Rate": "37.50%"
+                },
+                "Charizard ex": {
+                    "Matches": "6",
+                    "Score": "4 - 2 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "6",
+                    "Score": "3 - 3 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "6",
+                    "Score": "3 - 3 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "5",
+                    "Score": "4 - 1 - 0",
+                    "Win Rate": "80.00%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "4",
+                    "Score": "2 - 2 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Incineroar ex": {
+                    "Matches": "3",
+                    "Score": "1 - 2 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "2",
+                    "Score": "0 - 2 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Other": {
+                    "Matches": "84",
+                    "Score": "49-35",
+                    "Win Rate": "58.3%"
+                }
+            }
+        },
+        {
+            "Rank": "19",
+            "Deck Name": "Beedrill ex Beedrill",
+            "URL": "https://play.limitlesstcg.com/decks/beedrill-ex-a2b-beedrill-a1?game=POCKET&format=standard&set=A3",
+            "Count": "48",
+            "Share": "0.76%",
+            "Win %": "50.42%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "26",
+                    "Score": "14 - 12 - 0",
+                    "Win Rate": "53.85%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "18",
+                    "Score": "8 - 10 - 0",
+                    "Win Rate": "44.44%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "17",
+                    "Score": "9 - 8 - 0",
+                    "Win Rate": "52.94%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "14",
+                    "Score": "6 - 8 - 0",
+                    "Win Rate": "42.86%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "13",
+                    "Score": "7 - 6 - 0",
+                    "Win Rate": "53.85%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "10",
+                    "Score": "6 - 4 - 0",
+                    "Win Rate": "60.00%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "10",
+                    "Score": "1 - 9 - 0",
+                    "Win Rate": "10.00%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "8",
+                    "Score": "4 - 4 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Charizard ex": {
+                    "Matches": "8",
+                    "Score": "1 - 7 - 0",
+                    "Win Rate": "12.50%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "6",
+                    "Score": "4 - 2 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "5",
+                    "Score": "1 - 4 - 0",
+                    "Win Rate": "20.00%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "4",
+                    "Score": "3 - 1 - 0",
+                    "Win Rate": "75.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "4",
+                    "Score": "2 - 2 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Incineroar ex": {
+                    "Matches": "4",
+                    "Score": "1 - 3 - 0",
+                    "Win Rate": "25.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "3",
+                    "Score": "2 - 1 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "3",
+                    "Score": "1 - 2 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "2",
+                    "Score": "0 - 2 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Other": {
+                    "Matches": "77",
+                    "Score": "47-29",
+                    "Win Rate": "61.0%"
+                }
+            }
+        },
+        {
+            "Rank": "20",
+            "Deck Name": "Solgaleo ex Snorlax",
+            "URL": "https://play.limitlesstcg.com/decks/solgaleo-ex-a3-snorlax-a2a?game=POCKET&format=standard&set=A3",
+            "Count": "48",
+            "Share": "0.76%",
+            "Win %": "46.45%",
+            "Matchups": {
+                "Giratina ex Darkrai ex": {
+                    "Matches": "23",
+                    "Score": "2 - 21 - 0",
+                    "Win Rate": "8.70%"
+                },
+                "Giratina ex Snorlax": {
+                    "Matches": "19",
+                    "Score": "7 - 12 - 0",
+                    "Win Rate": "36.84%"
+                },
+                "Solgaleo ex Skarmory": {
+                    "Matches": "17",
+                    "Score": "12 - 5 - 0",
+                    "Win Rate": "70.59%"
+                },
+                "Garchomp ex Rampardos": {
+                    "Matches": "14",
+                    "Score": "6 - 8 - 0",
+                    "Win Rate": "42.86%"
+                },
+                "Giratina ex Greninja": {
+                    "Matches": "12",
+                    "Score": "4 - 8 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Charizard ex Incineroar ex": {
+                    "Matches": "10",
+                    "Score": "4 - 6 - 0",
+                    "Win Rate": "40.00%"
+                },
+                "Arceus ex Crobat": {
+                    "Matches": "9",
+                    "Score": "2 - 7 - 0",
+                    "Win Rate": "22.22%"
+                },
+                "Lucario Rampardos": {
+                    "Matches": "8",
+                    "Score": "3 - 4 - 1",
+                    "Win Rate": "37.50%"
+                },
+                "Magnezone Oricorio": {
+                    "Matches": "6",
+                    "Score": "1 - 5 - 0",
+                    "Win Rate": "16.67%"
+                },
+                "Charizard ex": {
+                    "Matches": "4",
+                    "Score": "2 - 2 - 0",
+                    "Win Rate": "50.00%"
+                },
+                "Greninja Giratina ex": {
+                    "Matches": "4",
+                    "Score": "1 - 3 - 0",
+                    "Win Rate": "25.00%"
+                },
+                "Lycanroc Rampardos": {
+                    "Matches": "3",
+                    "Score": "2 - 1 - 0",
+                    "Win Rate": "66.67%"
+                },
+                "Decidueye ex Meowscarada": {
+                    "Matches": "3",
+                    "Score": "1 - 2 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Aerodactyl ex Rampardos": {
+                    "Matches": "3",
+                    "Score": "1 - 2 - 0",
+                    "Win Rate": "33.33%"
+                },
+                "Meowscarada Decidueye ex": {
+                    "Matches": "2",
+                    "Score": "2 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Charizard ex Moltres ex": {
+                    "Matches": "2",
+                    "Score": "0 - 2 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Incineroar ex": {
+                    "Matches": "2",
+                    "Score": "0 - 2 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Solgaleo ex Snorlax": {
+                    "Matches": "2",
+                    "Score": "0 - 0 - 2",
+                    "Win Rate": "0.00%"
+                },
+                "Arceus ex Darkrai ex": {
+                    "Matches": "1",
+                    "Score": "1 - 0 - 0",
+                    "Win Rate": "100.00%"
+                },
+                "Beedrill ex Beedrill": {
+                    "Matches": "1",
+                    "Score": "0 - 1 - 0",
+                    "Win Rate": "0.00%"
+                },
+                "Other": {
+                    "Matches": "64",
+                    "Score": "46-18",
+                    "Win Rate": "71.9%"
+                }
+            }
+        }
     ]
 }
