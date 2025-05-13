@@ -135,15 +135,14 @@ export const preprocessAndValidateCsvData = (jsonData) => {
       processedRecord.auto = true;
       warnings.push(`Row ${index + 1}: Missing auto field - automatically set to true`);
     }
-    
-    // Make sure yourDeck and opponentDeck objects exist
+      // Make sure yourDeck and opponentDeck objects exist
     if (!processedRecord.yourDeck) {
-      processedRecord.yourDeck = { primary: null, secondary: null };
+      processedRecord.yourDeck = { primary: null, secondary: null, variant: null };
       errors.push(`Row ${index + 1}: Missing 'yourDeck' information - created empty object`);
     }
     
     if (!processedRecord.opponentDeck) {
-      processedRecord.opponentDeck = { primary: null, secondary: null };
+      processedRecord.opponentDeck = { primary: null, secondary: null, variant: null };
       errors.push(`Row ${index + 1}: Missing 'opponentDeck' information - created empty object`);
     }
     
@@ -288,6 +287,14 @@ const validateMatchRecord = (record, rowNum) => {
         errors.push(createDetailedError('yourDeck.secondary', record.yourDeck.secondary, 'Card does not exist in card database'));
       }
     }
+    // Check yourDeck.variant if it exists and is not null
+    if (record.yourDeck.variant !== "null" && record.yourDeck.variant) {
+      // Validate yourDeck.variant is a valid card key in card_data
+      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
+      if (!availableCardKeys.includes(record.yourDeck.variant)) {
+        errors.push(createDetailedError('yourDeck.variant', record.yourDeck.variant, 'Card does not exist in card database'));
+      }
+    }
   }
 
   if (!record.opponentDeck) {
@@ -309,6 +316,14 @@ const validateMatchRecord = (record, rowNum) => {
       const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
       if (!availableCardKeys.includes(record.opponentDeck.secondary)) {
         errors.push(createDetailedError('opponentDeck.secondary', record.opponentDeck.secondary, 'Card does not exist in card database'));
+      }
+    }
+    // Check opponentDeck.variant if it exists and is not null
+    if (record.opponentDeck.variant !== "null" && record.opponentDeck.variant) {
+      // Validate opponentDeck.variant is a valid card key in card_data
+      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
+      if (!availableCardKeys.includes(record.opponentDeck.variant)) {
+        errors.push(createDetailedError('opponentDeck.variant', record.opponentDeck.variant, 'Card does not exist in card database'));
       }
     }
   }

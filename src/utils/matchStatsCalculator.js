@@ -7,10 +7,19 @@ const getDeckDisplayName = (deck) => {
   if (!deck.primary) return '';
   const primaryCard = getCardInfo(deck.primary);
   const secondaryCard = deck.secondary ? getCardInfo(deck.secondary) : null;
+  const variantCard = deck.variant ? getCardInfo(deck.variant) : null;
   
-  return secondaryCard 
-    ? `${primaryCard.displayName} | ${secondaryCard.displayName}`
-    : primaryCard.displayName;
+  let displayName = primaryCard.displayName;
+  
+  if (secondaryCard) {
+    displayName += ` | ${secondaryCard.displayName}`;
+  }
+  
+  if (variantCard) {
+    displayName += ` | ${variantCard.displayName}`;
+  }
+  
+  return displayName;
 };
 
 /**

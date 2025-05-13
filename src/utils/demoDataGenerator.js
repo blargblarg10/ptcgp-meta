@@ -85,15 +85,16 @@ const generateSampleData = (numMatches = 500) => {
         const turnOrder = Math.random() > 0.5 ? "first" : "second";
         const yourDeck = generateDeck(true);
         const opponentDeck = generateDeck(false);
-        
-        const match = {
+          const match = {
             yourDeck: {
                 primary: yourDeck.primary,
-                secondary: yourDeck.secondary
+                secondary: yourDeck.secondary,
+                variant: Math.random() < 0.3 ? generateDeck(true).primary : null // 30% chance of having a variant
             },
             opponentDeck: {
                 primary: opponentDeck.primary,
-                secondary: opponentDeck.secondary
+                secondary: opponentDeck.secondary,
+                variant: Math.random() < 0.3 ? generateDeck(false).primary : null // 30% chance of having a variant
             },
             turnOrder,
             result: selectResult(yourDeck, opponentDeck, turnOrder),

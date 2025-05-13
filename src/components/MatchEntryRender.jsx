@@ -41,6 +41,9 @@ const SearchableDropdown = ({
       if (match.yourDeck.secondary) {
         cardCounts[match.yourDeck.secondary] = (cardCounts[match.yourDeck.secondary] || 0) + 1;
       }
+      if (match.yourDeck.variant) {
+        cardCounts[match.yourDeck.variant] = (cardCounts[match.yourDeck.variant] || 0) + 1;
+      }
       
       // Count opponent deck cards
       if (match.opponentDeck.primary) {
@@ -49,12 +52,15 @@ const SearchableDropdown = ({
       if (match.opponentDeck.secondary) {
         cardCounts[match.opponentDeck.secondary] = (cardCounts[match.opponentDeck.secondary] || 0) + 1;
       }
+      if (match.opponentDeck.variant) {
+        cardCounts[match.opponentDeck.variant] = (cardCounts[match.opponentDeck.variant] || 0) + 1;
+      }
     });
     
     // Sort by frequency and get top 10
     return Object.entries(cardCounts)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
+      .slice(0, 20)
       .map(([cardKey]) => {
         const cardInfo = getCardInfo(cardKey);
         return cardInfo;
@@ -262,7 +268,6 @@ const MatchEntry = ({
       </select>
     );
   };
-
   // Render a card select dropdown
   const renderCardSelect = (field, value, disabled, excludeCard = null) => {
     // Remove the filtering by excludeCard to allow selection of the same card
@@ -270,13 +275,23 @@ const MatchEntry = ({
       
     // Don't filter out cards from card groups
     const cardsByElement = CARDS_BY_ELEMENT;
-      
+    
+    let placeholder;
+    if (field.includes('primary')) {
+      placeholder = "Primary";
+    } else if (field.includes('secondary')) {
+      placeholder = "Secondary";
+    } else if (field.includes('variant')) {
+      placeholder = "Variant";
+    }
+
     return (
       <SearchableDropdown
         value={value || ""}
         onChange={(value) => {
           onFieldChange(entry.id, field, value);
         }}
+        placeholder={placeholder}
         disabled={disabled}
         optgroups={cardsByElement}
         matchHistory={matchHistory}
@@ -326,7 +341,7 @@ const MatchEntry = ({
       {/* Responsive grid layout - Stack on mobile, grid on larger screens */}
       <div className="md:grid md:grid-cols-24 md:gap-2 space-y-3 md:space-y-0">
         {/* Your Deck */}
-        <div className="md:col-span-9 md:mb-0">
+        <div className="md:col-span-9 md:mb-0">          
           <div className="flex items-center mb-1 h-6">
             <label className="text-xs font-medium text-gray-700">Your Deck</label>
             <div className="flex ml-2">
@@ -344,19 +359,32 @@ const MatchEntry = ({
                   className="w-6 h-6 ml-1"
                 />
               )}
+              {entry.yourDeck.variant && getCardInfo(entry.yourDeck.variant)?.iconPath && (
+                <img 
+                  src={`${basePath}icons/${getCardInfo(entry.yourDeck.variant).iconPath.split('/').pop()}`}
+                  alt="Variant Pokemon" 
+                  className="w-6 h-6 ml-1"
+                />
+              )}
             </div>
-          </div>
+          </div>          
           <div className="flex space-x-2">
-            <div className="flex-1">
+            <div className="flex-[0.33]">
               {renderCardSelect('yourDeck.primary', entry.yourDeck.primary, isLocked)}
               {formErrors?.[entry.id]?.['yourDeck.primary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.primary']}</div>
               )}
             </div>
-            <div className="flex-1">
+            <div className="flex-[0.33]">
               {renderCardSelect('yourDeck.secondary', entry.yourDeck.secondary, isLocked, entry.yourDeck.primary)}
               {formErrors?.[entry.id]?.['yourDeck.secondary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.secondary']}</div>
+              )}
+            </div>
+            <div className="flex-[0.33] border-l border-gray-200 pl-2">
+              {renderCardSelect('yourDeck.variant', entry.yourDeck.variant, isLocked, entry.yourDeck.primary)}
+              {formErrors?.[entry.id]?.['yourDeck.variant'] && (
+                <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.variant']}</div>
               )}
             </div>
           </div>
@@ -442,8 +470,7 @@ const MatchEntry = ({
         </div>
         
         {/* Opponent's Deck */}
-        <div className="md:col-span-9">
-          <div className="flex items-center mb-1 h-6">
+        <div className="md:col-span-9">          <div className="flex items-center mb-1 h-6">
             <label className="text-xs font-medium text-gray-700">Opponent's Deck</label>
             <div className="flex ml-2">
               {entry.opponentDeck.primary && getCardInfo(entry.opponentDeck.primary)?.iconPath && (
@@ -460,19 +487,31 @@ const MatchEntry = ({
                   className="w-6 h-6 ml-1"
                 />
               )}
+              {entry.opponentDeck.variant && getCardInfo(entry.opponentDeck.variant)?.iconPath && (
+                <img 
+                  src={`${basePath}icons/${getCardInfo(entry.opponentDeck.variant).iconPath.split('/').pop()}`}
+                  alt="Variant Pokemon" 
+                  className="w-6 h-6 ml-1"
+                />
+              )}
             </div>
-          </div>
-          <div className="flex space-x-2">
-            <div className="flex-1">
+          </div>          <div className="flex space-x-2">
+            <div className="flex-[0.33]">
               {renderCardSelect('opponentDeck.primary', entry.opponentDeck.primary, isLocked)}
               {formErrors?.[entry.id]?.['opponentDeck.primary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.primary']}</div>
               )}
             </div>
-            <div className="flex-1">
+            <div className="flex-[0.33]">
               {renderCardSelect('opponentDeck.secondary', entry.opponentDeck.secondary, isLocked, entry.opponentDeck.primary)}
               {formErrors?.[entry.id]?.['opponentDeck.secondary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.secondary']}</div>
+              )}
+            </div>
+            <div className="flex-[0.33] border-l border-gray-200 pl-2">
+              {renderCardSelect('opponentDeck.variant', entry.opponentDeck.variant, isLocked, entry.opponentDeck.primary)}
+              {formErrors?.[entry.id]?.['opponentDeck.variant'] && (
+                <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.variant']}</div>
               )}
             </div>
           </div>
@@ -566,24 +605,34 @@ const MatchEntry = ({
         </div>      </div>
       
       {/* Notes section with Points and Auto on the right */}
-      <div className="mt-3">
-        <div className="flex justify-between items-center">
-          {/* Notes section - takes up most of the space */}
-          <div className="flex-grow mr-4">
+      <div className="mt-3 ">
+        <div className="flex justify-between items-center">            {/* Notes section - takes up most of the space */}
+          <div className="flex-grow mr-4 flex items-center">
             {/* Show notes input for editing or new (unlocked) entries */}
             {(!entry.isLocked || isEditing) && (
-              <input
-                type="text"
+              <textarea
                 placeholder="Add notes about this match..."
                 value={entry.notes || ""}
                 onChange={(e) => onFieldChange(entry.id, 'notes', e.target.value)}
-                className="w-full p-1 text-xs border border-gray-300 rounded"
+                className="w-full p-1 text-xs border border-gray-300 rounded resize-none"
+                rows="1"
+                style={{ 
+                  height: "28px", 
+                  overflow: "hidden",
+                  resize: "none",
+                  paddingTop: "6px"
+                }}
+                onInput={(e) => {
+                  // Auto-resize: Reset height then set to scrollHeight
+                  e.target.style.height = "28px";
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
               />
             )}
             
             {/* Show notes when locked and notes exist - slightly bigger and darker */}
             {isLocked && entry.notes && (
-              <div className="text-sm text-gray-700">
+              <div className="text-sm text-gray-700 whitespace-pre-wrap">
                 {entry.notes}
               </div>
             )}

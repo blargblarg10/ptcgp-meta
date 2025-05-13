@@ -42,11 +42,13 @@ const clearEntriesCookie = () => {
 const initialBatchRow = {
   yourDeck: {
     primary: null,    // Will store just the key
-    secondary: null   // Will store just the key
+    secondary: null,   // Will store just the key
+    variant: null     // Will store just the key
   },
   opponentDeck: {
     primary: null,    // Will store just the key
-    secondary: null   // Will store just the key
+    secondary: null,   // Will store just the key
+    variant: null     // Will store just the key
   },
   turnOrder: null,
   result: "none",
@@ -445,10 +447,38 @@ const MatchResultTracker = () => {
         isValid = false;
       }
       
+      // Check if primary and variant are the same for your deck
+      if (entry.yourDeck.primary && entry.yourDeck.variant && 
+          entry.yourDeck.primary === entry.yourDeck.variant) {
+        entryErrors['yourDeck.variant'] = 'Cannot be the same as primary';
+        isValid = false;
+      }
+      
+      // Check if secondary and variant are the same for your deck
+      if (entry.yourDeck.secondary && entry.yourDeck.variant && 
+          entry.yourDeck.secondary === entry.yourDeck.variant) {
+        entryErrors['yourDeck.variant'] = 'Cannot be the same as secondary';
+        isValid = false;
+      }
+      
       // Check if primary and secondary are the same for opponent's deck
       if (entry.opponentDeck.primary && entry.opponentDeck.secondary && 
           entry.opponentDeck.primary === entry.opponentDeck.secondary) {
         entryErrors['opponentDeck.secondary'] = 'Cannot be the same as primary';
+        isValid = false;
+      }
+      
+      // Check if primary and variant are the same for opponent's deck
+      if (entry.opponentDeck.primary && entry.opponentDeck.variant && 
+          entry.opponentDeck.primary === entry.opponentDeck.variant) {
+        entryErrors['opponentDeck.variant'] = 'Cannot be the same as primary';
+        isValid = false;
+      }
+      
+      // Check if secondary and variant are the same for opponent's deck
+      if (entry.opponentDeck.secondary && entry.opponentDeck.variant && 
+          entry.opponentDeck.secondary === entry.opponentDeck.variant) {
+        entryErrors['opponentDeck.variant'] = 'Cannot be the same as secondary';
         isValid = false;
       }
       

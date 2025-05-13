@@ -10,8 +10,10 @@ export const EXPECTED_HEADERS = [
   'timestamp',
   'yourDeck.primary',
   'yourDeck.secondary',
+  'yourDeck.variant',
   'opponentDeck.primary',
   'opponentDeck.secondary',
+  'opponentDeck.variant',
   'turnOrder',
   'result',
   'isLocked',
@@ -92,10 +94,9 @@ export const csvToJson = (csvData) => {
   }
   // Extract headers
   const headers = filteredRows[0].split(',').map(h => h.trim());
-  
-  // These headers are required
+    // These headers are required
   const REQUIRED_HEADERS = EXPECTED_HEADERS.filter(h => 
-    !['id', 'isLocked', 'notes', 'points', 'auto'].includes(h)
+    !['id', 'isLocked', 'notes', 'points', 'auto', 'yourDeck.variant', 'opponentDeck.variant'].includes(h)
   );
   
   // Validate only required headers
@@ -170,17 +171,21 @@ export const csvToJson = (csvData) => {
           item[header] = value === "" || value === "null" ? null : value;
         }
       }
-    });    // Make sure yourDeck and opponentDeck objects exist
+    });    // Make sure yourDeck and opponentDeck objects exist    
     if (!item.yourDeck) {
-      item.yourDeck = { primary: null, secondary: null };
+      item.yourDeck = { primary: null, secondary: null, variant: null };
     } else if (!item.yourDeck.secondary) {
       item.yourDeck.secondary = null;
+    } else if (!item.yourDeck.variant) {
+      item.yourDeck.variant = null;
     }
     
     if (!item.opponentDeck) {
-      item.opponentDeck = { primary: null, secondary: null };
+      item.opponentDeck = { primary: null, secondary: null, variant: null };
     } else if (!item.opponentDeck.secondary) {
       item.opponentDeck.secondary = null;
+    } else if (!item.opponentDeck.variant) {
+      item.opponentDeck.variant = null;
     }
     
     // Ensure points and auto fields exist with default values if missing
@@ -211,8 +216,7 @@ function parseCSVRow(row) {
   while (i < row.length) {
     const char = row[i];
     
-    if (char === '"') {
-      if (i + 1 < row.length && row[i + 1] === '"') {
+    if (char === '"') {      if (i + 1 < row.length && row[i + 1] === '"') {
         // Handle escaped quotes - "" becomes " inside a quoted string
         currentValue += '';
         i++;
@@ -270,11 +274,10 @@ export const validateJsonStructure = (jsonData) => {
         errors.push(`Row ${index + 1}: Unexpected field '${key}'`);
       }
     });
-    
-    // Check deck objects for extra fields
+      // Check deck objects for extra fields
     if (item.yourDeck) {
       Object.keys(item.yourDeck).forEach(key => {
-        if (!['primary', 'secondary'].includes(key)) {
+        if (!['primary', 'secondary', 'variant'].includes(key)) {
           errors.push(`Row ${index + 1}: Unexpected field 'yourDeck.${key}'`);
         }
       });
@@ -282,7 +285,7 @@ export const validateJsonStructure = (jsonData) => {
     
     if (item.opponentDeck) {
       Object.keys(item.opponentDeck).forEach(key => {
-        if (!['primary', 'secondary'].includes(key)) {
+        if (!['primary', 'secondary', 'variant'].includes(key)) {
           errors.push(`Row ${index + 1}: Unexpected field 'opponentDeck.${key}'`);
         }
       });
