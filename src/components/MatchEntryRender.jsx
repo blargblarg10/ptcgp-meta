@@ -349,9 +349,11 @@ const MatchEntry = ({
       </div>
     );
   }
-
   return (
     <div className={rowClasses}>
+      {/* Added padding at the top to prevent overlapping */}
+      <div className="pt-1"></div>
+      
       {/* Timestamp in top right corner when locked - moved a bit further to the right to avoid overlap */}
       {entry.isLocked && (
         <div className="absolute top-2 right-9 text-xs text-gray-500" style={{ zIndex: 10 }}>
