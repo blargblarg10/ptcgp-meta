@@ -235,11 +235,10 @@ const MatchEntry = ({
   formErrors,
   matchHistory = [],
   previousEntryPoints
-}) => {
-  const isLocked = entry.isLocked && !isEditing;
+}) => {  const isLocked = entry.isLocked && !isEditing;
   const basePath = import.meta.env.BASE_URL || '/';
-  // Add state for delete confirmation
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  // State for delete confirmation
+  const [showInlineConfirm, setShowInlineConfirm] = useState(false);
 
   // Render a turn select dropdown
   const renderTurnSelect = (field, value, disabled) => {
@@ -326,7 +325,32 @@ const MatchEntry = ({
     rowClasses += "border-gray-300 bg-gray-100 ";
   } else {
     rowClasses += "border-gray-200 bg-white ";
-  }  return (
+  }
+
+  // Add conditional rendering based on confirmation state
+  if (showInlineConfirm) {
+    return (
+      <div className={`${rowClasses} flex flex-col items-center justify-center py-8`}>
+        <h3 className="text-lg font-medium mb-4 text-center">Are you sure you want to remove this entry?</h3>
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={() => setShowInlineConfirm(false)}
+            className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+          >
+            No
+          </button>
+          <button
+            onClick={() => onRemove(entry.id)}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
     <div className={rowClasses}>
       {/* Timestamp in top right corner when locked - moved a bit further to the right to avoid overlap */}
       {entry.isLocked && (
@@ -337,15 +361,7 @@ const MatchEntry = ({
       )}      {/* Small delete button in top right corner - always visible but more discreet */}
       <button
         type="button"
-        onClick={() => {
-          // Only show confirmation for locked entries, not for new/unsubmitted ones
-          if (entry.isLocked) {
-            setShowDeleteConfirm(true);
-          } else {
-            // Direct delete for unsubmitted entries
-            onRemove(entry.id);
-          }
-        }}
+        onClick={() => setShowInlineConfirm(true)}
         className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-sm font-medium rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 hover:text-gray-700 transition-colors duration-200 opacity-80 hover:opacity-100"
         style={{ lineHeight: 0, zIndex: 20 }}
         title="Remove"
@@ -736,34 +752,8 @@ const MatchEntry = ({
                 }`}>
                 </div>
               )}
-            </div>
-          </div>        </div>
-      </div>      {/* Delete confirmation popup - appears centered on screen with solid background */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center z-[9999]" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
-          <div className="bg-white p-4 rounded-lg shadow-xl max-w-md w-full border border-gray-300" style={{ position: 'relative', zIndex: 10000 }}>
-            <h3 className="text-lg font-medium mb-2">Confirm Deletion</h3>
-            <p className="mb-4">Are you sure you want to delete this match entry? This action cannot be undone.</p>
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  onRemove(entry.id);
-                  setShowDeleteConfirm(false);
-                }}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </div>          </div>        </div>
+      </div>
     </div>
   );
 };
