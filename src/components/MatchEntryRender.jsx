@@ -326,17 +326,32 @@ const MatchEntry = ({
     rowClasses += "border-gray-300 bg-gray-100 ";
   } else {
     rowClasses += "border-gray-200 bg-white ";
-  }
-
-  return (
+  }  return (
     <div className={rowClasses}>
-      {/* Timestamp in top right corner when locked */}
+      {/* Timestamp in top right corner when locked - moved a bit further to the right to avoid overlap */}
       {entry.isLocked && (
-        <div className="absolute top-2 right-3 text-xs text-gray-500">
+        <div className="absolute top-2 right-9 text-xs text-gray-500" style={{ zIndex: 10 }}>
           {new Date(entry.timestamp).toLocaleDateString()}
           {/* Recorded: {new Date(entry.timestamp).toLocaleDateString()} {new Date(entry.timestamp).toLocaleTimeString()} */}
         </div>
-      )}
+      )}      {/* Small delete button in top right corner - always visible but more discreet */}
+      <button
+        type="button"
+        onClick={() => {
+          // Only show confirmation for locked entries, not for new/unsubmitted ones
+          if (entry.isLocked) {
+            setShowDeleteConfirm(true);
+          } else {
+            // Direct delete for unsubmitted entries
+            onRemove(entry.id);
+          }
+        }}
+        className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-sm font-medium rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 hover:text-gray-700 transition-colors duration-200 opacity-80 hover:opacity-100"
+        style={{ lineHeight: 0, zIndex: 20 }}
+        title="Remove"
+      >
+        ×
+      </button>
       
       {/* Responsive grid layout - Stack on mobile, grid on larger screens */}
       <div className="md:grid md:grid-cols-24 md:gap-2 space-y-3 md:space-y-0">
@@ -618,31 +633,11 @@ const MatchEntry = ({
                 }`}>
                 </div>
               )}
-            </div>
-          </div>
+            </div>          </div>
 
-          {/* Edit/Delete buttons - right aligned */}
+          {/* Edit button only - right aligned */}
           <div className="flex space-x-1">
-            {/* Delete button first (only appears in edit mode or for new entries) */}
-            {(isEditing || !entry.isLocked) && (
-              <button
-                type="button"
-                onClick={() => {
-                  // Only show confirmation for editing existing entries, not for new/unsubmitted ones
-                  if (isEditing && entry.isLocked) {
-                    setShowDeleteConfirm(true);
-                  } else {
-                    // Direct delete for unsubmitted entries
-                    onRemove(entry.id);
-                  }
-                }}
-                className="h-10 w-10 flex items-center justify-center text-xl rounded-md bg-red-500 text-white shadow-sm hover:bg-opacity-90 transition-colors duration-200"
-                title="Remove"
-              >
-                ×
-              </button>
-            )}
-            {/* Edit/Confirm button second */}
+            {/* Edit/Confirm button */}
             {entry.isLocked && (
               <button
                 type="button"
@@ -742,14 +737,11 @@ const MatchEntry = ({
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Delete confirmation popup - only appears for locked entries in edit mode */}
+          </div>        </div>
+      </div>      {/* Delete confirmation popup - appears centered on screen with solid background */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
-          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+        <div className="fixed inset-0 flex items-center justify-center z-[9999]" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
+          <div className="bg-white p-4 rounded-lg shadow-xl max-w-md w-full border border-gray-300" style={{ position: 'relative', zIndex: 10000 }}>
             <h3 className="text-lg font-medium mb-2">Confirm Deletion</h3>
             <p className="mb-4">Are you sure you want to delete this match entry? This action cannot be undone.</p>
             <div className="flex justify-end space-x-2">
