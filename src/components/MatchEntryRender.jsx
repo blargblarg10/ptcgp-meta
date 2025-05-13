@@ -376,8 +376,7 @@ const MatchEntry = ({
         {/* Your Deck */}
         <div className="md:col-span-9 md:mb-0">          
           <div className="flex items-center mb-1 h-6">
-            <label className="text-xs font-medium text-gray-700">Your Deck</label>
-            <div className="flex ml-2">
+            <label className="text-xs font-medium text-gray-700">Your Deck</label>            <div className="flex ml-2">
               {entry.yourDeck.primary && getCardInfo(entry.yourDeck.primary)?.iconPath && (
                 <img 
                   src={`${basePath}icons/${getCardInfo(entry.yourDeck.primary).iconPath.split('/').pop()}`}
@@ -393,28 +392,30 @@ const MatchEntry = ({
                 />
               )}
               {entry.yourDeck.variant && getCardInfo(entry.yourDeck.variant)?.iconPath && (
-                <img 
-                  src={`${basePath}icons/${getCardInfo(entry.yourDeck.variant).iconPath.split('/').pop()}`}
-                  alt="Variant Pokemon" 
-                  className="w-6 h-6 ml-1"
-                />
+                <>
+                  {entry.yourDeck.secondary && <div className="h-6 mx-1 border-l border-gray-300"></div>}
+                  <img 
+                    src={`${basePath}icons/${getCardInfo(entry.yourDeck.variant).iconPath.split('/').pop()}`}
+                    alt="Variant Pokemon" 
+                    className="w-6 h-6"
+                  />
+                </>
               )}
             </div>
-          </div>          
-          <div className="flex space-x-2">
-            <div className="flex-[0.33]">
+          </div>            <div className="flex space-x-2">
+            <div className="flex-[0.38]">
               {renderCardSelect('yourDeck.primary', entry.yourDeck.primary, isLocked)}
               {formErrors?.[entry.id]?.['yourDeck.primary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.primary']}</div>
               )}
             </div>
-            <div className="flex-[0.33]">
+            <div className="flex-[0.38]">
               {renderCardSelect('yourDeck.secondary', entry.yourDeck.secondary, isLocked, entry.yourDeck.primary)}
               {formErrors?.[entry.id]?.['yourDeck.secondary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.secondary']}</div>
               )}
             </div>
-            <div className="flex-[0.33] border-l border-gray-200 pl-2">
+            <div className="flex-[0.24] border-l border-gray-200 pl-2">
               {renderCardSelect('yourDeck.variant', entry.yourDeck.variant, isLocked, entry.yourDeck.primary)}
               {formErrors?.[entry.id]?.['yourDeck.variant'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.variant']}</div>
@@ -504,8 +505,7 @@ const MatchEntry = ({
         
         {/* Opponent's Deck */}
         <div className="md:col-span-9">          <div className="flex items-center mb-1 h-6">
-            <label className="text-xs font-medium text-gray-700">Opponent's Deck</label>
-            <div className="flex ml-2">
+            <label className="text-xs font-medium text-gray-700">Opponent's Deck</label>            <div className="flex ml-2">
               {entry.opponentDeck.primary && getCardInfo(entry.opponentDeck.primary)?.iconPath && (
                 <img 
                   src={`${basePath}icons/${getCardInfo(entry.opponentDeck.primary).iconPath.split('/').pop()}`}
@@ -521,27 +521,29 @@ const MatchEntry = ({
                 />
               )}
               {entry.opponentDeck.variant && getCardInfo(entry.opponentDeck.variant)?.iconPath && (
-                <img 
-                  src={`${basePath}icons/${getCardInfo(entry.opponentDeck.variant).iconPath.split('/').pop()}`}
-                  alt="Variant Pokemon" 
-                  className="w-6 h-6 ml-1"
-                />
+                <>
+                  {entry.opponentDeck.secondary && <div className="h-6 mx-1 border-l border-gray-300"></div>}
+                  <img 
+                    src={`${basePath}icons/${getCardInfo(entry.opponentDeck.variant).iconPath.split('/').pop()}`}
+                    alt="Variant Pokemon" 
+                    className="w-6 h-6"
+                  />
+                </>
               )}
-            </div>
-          </div>          <div className="flex space-x-2">
-            <div className="flex-[0.33]">
+            </div>          </div>          <div className="flex space-x-2">
+            <div className="flex-[0.38]">
               {renderCardSelect('opponentDeck.primary', entry.opponentDeck.primary, isLocked)}
               {formErrors?.[entry.id]?.['opponentDeck.primary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.primary']}</div>
               )}
             </div>
-            <div className="flex-[0.33]">
+            <div className="flex-[0.38]">
               {renderCardSelect('opponentDeck.secondary', entry.opponentDeck.secondary, isLocked, entry.opponentDeck.primary)}
               {formErrors?.[entry.id]?.['opponentDeck.secondary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.secondary']}</div>
               )}
             </div>
-            <div className="flex-[0.33] border-l border-gray-200 pl-2">
+            <div className="flex-[0.24] border-l border-gray-200 pl-2">
               {renderCardSelect('opponentDeck.variant', entry.opponentDeck.variant, isLocked, entry.opponentDeck.primary)}
               {formErrors?.[entry.id]?.['opponentDeck.variant'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.variant']}</div>
