@@ -369,7 +369,7 @@ const MatchEntry = ({
         ×
       </button>
       
-      {/* Responsive grid layout - Stack on mobile, grid on larger screens */}
+      {/* Responsive grid layout - Stack on mobile, grid on larger screens */}      
       <div className="md:grid md:grid-cols-24 md:gap-2 space-y-3 md:space-y-0">
         {/* Your Deck */}
         <div className="md:col-span-9 md:mb-0">          
@@ -547,8 +547,7 @@ const MatchEntry = ({
             </div>
           </div>
         </div>
-        
-        {/* Turn field - Only visible on md+ screens */}
+          {/* Turn field - Only visible on md+ screens */}
         <div className="hidden md:block md:col-span-1">
           <div className="h-6 flex items-center mb-1">
             <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Turn">Turn</label>
@@ -597,10 +596,31 @@ const MatchEntry = ({
               : 'Draw'}
           </button>
         </div>
-          {/* Actions */}
-        <div className="flex md:justify-end md:col-span-1 md:items-end justify-between w-full">
-          {/* Points and Auto on mobile - left aligned */}
-          <div className="flex items-center space-x-3 md:hidden">
+        
+        {/* Edit button - Only visible on md+ screens when entry is locked */}
+        <div className="hidden md:block md:col-span-1">
+          <div className="h-6 flex items-center mb-1">
+            <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Edit"></label>
+          </div>
+          {entry.isLocked && (
+            <button
+              type="button"
+              onClick={() => onEdit(entry.id)}
+              className={`h-10 w-full rounded-md flex items-center justify-center text-xs font-medium shadow-sm transition-colors duration-200 ${
+                isEditing ? 'bg-green-500 text-white' : 'bg-amber-500 text-white'
+              }`}
+            >
+              {isEditing ? '✓' : '✎'}
+            </button>
+          )}
+          {!entry.isLocked && (
+            <div className="h-10"></div>
+          )}
+        </div>
+        
+        {/* Points and Auto on mobile - left aligned */}
+        <div className="flex md:hidden justify-between w-full">
+          {/* Points and Auto on mobile - left aligned */}          <div className="flex items-center space-x-3">
             {/* Points input */}
             <div className="flex items-center">
               <label className="text-xs font-medium text-gray-700 mr-1">Points:</label>
@@ -651,9 +671,8 @@ const MatchEntry = ({
               )}
             </div>          </div>
 
-          {/* Edit button only - right aligned */}
-          <div className="flex space-x-1">
-            {/* Edit/Confirm button */}
+          {/* Mobile edit button */}
+          <div className="md:hidden">
             {entry.isLocked && (
               <button
                 type="button"
@@ -664,10 +683,10 @@ const MatchEntry = ({
               >
                 {isEditing ? '✓' : '✎'}
               </button>
-            )}
-          </div>
-        </div>      </div>
-        {/* Notes section with Points and Auto on the right (desktop view) */}
+            )}          </div>
+        </div>
+      </div>
+      {/* Notes section with Points and Auto on the right (desktop view) */}
       <div className="mt-3 ">
         <div className="flex justify-between items-center">
           {/* Notes section - takes up most of the space */}
