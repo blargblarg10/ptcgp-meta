@@ -15,9 +15,9 @@ const getDeckDisplayName = (deck) => {
     displayName += ` | ${secondaryCard.displayName}`;
   }
   
-  if (variantCard) {
-    displayName += ` | ${variantCard.displayName}`;
-  }
+  // if (variantCard) {
+  //   displayName += ` | ${variantCard.displayName}`;
+  // }
   
   return displayName;
 };
