@@ -235,11 +235,10 @@ const MatchEntry = ({
   formErrors,
   matchHistory = [],
   previousEntryPoints
-}) => {
-  const isLocked = entry.isLocked && !isEditing;
+}) => {  const isLocked = entry.isLocked && !isEditing;
   const basePath = import.meta.env.BASE_URL || '/';
-  // Add state for delete confirmation
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  // State for delete confirmation
+  const [showInlineConfirm, setShowInlineConfirm] = useState(false);
 
   // Render a turn select dropdown
   const renderTurnSelect = (field, value, disabled) => {
@@ -328,23 +327,56 @@ const MatchEntry = ({
     rowClasses += "border-gray-200 bg-white ";
   }
 
+  // Add conditional rendering based on confirmation state
+  if (showInlineConfirm) {
+    return (
+      <div className={`${rowClasses} flex flex-col items-center justify-center py-8`}>
+        <h3 className="text-lg font-medium mb-4 text-center">Are you sure you want to remove this entry?</h3>
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={() => setShowInlineConfirm(false)}
+            className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+          >
+            No
+          </button>
+          <button
+            onClick={() => onRemove(entry.id)}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={rowClasses}>
-      {/* Timestamp in top right corner when locked */}
+      {/* Added padding at the top to prevent overlapping */}
+      <div className="pt-1"></div>
+      
+      {/* Timestamp in top right corner when locked - moved a bit further to the right to avoid overlap */}
       {entry.isLocked && (
-        <div className="absolute top-2 right-3 text-xs text-gray-500">
+        <div className="absolute top-2 right-9 text-xs text-gray-500" style={{ zIndex: 10 }}>
           {new Date(entry.timestamp).toLocaleDateString()}
           {/* Recorded: {new Date(entry.timestamp).toLocaleDateString()} {new Date(entry.timestamp).toLocaleTimeString()} */}
         </div>
-      )}
+      )}      {/* Small delete button in top right corner - always visible but more discreet */}
+      <button
+        type="button"
+        onClick={() => setShowInlineConfirm(true)}
+        className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-sm font-medium rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 hover:text-gray-700 transition-colors duration-200 opacity-80 hover:opacity-100"
+        style={{ lineHeight: 0, zIndex: 20 }}
+        title="Remove"
+      >
+        ×
+      </button>
       
-      {/* Responsive grid layout - Stack on mobile, grid on larger screens */}
+      {/* Responsive grid layout - Stack on mobile, grid on larger screens */}      
       <div className="md:grid md:grid-cols-24 md:gap-2 space-y-3 md:space-y-0">
         {/* Your Deck */}
         <div className="md:col-span-9 md:mb-0">          
           <div className="flex items-center mb-1 h-6">
-            <label className="text-xs font-medium text-gray-700">Your Deck</label>
-            <div className="flex ml-2">
+            <label className="text-xs font-medium text-gray-700">Your Deck</label>            <div className="flex ml-2">
               {entry.yourDeck.primary && getCardInfo(entry.yourDeck.primary)?.iconPath && (
                 <img 
                   src={`${basePath}icons/${getCardInfo(entry.yourDeck.primary).iconPath.split('/').pop()}`}
@@ -360,28 +392,30 @@ const MatchEntry = ({
                 />
               )}
               {entry.yourDeck.variant && getCardInfo(entry.yourDeck.variant)?.iconPath && (
-                <img 
-                  src={`${basePath}icons/${getCardInfo(entry.yourDeck.variant).iconPath.split('/').pop()}`}
-                  alt="Variant Pokemon" 
-                  className="w-6 h-6 ml-1"
-                />
+                <>
+                  {entry.yourDeck.secondary && <div className="h-6 mx-1 border-l border-gray-300"></div>}
+                  <img 
+                    src={`${basePath}icons/${getCardInfo(entry.yourDeck.variant).iconPath.split('/').pop()}`}
+                    alt="Variant Pokemon" 
+                    className="w-6 h-6"
+                  />
+                </>
               )}
             </div>
-          </div>          
-          <div className="flex space-x-2">
-            <div className="flex-[0.33]">
+          </div>            <div className="flex space-x-2">
+            <div className="flex-[0.38]">
               {renderCardSelect('yourDeck.primary', entry.yourDeck.primary, isLocked)}
               {formErrors?.[entry.id]?.['yourDeck.primary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.primary']}</div>
               )}
             </div>
-            <div className="flex-[0.33]">
+            <div className="flex-[0.38]">
               {renderCardSelect('yourDeck.secondary', entry.yourDeck.secondary, isLocked, entry.yourDeck.primary)}
               {formErrors?.[entry.id]?.['yourDeck.secondary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.secondary']}</div>
               )}
             </div>
-            <div className="flex-[0.33] border-l border-gray-200 pl-2">
+            <div className="flex-[0.24] border-l border-gray-200 pl-2">
               {renderCardSelect('yourDeck.variant', entry.yourDeck.variant, isLocked, entry.yourDeck.primary)}
               {formErrors?.[entry.id]?.['yourDeck.variant'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['yourDeck.variant']}</div>
@@ -471,8 +505,7 @@ const MatchEntry = ({
         
         {/* Opponent's Deck */}
         <div className="md:col-span-9">          <div className="flex items-center mb-1 h-6">
-            <label className="text-xs font-medium text-gray-700">Opponent's Deck</label>
-            <div className="flex ml-2">
+            <label className="text-xs font-medium text-gray-700">Opponent's Deck</label>            <div className="flex ml-2">
               {entry.opponentDeck.primary && getCardInfo(entry.opponentDeck.primary)?.iconPath && (
                 <img 
                   src={`${basePath}icons/${getCardInfo(entry.opponentDeck.primary).iconPath.split('/').pop()}`}
@@ -488,27 +521,29 @@ const MatchEntry = ({
                 />
               )}
               {entry.opponentDeck.variant && getCardInfo(entry.opponentDeck.variant)?.iconPath && (
-                <img 
-                  src={`${basePath}icons/${getCardInfo(entry.opponentDeck.variant).iconPath.split('/').pop()}`}
-                  alt="Variant Pokemon" 
-                  className="w-6 h-6 ml-1"
-                />
+                <>
+                  {entry.opponentDeck.secondary && <div className="h-6 mx-1 border-l border-gray-300"></div>}
+                  <img 
+                    src={`${basePath}icons/${getCardInfo(entry.opponentDeck.variant).iconPath.split('/').pop()}`}
+                    alt="Variant Pokemon" 
+                    className="w-6 h-6"
+                  />
+                </>
               )}
-            </div>
-          </div>          <div className="flex space-x-2">
-            <div className="flex-[0.33]">
+            </div>          </div>          <div className="flex space-x-2">
+            <div className="flex-[0.38]">
               {renderCardSelect('opponentDeck.primary', entry.opponentDeck.primary, isLocked)}
               {formErrors?.[entry.id]?.['opponentDeck.primary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.primary']}</div>
               )}
             </div>
-            <div className="flex-[0.33]">
+            <div className="flex-[0.38]">
               {renderCardSelect('opponentDeck.secondary', entry.opponentDeck.secondary, isLocked, entry.opponentDeck.primary)}
               {formErrors?.[entry.id]?.['opponentDeck.secondary'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.secondary']}</div>
               )}
             </div>
-            <div className="flex-[0.33] border-l border-gray-200 pl-2">
+            <div className="flex-[0.24] border-l border-gray-200 pl-2">
               {renderCardSelect('opponentDeck.variant', entry.opponentDeck.variant, isLocked, entry.opponentDeck.primary)}
               {formErrors?.[entry.id]?.['opponentDeck.variant'] && (
                 <div className="text-red-500 text-xs mt-1">{formErrors[entry.id]['opponentDeck.variant']}</div>
@@ -516,8 +551,7 @@ const MatchEntry = ({
             </div>
           </div>
         </div>
-        
-        {/* Turn field - Only visible on md+ screens */}
+          {/* Turn field - Only visible on md+ screens */}
         <div className="hidden md:block md:col-span-1">
           <div className="h-6 flex items-center mb-1">
             <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Turn">Turn</label>
@@ -566,10 +600,31 @@ const MatchEntry = ({
               : 'Draw'}
           </button>
         </div>
-          {/* Actions */}
-        <div className="flex md:justify-end md:col-span-1 md:items-end justify-between w-full">
-          {/* Points and Auto on mobile - left aligned */}
-          <div className="flex items-center space-x-3 md:hidden">
+        
+        {/* Edit button - Only visible on md+ screens when entry is locked */}
+        <div className="hidden md:block md:col-span-1">
+          <div className="h-6 flex items-center mb-1">
+            <label className="block text-xs font-medium text-gray-700 truncate whitespace-nowrap" title="Edit"></label>
+          </div>
+          {entry.isLocked && (
+            <button
+              type="button"
+              onClick={() => onEdit(entry.id)}
+              className={`h-10 w-full rounded-md flex items-center justify-center text-xs font-medium shadow-sm transition-colors duration-200 ${
+                isEditing ? 'bg-green-500 text-white' : 'bg-amber-500 text-white'
+              }`}
+            >
+              {isEditing ? '✓' : '✎'}
+            </button>
+          )}
+          {!entry.isLocked && (
+            <div className="h-10"></div>
+          )}
+        </div>
+        
+        {/* Points and Auto on mobile - left aligned */}
+        <div className="flex md:hidden justify-between w-full">
+          {/* Points and Auto on mobile - left aligned */}          <div className="flex items-center space-x-3">
             {/* Points input */}
             <div className="flex items-center">
               <label className="text-xs font-medium text-gray-700 mr-1">Points:</label>
@@ -618,31 +673,10 @@ const MatchEntry = ({
                 }`}>
                 </div>
               )}
-            </div>
-          </div>
+            </div>          </div>
 
-          {/* Edit/Delete buttons - right aligned */}
-          <div className="flex space-x-1">
-            {/* Delete button first (only appears in edit mode or for new entries) */}
-            {(isEditing || !entry.isLocked) && (
-              <button
-                type="button"
-                onClick={() => {
-                  // Only show confirmation for editing existing entries, not for new/unsubmitted ones
-                  if (isEditing && entry.isLocked) {
-                    setShowDeleteConfirm(true);
-                  } else {
-                    // Direct delete for unsubmitted entries
-                    onRemove(entry.id);
-                  }
-                }}
-                className="h-10 w-10 flex items-center justify-center text-xl rounded-md bg-red-500 text-white shadow-sm hover:bg-opacity-90 transition-colors duration-200"
-                title="Remove"
-              >
-                ×
-              </button>
-            )}
-            {/* Edit/Confirm button second */}
+          {/* Mobile edit button */}
+          <div className="md:hidden">
             {entry.isLocked && (
               <button
                 type="button"
@@ -653,10 +687,10 @@ const MatchEntry = ({
               >
                 {isEditing ? '✓' : '✎'}
               </button>
-            )}
-          </div>
-        </div>      </div>
-        {/* Notes section with Points and Auto on the right (desktop view) */}
+            )}          </div>
+        </div>
+      </div>
+      {/* Notes section with Points and Auto on the right (desktop view) */}
       <div className="mt-3 ">
         <div className="flex justify-between items-center">
           {/* Notes section - takes up most of the space */}
@@ -741,37 +775,8 @@ const MatchEntry = ({
                 }`}>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
+            </div>          </div>        </div>
       </div>
-      
-      {/* Delete confirmation popup - only appears for locked entries in edit mode */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
-          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
-            <h3 className="text-lg font-medium mb-2">Confirm Deletion</h3>
-            <p className="mb-4">Are you sure you want to delete this match entry? This action cannot be undone.</p>
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  onRemove(entry.id);
-                  setShowDeleteConfirm(false);
-                }}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
