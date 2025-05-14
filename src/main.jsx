@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 
 import App from './App';
-import { AuthProvider } from './features/auth/context/AuthContext';
+import { AppAuthProvider } from './features/auth/context/AppAuthProvider';
 
 // Get the base path from the import.meta.env, defaulting to '/' for development
 const basePath = import.meta.env.BASE_URL || '/';
@@ -14,9 +14,9 @@ const basePath = import.meta.env.BASE_URL || '/';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HashRouter>
-      <AuthProvider>
+      <AppAuthProvider>
         <App />
-      </AuthProvider>
+      </AppAuthProvider>
     </HashRouter>
   </StrictMode>
 );

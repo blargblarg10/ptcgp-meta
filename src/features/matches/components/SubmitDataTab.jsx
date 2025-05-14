@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MatchEntry from './MatchEntryRender';
 import { useAuth } from '../../auth/context/AuthContext';
+import { useAuthUser } from '../../auth/hooks/useAuthUser';
 import { loadUserMatchData, saveUserMatchData } from '../../../services/firebase';
 
 // Cookie utilities for saving and loading unsubmitted entries
@@ -117,7 +118,7 @@ const createBatchRow = (existingRow = null, matchHistory = []) => {  // Priority
 
 const MatchResultTracker = () => {
   // State
-  const { currentUser, userData } = useAuth();
+  const { currentUser, userData } = useAuthUser();
   const [matches, setMatches] = useState([]);
   const [batchEntries, setBatchEntries] = useState([]); 
   const [formErrors, setFormErrors] = useState({});

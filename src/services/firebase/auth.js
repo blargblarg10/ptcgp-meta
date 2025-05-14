@@ -6,7 +6,34 @@ import { auth, db } from './config';
 // Auth providers
 const googleProvider = new GoogleAuthProvider();
 
-// Create or fetch user document in Firestore
+/**
+ * Creates a new user data object from a Firebase Auth user
+ * @param {Object} user - Firebase Auth user object
+ * @returns {Object} User data object
+ */
+const createNewUserData = (user) => {
+  return {
+    user_id: user.uid,
+    name: user.displayName || 'Anonymous User',
+    email: user.email || null,
+    photoURL: user.photoURL || null,
+    createdAt: new Date().toISOString(),
+    matches: [],
+    stats: {
+      totalMatches: 0,
+      wins: 0,
+      losses: 0,
+      draws: 0
+    },
+    lastUpdated: new Date().toISOString()
+  };
+};
+
+/**
+ * Creates or retrieves a user document from Firestore
+ * @param {Object} user - Firebase Auth user object
+ * @returns {Object|null} User document data or null
+ */
 export const createOrGetUserDocument = async (user) => {
   if (!user) return null;
   
@@ -19,27 +46,10 @@ export const createOrGetUserDocument = async (user) => {
     
     if (docSnap.exists()) {
       // If the document exists, return the user data
-      console.log("Found existing user document");
       return docSnap.data();
     } else {
       // If the document doesn't exist, create a new one
-      console.log("Creating new user document");
-      
-      const userData = {
-        user_id: user.uid,
-        name: user.displayName || 'Anonymous User',
-        email: user.email || null,
-        photoURL: user.photoURL || null,
-        createdAt: new Date().toISOString(),
-        matches: [],
-        stats: {
-          totalMatches: 0,
-          wins: 0,
-          losses: 0,
-          draws: 0
-        },
-        lastUpdated: new Date().toISOString()
-      };
+      const userData = createNewUserData(user);
       
       // Create the document in Firestore
       await setDoc(userDocRef, userData);
@@ -52,7 +62,10 @@ export const createOrGetUserDocument = async (user) => {
   }
 };
 
-// Sign in with Google
+/**
+ * Signs in a user with Google
+ * @returns {Object|null} Firebase Auth user object or null if cancelled
+ */
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -71,7 +84,9 @@ export const signInWithGoogle = async () => {
   }
 };
 
-// Sign out
+/**
+ * Signs out the current user
+ */
 export const logOut = async () => {
   try {
     await signOut(auth);
@@ -81,7 +96,11 @@ export const logOut = async () => {
   }
 };
 
-// Track auth state
+/**
+ * Subscribes to Firebase auth state changes
+ * @param {Function} callback - Function to call when auth state changes
+ * @returns {Function} Unsubscribe function
+ */
 export const subscribeToAuthChanges = (callback) => {
   return onAuthStateChanged(auth, callback);
 };

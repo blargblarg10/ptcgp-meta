@@ -3,7 +3,7 @@ import { useNavigate, Routes, Route, useLocation, Link } from 'react-router-dom'
 import SubmitData from './features/matches/components/SubmitDataTab';
 import YourStats from './features/stats/components/YourStatsTab';
 import MetaDataTab from './features/meta-analysis/MetaDataTab';
-import UserProfile from './features/auth/components/UserProfile';
+import { UserProfile } from './features/profile';
 import LoginModal from './features/auth/components/LoginModal';
 import { useAuth } from './features/auth/context/AuthContext';
 

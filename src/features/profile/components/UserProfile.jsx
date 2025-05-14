@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useAuthUser } from '../hooks/useAuthUser';
+import { useAuthUser } from '../../auth/hooks/useAuthUser';
 import { loadUserMatchData, saveUserMatchData } from '../../../services/firebase';
 import { 
   convertJsonToCsv, 
