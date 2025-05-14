@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AVAILABLE_CARDS, CARDS_BY_ELEMENT, getCardInfo } from '../utils/cardDataProcessor';
+import { AVAILABLE_CARDS, CARDS_BY_ELEMENT, getCardInfo } from '../../../shared/utils/cardDataProcessor';
 
 // Updated SearchableDropdown component
 const SearchableDropdown = ({ 

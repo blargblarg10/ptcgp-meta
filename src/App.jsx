@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route, useLocation, Link } from 'react-router-dom';
-import SubmitData from './components/SubmitDataTab';
-import YourStats from './components/YourStatsTab';
-import MetaDataTab from './components/MetaDataTab';
-import Login from './components/Login';
-import UserProfile from './components/UserProfile';
-import { useAuth } from './context/AuthContext';
+import SubmitData from './features/matches/components/SubmitDataTab';
+import YourStats from './features/stats/components/YourStatsTab';
+import MetaDataTab from './features/meta-analysis/MetaDataTab';
+import Login from './features/auth/components/Login';
+import UserProfile from './features/auth/components/UserProfile';
+import { useAuth } from './features/auth/context/AuthContext';
 
 // Main App component
 const App = () => {

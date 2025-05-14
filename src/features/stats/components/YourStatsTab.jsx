@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { calculateStats, preparePieData, prepareLineChartData, calculateRollingDeckFrequencies } from '../utils/matchStatsCalculator';
-import { useAuth } from '../context/AuthContext';
-import { loadUserMatchData } from '../utils/firebase';
-import PieCharts from './PieCharts';
-import { COLORS, OTHER_COLOR } from './PieCharts';
+import { useAuth } from '../../auth/context/AuthContext';
+import { loadUserMatchData } from '../../../services/firebase';
+import PieCharts from './charts/PieCharts';
+import { COLORS, OTHER_COLOR } from './charts/PieCharts';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from 'dayjs';
-import seasonsData from '../config/seasons.json';
+import seasonsData from '../../../config/seasons.json';
 
 // Get the latest season by comparing start dates
 const getLatestSeason = () => {

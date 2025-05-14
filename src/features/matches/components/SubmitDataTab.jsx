@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MatchEntry from './MatchEntryRender';
-import { useAuth } from '../context/AuthContext';
-import { loadUserMatchData, saveUserMatchData } from '../utils/firebase';
+import { useAuth } from '../../auth/context/AuthContext';
+import { loadUserMatchData, saveUserMatchData } from '../../../services/firebase';
 
 // Cookie utilities for saving and loading unsubmitted entries
 const COOKIE_NAME = 'ptcgp_unsubmitted_entries';

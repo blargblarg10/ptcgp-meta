@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { COLORS, OTHER_COLOR } from './PieCharts';
+import { COLORS, OTHER_COLOR } from '../stats/components/charts/PieCharts';
 
 const TournamentMetaAnalysis = ({ 
   tournamentData, 

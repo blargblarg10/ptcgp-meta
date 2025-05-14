@@ -3,7 +3,7 @@
  */
 
 import { EXPECTED_HEADERS } from './dataFormatConverter';
-import { AVAILABLE_CARDS } from './cardDataProcessor';
+import { AVAILABLE_CARDS } from '../../shared/utils/cardDataProcessor';
 
 /**
  * Converts date formats like MM/DD/YYYY to ISO timestamps

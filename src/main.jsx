@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 
 import App from './App';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './features/auth/context/AuthContext';
 
 // Get the base path from the import.meta.env, defaulting to '/' for development
 const basePath = import.meta.env.BASE_URL || '/';

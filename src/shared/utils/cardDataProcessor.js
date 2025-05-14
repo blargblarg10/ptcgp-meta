@@ -1,4 +1,4 @@
-import cardData from '../data/card_data.json';
+import cardData from '../../data/card_data.json';
 
 // First, group cards by name to identify duplicates
 const cardsByName = Object.entries(cardData.cards)

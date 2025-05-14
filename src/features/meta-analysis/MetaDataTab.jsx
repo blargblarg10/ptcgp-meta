@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import tournamentMetaData from '../data/deckTournamentMeta.json';
+import tournamentMetaData from '../../data/deckTournamentMeta.json';
 import dayjs from 'dayjs';
 import TournamentMetaAnalysis from './TournamentMetaAnalysis';
 

@@ -1,4 +1,4 @@
-import { getCardInfo } from './cardDataProcessor';
+import { getCardInfo } from '../../../shared/utils/cardDataProcessor';
 
 /**
  * Helper function to get deck display name from deck object

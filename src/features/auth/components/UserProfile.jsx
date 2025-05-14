@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { loadUserMatchData, saveUserMatchData } from '../utils/firebase';
+import { loadUserMatchData, saveUserMatchData } from '../../../services/firebase';
 import { 
   jsonToCsv, 
   csvToJson, 
@@ -8,7 +8,7 @@ import {
   downloadFile,
   analyzeCSV,
   processCSV
-} from '../utils/dataFormatConverter';
+} from '../../../data-processing/csv/dataFormatConverter';
 
 const UserProfile = () => {
   const { currentUser, userData, logOut } = useAuth();
