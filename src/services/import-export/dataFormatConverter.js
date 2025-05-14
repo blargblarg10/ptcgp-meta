@@ -1,26 +1,17 @@
 /**
  * Utility functions to convert between JSON and CSV formats for match data
+ * 
+ * @module dataFormatConverter
+ * @description Handles conversion between different data formats and processing pipelines
+ * @todo Consider refactoring this file to separate:
+ * 1. Data format conversion (csvToJson, jsonToCsv) 
+ * 2. Data validation (moved to validators/)
+ * 3. Data processing (moved to processors/)
  */
 
+import { EXPECTED_HEADERS, REQUIRED_HEADERS, VARIANT_HEADERS, MATCH_RECORD_FIELDS } from './constants';
+import { parseCSVRow, filterCsvContent, downloadFile } from './utils';
 import { validateCsvData, analyzeCsvFile, preprocessAndValidateCsvData } from './csvValidator';
-
-// Expected headers for match data CSV
-export const EXPECTED_HEADERS = [
-  'id',
-  'timestamp',
-  'yourDeck.primary',
-  'yourDeck.secondary',
-  'yourDeck.variant',
-  'opponentDeck.primary',
-  'opponentDeck.secondary',
-  'opponentDeck.variant',
-  'turnOrder',
-  'result',
-  'isLocked',
-  'notes',
-  'points',
-  'auto'
-];
 
 /**
  * Converts match data from JSON to CSV format
@@ -82,25 +73,17 @@ export const csvToJson = (csvData) => {
   }
 
   // Filter out blank lines and comment lines that start with #
-  const filteredRows = csvData
-    .split(/\r?\n/)
-    .filter(line => {
-      const trimmedLine = line.trim();
-      return trimmedLine !== '' && !trimmedLine.startsWith('#');
-    });
+  const filteredRows = filterCsvContent(csvData);
 
   if (filteredRows.length < 2) { // Need at least header row and one data row
     return { data: [], errors: ['CSV file must contain at least a header row and one data row'] };
   }
+  
   // Extract headers
   const headers = filteredRows[0].split(',').map(h => h.trim());
-    // These headers are required
-  const REQUIRED_HEADERS = EXPECTED_HEADERS.filter(h => 
-    !['id', 'isLocked', 'notes', 'points', 'auto', 'yourDeck.variant', 'opponentDeck.variant'].includes(h)
-  );
   
   // Validate only required headers
-  const missingRequiredHeaders = REQUIRED_HEADERS.filter(h => !headers.includes(h));
+  const missingRequiredHeaders = REQUIRED_HEADERS.filter(h => !headers.includes(h) && !VARIANT_HEADERS.includes(h));
   
   if (missingRequiredHeaders.length > 0) {
     return { 
@@ -108,6 +91,7 @@ export const csvToJson = (csvData) => {
       errors: [`Missing required headers: ${missingRequiredHeaders.join(', ')}`] 
     };
   }
+  
   const jsonData = [];
   const errors = [];
   const warnings = [];
@@ -123,7 +107,8 @@ export const csvToJson = (csvData) => {
     }
 
     const item = {};
-      // Initialize optional fields with default values
+    
+    // Initialize optional fields with default values
     if (!headers.includes('id')) {
       item.id = null; // This will be auto-generated later
     }
@@ -143,7 +128,7 @@ export const csvToJson = (csvData) => {
     
     headers.forEach((header, index) => {
       const value = values[index].trim();
-        if (header.includes('.')) {
+      if (header.includes('.')) {
         // Handle nested properties
         const [parent, child] = header.split('.');
         if (!item[parent]) {
@@ -155,7 +140,8 @@ export const csvToJson = (csvData) => {
         } else {
           item[parent][child] = value === "" ? null : value;
         }
-      } else {        // Parse values according to expected types
+      } else {        
+        // Parse values according to expected types
         if (header === 'isLocked') {
           item[header] = value.toLowerCase() === 'true';
         } else if (header === 'turnOrder') {
@@ -171,7 +157,9 @@ export const csvToJson = (csvData) => {
           item[header] = value === "" || value === "null" ? null : value;
         }
       }
-    });    // Make sure yourDeck and opponentDeck objects exist    
+    });
+    
+    // Make sure yourDeck and opponentDeck objects exist    
     if (!item.yourDeck) {
       item.yourDeck = { primary: null, secondary: null, variant: null };
     } else if (!item.yourDeck.secondary) {
@@ -203,46 +191,6 @@ export const csvToJson = (csvData) => {
 };
 
 /**
- * Helper function to properly parse CSV rows, handling quoted values
- * @param {string} row - CSV row string
- * @returns {Array} Array of values from the row
- */
-function parseCSVRow(row) {
-  const result = [];
-  let insideQuotes = false;
-  let currentValue = '';
-  let i = 0;
-  
-  while (i < row.length) {
-    const char = row[i];
-    
-    if (char === '"') {      if (i + 1 < row.length && row[i + 1] === '"') {
-        // Handle escaped quotes - "" becomes " inside a quoted string
-        currentValue += '';
-        i++;
-      } else {
-        // Toggle quote mode
-        insideQuotes = !insideQuotes;
-      }
-    } else if (char === ',' && !insideQuotes) {
-      // End of field
-      result.push(currentValue);
-      currentValue = '';
-    } else {
-      // Add character to current value
-      currentValue += char;
-    }
-    
-    i++;
-  }
-  
-  // Add the last field
-  result.push(currentValue);
-  
-  return result;
-}
-
-/**
  * Validates the JSON data structure to ensure it only contains expected fields
  * @param {Array} jsonData - Array of match data objects
  * @returns {Object} Object with validation result and any errors
@@ -268,13 +216,15 @@ export const validateJsonStructure = (jsonData) => {
     if (!item.opponentDeck || typeof item.opponentDeck !== 'object') {
       errors.push(`Row ${index + 1}: Missing or invalid 'opponentDeck' object`);
     }
-      // Check for extra fields that aren't in the expected schema
+    
+    // Check for extra fields that aren't in the expected schema
     Object.keys(item).forEach(key => {
-      if (!['id', 'timestamp', 'yourDeck', 'opponentDeck', 'turnOrder', 'result', 'isLocked', 'notes', 'points', 'auto'].includes(key)) {
+      if (!MATCH_RECORD_FIELDS.includes(key)) {
         errors.push(`Row ${index + 1}: Unexpected field '${key}'`);
       }
     });
-      // Check deck objects for extra fields
+    
+    // Check deck objects for extra fields
     if (item.yourDeck) {
       Object.keys(item.yourDeck).forEach(key => {
         if (!['primary', 'secondary', 'variant'].includes(key)) {
@@ -293,21 +243,6 @@ export const validateJsonStructure = (jsonData) => {
   });
   
   return { valid: errors.length === 0, errors };
-};
-
-/**
- * Download data as a file
- * @param {string} content - File content
- * @param {string} fileName - File name
- * @param {string} contentType - MIME type
- */
-export const downloadFile = (content, fileName, contentType) => {
-  const a = document.createElement('a');
-  const file = new Blob([content], { type: contentType });
-  a.href = URL.createObjectURL(file);
-  a.download = fileName;
-  a.click();
-  URL.revokeObjectURL(a.href);
 };
 
 /**
@@ -385,3 +320,6 @@ export const processCSV = (csvContent) => {
     stats: structureAnalysis.stats
   };
 };
+
+// Re-export downloadFile from utils for backward compatibility
+export { downloadFile };

@@ -2,8 +2,18 @@
  * Utility functions for validating CSV data format
  */
 
-import { EXPECTED_HEADERS } from './dataFormatConverter';
+import { 
+  EXPECTED_HEADERS, 
+  REQUIRED_HEADERS, 
+  OPTIONAL_HEADERS, 
+  DATE_REGEX,
+  VALID_TURN_ORDER_VALUES,
+  VALID_RESULT_VALUES,
+  ID_PATTERNS,
+  DEFAULT_VALUES
+} from './constants';
 import { AVAILABLE_CARDS } from '../../shared/utils/cardDataProcessor';
+import { filterCsvContent, findDuplicates, createDetailedError } from './utils';
 
 /**
  * Converts date formats like MM/DD/YYYY to ISO timestamps
@@ -18,13 +28,12 @@ export const normalizeTimestamps = (jsonData) => {
 
   // Track dates we've seen to handle duplicates
   const dateMap = {};
-  const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
   
   return jsonData.map(record => {
     if (!record.timestamp) return record;
     
     // Check if timestamp is in MM/DD/YYYY format
-    const match = record.timestamp.match(dateRegex);
+    const match = record.timestamp.match(DATE_REGEX);
     if (!match) return record; // Not in date-only format, leave as is
     
     // Extract date components
@@ -61,7 +70,140 @@ export const normalizeTimestamps = (jsonData) => {
 };
 
 /**
- * Preprocesses and validates CSV data, automatically adding missing required fields
+ * Validates a single match record
+ * @param {Object} record - Match record object
+ * @param {number} rowNum - Row number for error reporting
+ * @returns {Array} Array of validation error messages
+ */
+const validateMatchRecord = (record, rowNum) => {
+  const errors = [];
+
+  // Check ID format only if it exists (we don't require ID as it will be auto-generated)
+  if (record.id && !ID_PATTERNS.some(pattern => pattern.test(record.id))) {
+    errors.push(createDetailedError(rowNum, 'id', record.id, 'Invalid ID format'));
+  }
+
+  // Check timestamp format
+  if (!record.timestamp) {
+    errors.push(createDetailedError(rowNum, 'timestamp', record.timestamp, 'Missing required field'));
+  } else if (isNaN(Date.parse(record.timestamp))) {
+    errors.push(createDetailedError(rowNum, 'timestamp', record.timestamp, 'Invalid timestamp format'));
+  }
+
+  // Validate deck information
+  if (!record.yourDeck) {
+    errors.push(createDetailedError(rowNum, 'yourDeck', record.yourDeck, 'Missing yourDeck information'));
+  } else {
+    // Check yourDeck.primary exists
+    if (!record.yourDeck.primary) {
+      errors.push(createDetailedError(rowNum, 'yourDeck.primary', record.yourDeck.primary, 'Missing primary deck value'));
+    } else {
+      // Validate yourDeck.primary is a valid card key in card_data
+      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
+      if (!availableCardKeys.includes(record.yourDeck.primary)) {
+        errors.push(createDetailedError(rowNum, 'yourDeck.primary', record.yourDeck.primary, 'Card does not exist in card database'));
+      }
+    }
+    // Check yourDeck.secondary if it exists and is not null
+    if (record.yourDeck.secondary !== "null" && record.yourDeck.secondary) {
+      // Validate yourDeck.secondary is a valid card key in card_data
+      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
+      if (!availableCardKeys.includes(record.yourDeck.secondary)) {
+        errors.push(createDetailedError(rowNum, 'yourDeck.secondary', record.yourDeck.secondary, 'Card does not exist in card database'));
+      }
+    }
+    // Check yourDeck.variant if it exists and is not null
+    if (record.yourDeck.variant !== "null" && record.yourDeck.variant) {
+      // Validate yourDeck.variant is a valid card key in card_data
+      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
+      if (!availableCardKeys.includes(record.yourDeck.variant)) {
+        errors.push(createDetailedError(rowNum, 'yourDeck.variant', record.yourDeck.variant, 'Card does not exist in card database'));
+      }
+    }
+  }
+  
+  if (!record.opponentDeck) {
+    errors.push(createDetailedError(rowNum, 'opponentDeck', record.opponentDeck, 'Missing opponentDeck information'));
+  } else {
+    // Check opponentDeck.primary exists
+    if (!record.opponentDeck.primary) {
+      errors.push(createDetailedError(rowNum, 'opponentDeck.primary', record.opponentDeck.primary, 'Missing primary deck value'));
+    } else {
+      // Validate opponentDeck.primary is a valid card key in card_data
+      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
+      if (!availableCardKeys.includes(record.opponentDeck.primary)) {
+        errors.push(createDetailedError(rowNum, 'opponentDeck.primary', record.opponentDeck.primary, 'Card does not exist in card database'));
+      }
+    }
+    // Check opponentDeck.secondary if it exists and is not null
+    if (record.opponentDeck.secondary !== "null" && record.opponentDeck.secondary) {
+      // Validate opponentDeck.secondary is a valid card key in card_data
+      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
+      if (!availableCardKeys.includes(record.opponentDeck.secondary)) {
+        errors.push(createDetailedError(rowNum, 'opponentDeck.secondary', record.opponentDeck.secondary, 'Card does not exist in card database'));
+      }
+    }
+    // Check opponentDeck.variant if it exists and is not null
+    if (record.opponentDeck.variant !== "null" && record.opponentDeck.variant) {
+      // Validate opponentDeck.variant is a valid card key in card_data
+      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
+      if (!availableCardKeys.includes(record.opponentDeck.variant)) {
+        errors.push(createDetailedError(rowNum, 'opponentDeck.variant', record.opponentDeck.variant, 'Card does not exist in card database'));
+      }
+    }
+  }
+
+  // Validate turn order
+  if (!record.turnOrder) {
+    errors.push(createDetailedError(rowNum, 'turnOrder', record.turnOrder, 'Missing required field'));
+  } else if (!VALID_TURN_ORDER_VALUES.includes(String(record.turnOrder).toLowerCase())) {
+    errors.push(createDetailedError(rowNum, 'turnOrder', record.turnOrder, 'Invalid value (must be "first", "second", 1, or 2)'));
+  }
+
+  // Validate match result
+  if (!record.result) {
+    errors.push(createDetailedError(rowNum, 'result', record.result, 'Missing required field'));
+  } else if (!VALID_RESULT_VALUES.includes(String(record.result).toLowerCase())) {
+    errors.push(createDetailedError(rowNum, 'result', record.result, 'Invalid value (must be "victory", "defeat", "win", "loss", or "tie")'));
+  }
+
+  return errors;
+};
+
+// Create a core validation function that both validateCsvData and preprocessAndValidateCsvData can use
+/**
+ * Core validation logic for match records that can be shared by different validation functions
+ * @param {Array} records - Array of match records to validate
+ * @returns {Object} Common validation results with errors and warnings
+ * @private
+ */
+const _performCommonValidations = (records) => {
+  const errors = [];
+  const warnings = [];
+
+  // Check for duplicate IDs
+  const ids = records.map(record => record.id);
+  const duplicateIds = findDuplicates(ids);
+  if (duplicateIds.length > 0) {
+    errors.push(`Found duplicate match IDs: ${duplicateIds.join(', ')}`);
+  }
+
+  // Check for future timestamps
+  const now = new Date();
+  records.forEach((record, index) => {
+    if (record.timestamp) {
+      const recordDate = new Date(record.timestamp);
+      if (recordDate > now) {
+        warnings.push(`Row ${index + 1}: Match timestamp is in the future: ${record.timestamp}`);
+      }
+    }
+  });
+
+  return { errors, warnings };
+};
+
+/**
+ * Preprocesses and validates CSV data, applying automatic corrections for missing fields
  * @param {Object} jsonData - Parsed JSON data from CSV
  * @returns {Object} Processed data with validation results
  */
@@ -107,35 +249,17 @@ export const preprocessAndValidateCsvData = (jsonData) => {
   normalizedData.forEach((record, index) => {
     const processedRecord = { ...record };
     
-    // Add ID if missing
-    if (!processedRecord.id) {
-      processedRecord.id = `match-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-      warnings.push(`Row ${index + 1}: Missing ID field - automatically assigned: ${processedRecord.id}`);
-    }
+    // Add optional fields with default values if missing
+    Object.entries(DEFAULT_VALUES).forEach(([field, defaultValue]) => {
+      if (processedRecord[field] === undefined) {
+        processedRecord[field] = field === 'id' 
+          ? `match-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+          : defaultValue;
+        warnings.push(`Row ${index + 1}: Missing ${field} field - automatically ${field === 'id' ? 'assigned' : 'set'}: ${processedRecord[field]}`);
+      }
+    });
     
-    // Add isLocked if missing
-    if (processedRecord.isLocked === undefined) {
-      processedRecord.isLocked = true;
-      warnings.push(`Row ${index + 1}: Missing isLocked field - automatically set to true`);
-    }
-      // Add notes if missing
-    if (processedRecord.notes === undefined) {
-      processedRecord.notes = "";
-      warnings.push(`Row ${index + 1}: Missing notes field - automatically added as empty`);
-    }
-    
-    // Add points if missing
-    if (processedRecord.points === undefined) {
-      processedRecord.points = 0;
-      warnings.push(`Row ${index + 1}: Missing points field - automatically set to 0`);
-    }
-    
-    // Add auto if missing
-    if (processedRecord.auto === undefined) {
-      processedRecord.auto = true;
-      warnings.push(`Row ${index + 1}: Missing auto field - automatically set to true`);
-    }
-      // Make sure yourDeck and opponentDeck objects exist
+    // Make sure yourDeck and opponentDeck objects exist
     if (!processedRecord.yourDeck) {
       processedRecord.yourDeck = { primary: null, secondary: null, variant: null };
       errors.push(`Row ${index + 1}: Missing 'yourDeck' information - created empty object`);
@@ -153,23 +277,10 @@ export const preprocessAndValidateCsvData = (jsonData) => {
     processedData.push(processedRecord);
   });
 
-  // Check for duplicate IDs (after adding IDs to records that were missing them)
-  const ids = processedData.map(record => record.id);
-  const duplicateIds = findDuplicates(ids);
-  if (duplicateIds.length > 0) {
-    errors.push(`Found duplicate match IDs: ${duplicateIds.join(', ')}`);
-  }
-
-  // Check for future timestamps
-  const now = new Date();
-  processedData.forEach((record, index) => {
-    if (record.timestamp) {
-      const recordDate = new Date(record.timestamp);
-      if (recordDate > now) {
-        warnings.push(`Row ${index + 1}: Match timestamp is in the future: ${record.timestamp}`);
-      }
-    }
-  });
+  // Perform common validations
+  const commonValidations = _performCommonValidations(processedData);
+  errors.push(...commonValidations.errors);
+  warnings.push(...commonValidations.warnings);
 
   return {
     data: processedData,
@@ -180,7 +291,7 @@ export const preprocessAndValidateCsvData = (jsonData) => {
 };
 
 /**
- * Validates a CSV file for proper format and data integrity
+ * Performs strict validation on parsed CSV data without any automatic correction
  * @param {Object} jsonData - Parsed JSON data from CSV
  * @returns {Object} Validation result with detailed errors if any
  */
@@ -209,162 +320,16 @@ export const validateCsvData = (jsonData) => {
     errors.push(...rowErrors);
   });
 
-  // Check for duplicate IDs
-  const ids = jsonData.map(record => record.id);
-  const duplicateIds = findDuplicates(ids);
-  if (duplicateIds.length > 0) {
-    errors.push(`Found duplicate match IDs: ${duplicateIds.join(', ')}`);
-  }
-
-  // Check for future timestamps
-  const now = new Date();
-  jsonData.forEach((record, index) => {
-    if (record.timestamp) {
-      const recordDate = new Date(record.timestamp);
-      if (recordDate > now) {
-        warnings.push(`Row ${index + 1}: Match timestamp is in the future: ${record.timestamp}`);
-      }
-    }
-  });
+  // Perform common validations
+  const commonValidations = _performCommonValidations(jsonData);
+  errors.push(...commonValidations.errors);
+  warnings.push(...commonValidations.warnings);
 
   return {
     valid: errors.length === 0,
     errors,
     warnings
   };
-};
-
-/**
- * Validates a single match record
- * @param {Object} record - Match record object
- * @param {number} rowNum - Row number for error reporting
- * @returns {Array} Array of validation error messages
- */
-const validateMatchRecord = (record, rowNum) => {
-  const errors = [];
-
-  // Helper function to create detailed error messages
-  const createDetailedError = (field, value, message) => {
-    const displayValue = value === undefined ? 'undefined' : 
-                         value === null ? 'null' : 
-                         typeof value === 'object' ? JSON.stringify(value) : 
-                         `"${value}"`;
-    return `Row ${rowNum}: ${message} - Field: ${field}, Value: ${displayValue}`;
-  };
-
-  // Check ID format only if it exists (we don't require ID as it will be auto-generated)
-  if (record.id && !/^match-\d+-[a-z0-9]+$/.test(record.id) && 
-      !/^new-\d+-[a-z0-9]+$/.test(record.id)) {
-    errors.push(createDetailedError('id', record.id, 'Invalid ID format'));
-  }
-
-  // Check timestamp format
-  if (!record.timestamp) {
-    errors.push(createDetailedError('timestamp', record.timestamp, 'Missing required field'));
-  } else if (isNaN(Date.parse(record.timestamp))) {
-    errors.push(createDetailedError('timestamp', record.timestamp, 'Invalid timestamp format'));
-  }
-
-  // Validate deck information
-  if (!record.yourDeck) {
-    errors.push(createDetailedError('yourDeck', record.yourDeck, 'Missing yourDeck information'));
-  } else {
-    // Check yourDeck.primary exists
-    if (!record.yourDeck.primary) {
-      errors.push(createDetailedError('yourDeck.primary', record.yourDeck.primary, 'Missing primary deck value'));
-    } else {
-      // Validate yourDeck.primary is a valid card key in card_data
-      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
-      if (!availableCardKeys.includes(record.yourDeck.primary)) {
-        errors.push(createDetailedError('yourDeck.primary', record.yourDeck.primary, 'Card does not exist in card database'));
-      }
-    }
-      // Check yourDeck.secondary if it exists and is not null
-    if (record.opponentDeck.secondary !== "null" && record.opponentDeck.secondary) {
-      // Validate yourDeck.secondary is a valid card key in card_data
-      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
-      if (!availableCardKeys.includes(record.yourDeck.secondary)) {
-        errors.push(createDetailedError('yourDeck.secondary', record.yourDeck.secondary, 'Card does not exist in card database'));
-      }
-    }
-    // Check yourDeck.variant if it exists and is not null
-    if (record.yourDeck.variant !== "null" && record.yourDeck.variant) {
-      // Validate yourDeck.variant is a valid card key in card_data
-      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
-      if (!availableCardKeys.includes(record.yourDeck.variant)) {
-        errors.push(createDetailedError('yourDeck.variant', record.yourDeck.variant, 'Card does not exist in card database'));
-      }
-    }
-  }
-
-  if (!record.opponentDeck) {
-    errors.push(createDetailedError('opponentDeck', record.opponentDeck, 'Missing opponentDeck information'));
-  } else {
-    // Check opponentDeck.primary exists
-    if (!record.opponentDeck.primary) {
-      errors.push(createDetailedError('opponentDeck.primary', record.opponentDeck.primary, 'Missing primary deck value'));
-    } else {
-      // Validate opponentDeck.primary is a valid card key in card_data
-      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
-      if (!availableCardKeys.includes(record.opponentDeck.primary)) {
-        errors.push(createDetailedError('opponentDeck.primary', record.opponentDeck.primary, 'Card does not exist in card database'));
-      }
-    }
-      // Check opponentDeck.secondary if it exists and is not null
-    if (record.opponentDeck.secondary !== "null" && record.opponentDeck.secondary) {
-      // Validate opponentDeck.secondary is a valid card key in card_data
-      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
-      if (!availableCardKeys.includes(record.opponentDeck.secondary)) {
-        errors.push(createDetailedError('opponentDeck.secondary', record.opponentDeck.secondary, 'Card does not exist in card database'));
-      }
-    }
-    // Check opponentDeck.variant if it exists and is not null
-    if (record.opponentDeck.variant !== "null" && record.opponentDeck.variant) {
-      // Validate opponentDeck.variant is a valid card key in card_data
-      const availableCardKeys = AVAILABLE_CARDS.map(card => card.key);
-      if (!availableCardKeys.includes(record.opponentDeck.variant)) {
-        errors.push(createDetailedError('opponentDeck.variant', record.opponentDeck.variant, 'Card does not exist in card database'));
-      }
-    }
-  }
-
-  // Validate turn order
-  if (!record.turnOrder) {
-    errors.push(createDetailedError('turnOrder', record.turnOrder, 'Missing required field'));
-  } else if (!['first', 'second', '1', '2'].includes(String(record.turnOrder).toLowerCase())) {
-    errors.push(createDetailedError('turnOrder', record.turnOrder, 'Invalid value (must be "first", "second", 1, or 2)'));
-  }
-
-  // Validate match result
-  if (!record.result) {
-    errors.push(createDetailedError('result', record.result, 'Missing required field'));
-  } else if (!['win', 'loss', 'tie', 'victory', 'defeat'].includes(String(record.result).toLowerCase())) {
-    errors.push(createDetailedError('result', record.result, 'Invalid value (must be "victory", "defeat", "win", "loss", or "tie")'));
-  }
-
-  return errors;
-};
-
-/**
- * Find duplicate values in an array
- * @param {Array} array - Array to check for duplicates
- * @returns {Array} Array of duplicate values
- */
-const findDuplicates = (array) => {
-  const seen = {};
-  const duplicates = [];
-
-  array.forEach(item => {
-    if (seen[item]) {
-      if (!duplicates.includes(item)) {
-        duplicates.push(item);
-      }
-    } else {
-      seen[item] = true;
-    }
-  });
-
-  return duplicates;
 };
 
 /**
@@ -382,13 +347,8 @@ export const analyzeCsvFile = (csvContent) => {
   }
 
   // Filter out blank lines and comment lines that start with #
-  const filteredContent = csvContent
-    .split(/\r?\n/)
-    .filter(line => {
-      const trimmedLine = line.trim();
-      return trimmedLine !== '' && !trimmedLine.startsWith('#');
-    })
-    .join('\n');
+  const filteredRows = filterCsvContent(csvContent);
+  const filteredContent = filteredRows.join('\n');
 
   // Basic structure validation
   const rows = filteredContent.split(/\r?\n/);
@@ -399,16 +359,9 @@ export const analyzeCsvFile = (csvContent) => {
       stats: { rowCount: rows.length }
     };
   }
+  
   // Header validation
   const headers = rows[0].split(',').map(h => h.trim());
-  
-  // These headers are required
-  const REQUIRED_HEADERS = EXPECTED_HEADERS.filter(h => 
-    !['id', 'isLocked', 'notes', 'points', 'auto'].includes(h)
-  );
-  
-  // These headers are optional (will be auto-created)
-  const OPTIONAL_HEADERS = ['id', 'isLocked', 'notes', 'points', 'auto'];
   
   const missingRequiredHeaders = REQUIRED_HEADERS.filter(h => !headers.includes(h));
   const missingOptionalHeaders = OPTIONAL_HEADERS.filter(h => !headers.includes(h));
