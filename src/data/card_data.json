@@ -8122,7 +8122,7 @@
       "cardSubtype": "Basic",
       "evolvesFrom": "",
       "webLink": "https://pocket.limitlesstcg.com/cards/A3/66",
-      "iconPath": "./icons/oricorio.png",
+      "iconPath": "./icons/oricorio-pom-pom.png",
       "finalEvolution": true
     },
     "A3-67": {
@@ -8356,7 +8356,7 @@
       "cardSubtype": "Basic",
       "evolvesFrom": "",
       "webLink": "https://pocket.limitlesstcg.com/cards/A3/84",
-      "iconPath": null,
+      "iconPath": "./icons/tapu-lele.png",
       "finalEvolution": true
     },
     "A3-85": {
