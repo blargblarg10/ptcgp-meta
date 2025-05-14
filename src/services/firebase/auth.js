@@ -60,6 +60,12 @@ export const signInWithGoogle = async () => {
     await createOrGetUserDocument(result.user);
     return result.user;
   } catch (error) {
+    // Check if this is a popup cancelled error, which is expected when user closes the popup
+    if (error.code === 'auth/popup-closed-by-user') {
+      console.log('User closed the Google sign-in popup');
+      return null; // Return null instead of throwing for this specific error
+    }
+    
     console.error("Error signing in with Google", error);
     throw error;
   }

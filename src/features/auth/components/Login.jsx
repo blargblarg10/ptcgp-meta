@@ -5,7 +5,6 @@ const Login = () => {
   const { signInWithGoogle } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const handleGoogleSignIn = async () => {
     try {
       setError('');
