@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { calculateStats, preparePieData, prepareLineChartData, calculateRollingDeckFrequencies } from '../utils/matchStatsCalculator';
-import { useAuth } from '../../auth/context/AuthContext';
+import { useAuthUser } from '../../auth/hooks/useAuthUser';
 import { loadUserMatchData } from '../../../services/firebase';
 import PieCharts from './charts/PieCharts';
 import { COLORS, OTHER_COLOR } from './charts/PieCharts';
@@ -21,9 +21,8 @@ const getLatestSeason = () => {
 const YourStats = () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
   // State
-  const { currentUser, userData } = useAuth();
+  const { currentUser, userData } = useAuthUser();
   const [fullData, setFullData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [dateRange, setDateRange] = useState([today, today]);
