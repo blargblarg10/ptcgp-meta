@@ -8,7 +8,7 @@ import {
   downloadFile,
   analyzeCSV,
   processCSV
-} from '../../../data-processing/csv/dataFormatConverter';
+} from '../../../services/import-export/dataFormatConverter';
 
 const UserProfile = () => {
   const { currentUser, userData, logOut } = useAuth();
