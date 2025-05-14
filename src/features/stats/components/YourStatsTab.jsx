@@ -8,7 +8,7 @@ import { COLORS, OTHER_COLOR } from './charts/PieCharts';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from 'dayjs';
-import seasonsData from '../../../shared/config/seasons.json';
+import seasonsData from '../config/seasons.json';
 
 // Get the latest season by comparing start dates
 const getLatestSeason = () => {
