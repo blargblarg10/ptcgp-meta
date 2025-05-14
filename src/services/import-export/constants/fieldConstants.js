@@ -1,5 +1,5 @@
 /**
- * Shared constants for CSV and JSON data processing
+ * Constants for field names and data structures
  */
 
 // Expected headers for match data CSV
@@ -47,27 +47,3 @@ export const MATCH_RECORD_FIELDS = [
   'points', 
   'auto'
 ];
-
-// Valid values for turn order
-export const VALID_TURN_ORDER_VALUES = ['first', 'second', '1', '2'];
-
-// Valid values for match result
-export const VALID_RESULT_VALUES = ['win', 'loss', 'tie', 'victory', 'defeat'];
-
-// Default values for optional fields
-export const DEFAULT_VALUES = {
-  id: null, // Will be generated
-  isLocked: true,
-  notes: "",
-  points: 0,
-  auto: true
-};
-
-// ID format patterns
-export const ID_PATTERNS = [
-  /^match-\d+-[a-z0-9]+$/,
-  /^new-\d+-[a-z0-9]+$/
-];
-
-// Date format regex for MM/DD/YYYY
-export const DATE_REGEX = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;

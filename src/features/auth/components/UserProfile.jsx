@@ -2,13 +2,13 @@ import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { loadUserMatchData, saveUserMatchData } from '../../../services/firebase';
 import { 
-  jsonToCsv, 
-  csvToJson, 
+  convertJsonToCsv, 
+  convertCsvToJson, 
   validateJsonStructure, 
   downloadFile,
-  analyzeCSV,
-  processCSV
-} from '../../../services/import-export/dataFormatConverter';
+  validateCsvStructure,
+  processImportCsv
+} from '../../../services/import-export';
 
 const UserProfile = () => {
   const { currentUser, userData, logOut } = useAuth();
@@ -38,7 +38,7 @@ const UserProfile = () => {
       setShowDropdown(false);
       const matchData = await loadUserMatchData(userData);
       if (matchData && matchData.length > 0) {
-        // Add notes header information at the top of the file
+        // Add notes header information at the top of the file        
         const notesHeader = 
           "# PTCGP Meta Match Data\n" +
           `# Downloaded on: ${new Date().toLocaleString()}\n` +
@@ -50,7 +50,7 @@ const UserProfile = () => {
           "#        - All dates should be in ISO format (YYYY-MM-DDTHH:MM:SS.mmmZ)\n" +
           "#        - Do not modify the ID column values\n\n";
           
-        const csvContent = jsonToCsv(matchData);
+        const csvContent = convertJsonToCsv(matchData);
         const fileContent = notesHeader + csvContent;
         const fileName = `ptcgp_match_data_${new Date().toISOString().split('T')[0]}.csv`;
         downloadFile(fileContent, fileName, 'text/csv');
@@ -78,11 +78,10 @@ const UserProfile = () => {
     setUploadStats(null);
     setShowUploadInfo(false);
     
-    try {
-      const fileContent = await readFileAsText(file);
+    try {      const fileContent = await readFileAsText(file);
       
-      // Use the consolidated processCSV function to handle all validation in one call
-      const processedResult = processCSV(fileContent);
+      // Use the consolidated processImportCsv function to handle all validation in one call
+      const processedResult = processImportCsv(fileContent);
       
       // Set stats for display
       setUploadStats(processedResult.stats);
