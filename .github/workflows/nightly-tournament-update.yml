@@ -1,9 +1,6 @@
-name: Nightly Data Update
+name: Manual Tournament Data Update
 
 on:
-  schedule:
-    # Run at 11:00 PM UTC every day
-    - cron: '0 23 * * *'
   workflow_dispatch:  # Allows manual triggering from GitHub UI
 
 jobs:

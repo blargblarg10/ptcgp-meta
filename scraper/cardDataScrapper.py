@@ -28,7 +28,7 @@ SCRIPT_DIR = pathlib.Path(__file__).parent.resolve()
 CONFIG = {
     'info': False,
     'OUTPUT_FILE': os.path.join(SCRIPT_DIR, "..", "src/data/card_data.json"),
-    'ICON_FOLDER': "./public/icons/",
+    'ICON_FOLDER': os.path.join(SCRIPT_DIR, "..", "./public/icons/"),
     'ICON_WEBPATH': "./icons/",
     'LOG_FILE': os.path.join(SCRIPT_DIR, 'scraper.log'),
     'CARD_URL': "https://pocket.limitlesstcg.com/cards/",
@@ -171,10 +171,11 @@ class CardDatabase:
             return False
 
 class CardScraper:
-    def __init__(self, database):
+    def __init__(self, database, latest_only=False):
         self.database = database
         self.max_retries = 3
         self.retry_delay = 2  # seconds
+        self.latest_only = latest_only
         
     def create_new_driver(self):
         """Creates a new WebDriver instance."""
@@ -391,7 +392,7 @@ class CardScraper:
             logger.error(f"Unexpected error scraping card at {url}: {str(e)}")
             return None
         finally:
-            if driver:
+            if driver:                
                 try:
                     driver.quit()
                 except Exception as e:
@@ -407,12 +408,21 @@ class CardScraper:
         rows = driver.find_elements(By.CSS_SELECTOR, "table tbody tr")
         set_links = []
         
-        for row in rows:
+        for i, row in enumerate(rows):
             try:
+                # If latest_only is True, only process the first row
+                if self.latest_only and len(set_links) > 0:
+                    break
+                    
                 link_element = row.find_element(By.CSS_SELECTOR, "td:first-child a")
                 url = link_element.get_attribute("href")
                 set_code = url.split('/')[-1]
                 set_name = link_element.text.split('\n')[0].strip()
+                
+                if set_name == "P-A":
+                    logger.info(f"Not including Promo-A cards")
+                    continue
+                
                 set_links.append({
                     "url": url, 
                     "setCode": set_code,
@@ -488,12 +498,14 @@ def main():
                        help='Reset the database and ignore existing data')
     parser.add_argument('--icons-only', action='store_true', default=False,
                        help='Only retrieve missing icons for existing card data')
+    parser.add_argument('--latest-only', action='store_true', default=False,
+                       help='Grab only the latest sets and cards')
     args = parser.parse_args()
 
     logger.info(f"Starting scraper with {CONFIG['MAX_WORKERS']} concurrent workers...")
     
     database = CardDatabase(reset=args.reset)
-    scraper = CardScraper(database)
+    scraper = CardScraper(database, args.latest_only)
     
     if args.icons_only:
         logger.info("Running in icons-only mode")
